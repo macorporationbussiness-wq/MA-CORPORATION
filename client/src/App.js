@@ -13,7 +13,6 @@ import Services from './pages/Services';
 import WhyChooseUs from './pages/WhyChooseUs';
 import Team from './pages/Team';
 import Portfolios from './pages/Portfolios';
-import PortfolioDetails from './pages/PortfolioDetails';
 import Certificates from './pages/Certificates';
 import Admissions from './pages/Admissions';
 import Contact from './pages/Contact';
@@ -52,7 +51,6 @@ export default function App() {
                                 <Route path="/why-choose-us" element={<WhyChooseUs />} />
                                 <Route path="/team" element={<Team />} />
                                 <Route path="/portfolios" element={<Portfolios />} />
-                                <Route path="/portfolios/:slug" element={<PortfolioDetails />} />
                                 <Route path="/certificates" element={<Certificates />} />
                                 <Route path="/admissions" element={<Admissions />} />
                                 <Route path="/contact" element={<Contact />} />

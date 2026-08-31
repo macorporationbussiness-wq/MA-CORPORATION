@@ -12,30 +12,6 @@ export default function CertificateManager() {
     const load = () => API.get('/certificates/all').then((r) => setCerts(r.data)).catch(() => { });
     useEffect(() => { load(); }, []);
 
-    // File upload helper
-    const uploadFile = async (file) => {
-        const formData = new FormData();
-        formData.append('image', file);
-        const resp = await fetch('http://localhost:5000/api/upload/single', {
-            method: 'POST',
-            body: formData,
-        });
-        const data = await resp.json();
-        return data.url;
-    };
-
-    // Upload certificate file
-    const handleCertificateUpload = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        try {
-            const url = await uploadFile(file);
-            setForm((prev) => ({ ...prev, certificateUrl: url }));
-        } catch (err) {
-            setMsg('Error uploading certificate');
-        }
-    };
-
     const submit = async (e) => {
         e.preventDefault();
         try {
@@ -73,51 +49,7 @@ export default function CertificateManager() {
                     <div className="field"><label>Title</label><input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required /></div>
                     <div className="field"><label>Issued To</label><input value={form.issuedTo} onChange={(e) => setForm({ ...form, issuedTo: e.target.value })} required /></div>
                     <div className="field"><label>Course</label><input value={form.course} onChange={(e) => setForm({ ...form, course: e.target.value })} required /></div>
-                    <div className="field">
-                        <label>
-                            Certificate URL
-                            <label
-                                style={{
-                                    display: 'inline-block',
-                                    padding: '4px 10px',
-                                    fontSize: '0.75rem',
-                                    marginLeft: 8,
-                                    background: 'var(--surface)',
-                                    border: '1px solid var(--border-dark)',
-                                    borderRadius: 4,
-                                    color: 'var(--text-light)',
-                                    cursor: 'pointer',
-                                }}
-                            >
-                                📷 Upload
-                                <input
-                                    type="file"
-                                    accept="image/*,application/pdf"
-                                    onChange={handleCertificateUpload}
-                                    style={{ display: 'none' }}
-                                />
-                            </label>
-                        </label>
-                        <input
-                            value={form.certificateUrl}
-                            onChange={(e) => setForm({ ...form, certificateUrl: e.target.value })}
-                            placeholder="Or paste certificate URL (https://example.com/cert.jpg or .pdf)"
-                        />
-                        {form.certificateUrl && (
-                            <div style={{ marginTop: 8 }}>
-                                {form.certificateUrl.endsWith('.pdf') ? (
-                                    <a href={form.certificateUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#14B8A6', fontSize: '0.85rem' }}>📄 View PDF</a>
-                                ) : (
-                                    <img
-                                        src={form.certificateUrl}
-                                        alt="preview"
-                                        style={{ width: '100%', height: 80, objectFit: 'cover', borderRadius: 8 }}
-                                        onError={(e) => { e.target.style.display = 'none'; }}
-                                    />
-                                )}
-                            </div>
-                        )}
-                    </div>
+                    <div className="field"><label>Certificate URL</label><input value={form.certificateUrl} onChange={(e) => setForm({ ...form, certificateUrl: e.target.value })} /></div>
                 </div>
                 <label style={{ display: 'flex', gap: 8, alignItems: 'center' }}><input type="checkbox" checked={form.isActive} onChange={(e) => setForm({ ...form, isActive: e.target.checked })} /> Active</label>
                 <div style={{ display: 'flex', gap: 10, marginTop: 10 }}>

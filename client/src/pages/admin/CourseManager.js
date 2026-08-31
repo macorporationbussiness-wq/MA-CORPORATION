@@ -17,30 +17,6 @@ export default function CourseManager() {
     const load = () => API.get('/courses/all').then((r) => setCourses(r.data)).catch(() => { });
     useEffect(() => { load(); }, []);
 
-    // File upload helper
-    const uploadFile = async (file) => {
-        const formData = new FormData();
-        formData.append('image', file);
-        const resp = await fetch('http://localhost:5000/api/upload/single', {
-            method: 'POST',
-            body: formData,
-        });
-        const data = await resp.json();
-        return data.url;
-    };
-
-    // Upload course image file
-    const handleImageUpload = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        try {
-            const url = await uploadFile(file);
-            setForm((prev) => ({ ...prev, image: url }));
-        } catch (err) {
-            setMsg('Error uploading image');
-        }
-    };
-
     const submit = async (e) => {
         e.preventDefault();
         const payload = {
@@ -103,45 +79,7 @@ export default function CourseManager() {
                     </div>
                     <div className="field"><label>Mode</label><input value={form.mode} onChange={(e) => setForm({ ...form, mode: e.target.value })} /></div>
                     <div className="field"><label>Fee (PKR)</label><input type="number" value={form.fee} onChange={(e) => setForm({ ...form, fee: e.target.value })} /></div>
-                    <div className="field">
-                        <label>
-                            Image URL
-                            <label
-                                style={{
-                                    display: 'inline-block',
-                                    padding: '4px 10px',
-                                    fontSize: '0.75rem',
-                                    marginLeft: 8,
-                                    background: 'var(--surface)',
-                                    border: '1px solid var(--border-dark)',
-                                    borderRadius: 4,
-                                    color: 'var(--text-light)',
-                                    cursor: 'pointer',
-                                }}
-                            >
-                                📷 Upload
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleImageUpload}
-                                    style={{ display: 'none' }}
-                                />
-                            </label>
-                        </label>
-                        <input
-                            value={form.image}
-                            onChange={(e) => setForm({ ...form, image: e.target.value })}
-                            placeholder="Or paste image URL (https://example.com/image.jpg)"
-                        />
-                        {form.image && (
-                            <img
-                                src={form.image}
-                                alt="preview"
-                                style={{ width: '100%', height: 80, objectFit: 'cover', borderRadius: 8, marginTop: 8 }}
-                                onError={(e) => { e.target.style.display = 'none'; }}
-                            />
-                        )}
-                    </div>
+                    <div className="field"><label>Image URL</label><input value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} /></div>
                 </div>
                 <div className="field"><label>Short Description</label><textarea value={form.shortDescription} onChange={(e) => setForm({ ...form, shortDescription: e.target.value })} /></div>
                 <div className="field"><label>Introduction</label><textarea value={form.introduction} onChange={(e) => setForm({ ...form, introduction: e.target.value })} /></div>

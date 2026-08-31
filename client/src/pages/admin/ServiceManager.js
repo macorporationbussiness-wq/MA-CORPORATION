@@ -12,30 +12,6 @@ export default function ServiceManager() {
     const load = () => API.get('/services/all').then((r) => setServices(r.data)).catch(() => { });
     useEffect(() => { load(); }, []);
 
-    // File upload helper
-    const uploadFile = async (file) => {
-        const formData = new FormData();
-        formData.append('image', file);
-        const resp = await fetch('http://localhost:5000/api/upload/single', {
-            method: 'POST',
-            body: formData,
-        });
-        const data = await resp.json();
-        return data.url;
-    };
-
-    // Upload service image file
-    const handleImageUpload = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        try {
-            const url = await uploadFile(file);
-            setForm((prev) => ({ ...prev, image: url }));
-        } catch (err) {
-            setMsg('Error uploading image');
-        }
-    };
-
     const submit = async (e) => {
         e.preventDefault();
         try {
@@ -75,45 +51,6 @@ export default function ServiceManager() {
                 </div>
                 <div className="field"><label>Description</label><textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></div>
                 <div className="field"><label>Icon (name)</label><input value={form.icon} onChange={(e) => setForm({ ...form, icon: e.target.value })} /></div>
-                <div className="field">
-                    <label>
-                        Image URL
-                        <label
-                            style={{
-                                display: 'inline-block',
-                                padding: '4px 10px',
-                                fontSize: '0.75rem',
-                                marginLeft: 8,
-                                background: 'var(--surface)',
-                                border: '1px solid var(--border-dark)',
-                                borderRadius: 4,
-                                color: 'var(--text-light)',
-                                cursor: 'pointer',
-                            }}
-                        >
-                            📷 Upload
-                            <input
-                                type="file"
-                                accept="image/*"
-                                onChange={handleImageUpload}
-                                style={{ display: 'none' }}
-                            />
-                        </label>
-                    </label>
-                    <input
-                        value={form.image}
-                        onChange={(e) => setForm({ ...form, image: e.target.value })}
-                        placeholder="Or paste image URL (https://example.com/image.jpg)"
-                    />
-                    {form.image && (
-                        <img
-                            src={form.image}
-                            alt="preview"
-                            style={{ width: '100%', height: 80, objectFit: 'cover', borderRadius: 8, marginTop: 8 }}
-                            onError={(e) => { e.target.style.display = 'none'; }}
-                        />
-                    )}
-                </div>
                 <div style={{ display: 'flex', gap: 10 }}>
                     <button type="submit" className="btn btn-primary">{editingId ? 'Update' : 'Create'}</button>
                     {editingId && <button type="button" className="btn btn-outline" onClick={() => { setForm(empty); setEditingId(null); }}>Cancel</button>}

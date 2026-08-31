@@ -32,15 +32,12 @@ export default function SettingsManager() {
 
     const submit = async (e) => {
         e.preventDefault();
-        setMsg('');
         try {
-            const res = await API.put('/settings', form);
-            console.log('Settings save response:', res.data);
+            await API.put('/settings', form);
             fetchSettings();
             setMsg('Settings saved successfully');
         } catch (err) {
-            console.error('Settings save error:', err.response?.data || err.message);
-            setMsg('Error saving settings: ' + (err.response?.data?.msg || err.message));
+            setMsg('Error saving settings');
         }
     };
 

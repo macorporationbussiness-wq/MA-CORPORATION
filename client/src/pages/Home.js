@@ -31,65 +31,40 @@ export default function Home() {
         API.get('/team').then((r) => setTeam(r.data.slice(0, 4))).catch(() => { });
     }, []);
 
-    const stats = settings.stats || {};
-
     return (
         <div>
-            {/* Hero — dark navy */}
-            <section
-                style={{
-                    position: 'relative',
-                    padding: '120px 0 100px',
-                    background:
-                        'linear-gradient(135deg, #0A1733 0%, #0D1F47 55%, #102A5C 100%)',
-                    overflow: 'hidden',
-                }}
-            >
+            {/* Banner with hero content */}
+            <section style={{ position: 'relative', width: '100%', overflow: 'hidden' }}>
+                <img
+                    src="/sell-banner.jfif"
+                    alt="SELL BAN"
+                    style={{ width: '100%', height: 'auto', display: 'block' }}
+                />
                 <div
                     style={{
                         position: 'absolute',
-                        top: '-10%',
-                        right: '-5%',
-                        width: 480,
-                        height: 480,
-                        background: 'radial-gradient(circle, rgba(20,184,166,0.18), transparent 60%)',
-                        borderRadius: '50%',
+                        inset: 0,
+                        background: 'linear-gradient(to top, rgba(10,23,51,0.85) 0%, rgba(10,23,51,0.4) 50%, rgba(10,23,51,0.2) 100%)',
+                        display: 'flex',
+                        alignItems: 'flex-end',
+                        padding: '60px 0',
                     }}
-                />
-                <div className="container" style={{ position: 'relative', display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: 40, alignItems: 'center' }}>
-                    <div className="fade-up">
-                        <span className="badge" style={{ marginBottom: 18 }}>Professional Education & Services</span>
-                        <h1 style={{ color: '#fff', fontSize: '3.1rem', marginBottom: 20, lineHeight: 1.15 }}>
-                            Empowering People. <span style={{ color: '#2DD4BF' }}>Building Skills.</span>{' '}
-                            <span style={{ color: '#2DD4BF' }}>Creating Opportunities.</span>
-                        </h1>
-                        <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.12rem', marginBottom: 30, maxWidth: 540 }}>
-                            M.A. Corporation provides professional courses and quality business
-                            services designed to help individuals, students, and organizations
-                            achieve their goals.
-                        </p>
-                        <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
-                            <Link to="/courses" className="btn btn-primary">Explore Courses</Link>
-                            <Link to="/services" className="btn btn-outline">Our Services</Link>
-                        </div>
-                    </div>
-                    <div className="fade-up" style={{ position: 'relative' }}>
-                        <div
-                            style={{
-                                borderRadius: 16,
-                                overflow: 'hidden',
-                                border: '1px solid rgba(255,255,255,0.1)',
-                                boxShadow: '0 30px 60px rgba(0,0,0,0.35)',
-                                background: 'linear-gradient(135deg, #102A5C, #0A1733)',
-                                aspectRatio: '4/3',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}
-                        >
-                            <div style={{ textAlign: 'center', padding: 30 }}>
-                                <div style={{ fontSize: '3rem', marginBottom: 10 }}>🎓💼👥</div>
-                                <p style={{ color: 'rgba(255,255,255,0.7)' }}>Professional Learning & Business Environment</p>
+                >
+                    <div className="container" style={{ position: 'relative', display: 'grid', gridTemplateColumns: '1fr', gap: 40, alignItems: 'center' }}>
+                        <div className="fade-up" style={{ textAlign: 'center' }}>
+                            <span className="badge" style={{ marginBottom: 18, background: 'rgba(45,212,191,0.15)', color: '#2DD4BF', border: '1px solid rgba(45,212,191,0.3)' }}>Professional Education & Services</span>
+                            <h1 style={{ color: '#fff', fontSize: '3.1rem', marginBottom: 20, lineHeight: 1.15, textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
+                                Empowering People. <span style={{ color: '#2DD4BF' }}>Building Skills.</span>{' '}
+                                <span style={{ color: '#2DD4BF' }}>Creating Opportunities.</span>
+                            </h1>
+                            <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '1.12rem', marginBottom: 30, maxWidth: 640, margin: '0 auto 30px', textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}>
+                                M.A. Corporation provides professional courses and quality business
+                                services designed to help individuals, students, and organizations
+                                achieve their goals.
+                            </p>
+                            <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
+                                <Link to="/courses" className="btn btn-primary">Explore Courses</Link>
+                                <Link to="/services" className="btn btn-outline" style={{ borderColor: 'rgba(255,255,255,0.4)', color: '#fff' }}>Our Services</Link>
                             </div>
                         </div>
                     </div>
@@ -125,6 +100,30 @@ export default function Home() {
                                 <div className="icon-chip">{a.icon}</div>
                                 <h3 style={{ fontSize: '1.2rem', marginBottom: 10 }}>{a.title}</h3>
                                 <p className="muted" style={{ fontSize: '0.95rem' }}>{a.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* What We Offer — dark */}
+            <section className="section-sm section-dark">
+                <div className="container">
+                    <div className="section-head">
+                        <span className="eyebrow">What We Offer</span>
+                        <h2>All Marketing • AI • Consulting • Technology</h2>
+                    </div>
+                    <div className="grid grid-4">
+                        {[
+                            { title: 'Marketing', desc: 'Strategic marketing solutions to grow your brand and reach.', icon: '📢' },
+                            { title: 'AI', desc: 'Artificial intelligence tools and solutions for modern businesses.', icon: '🤖' },
+                            { title: 'Consulting', desc: 'Expert consulting services tailored to your business needs.', icon: '💼' },
+                            { title: 'Technology', desc: 'Cutting-edge technology services and development solutions.', icon: '💻' },
+                        ].map((item) => (
+                            <div key={item.title} className="card" style={{ textAlign: 'center' }}>
+                                <div className="icon-chip" style={{ fontSize: '2rem', marginBottom: 14 }}>{item.icon}</div>
+                                <h3 style={{ fontSize: '1.25rem', marginBottom: 10 }}>{item.title}</h3>
+                                <p className="muted" style={{ fontSize: '0.92rem' }}>{item.desc}</p>
                             </div>
                         ))}
                     </div>
@@ -196,26 +195,6 @@ export default function Home() {
                                 <div className="icon-chip">{v.icon}</div>
                                 <h3 style={{ fontSize: '1.15rem', marginBottom: 8 }}>{v.title}</h3>
                                 <p className="muted" style={{ fontSize: '0.92rem' }}>{v.desc}</p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Statistics — teal band */}
-            <section className="section-sm" style={{ background: 'linear-gradient(135deg, #14B8A6 0%, #0EA5A4 100%)' }}>
-                <div className="container">
-                    <div className="grid grid-5" style={{ textAlign: 'center', color: '#fff' }}>
-                        {[
-                            { v: stats.students, l: 'Students / Clients' },
-                            { v: stats.courses, l: 'Courses' },
-                            { v: stats.services, l: 'Professional Services' },
-                            { v: stats.team, l: 'Team Members' },
-                            { v: stats.years, l: 'Years of Experience' },
-                        ].map((s) => (
-                            <div key={s.l}>
-                                <div style={{ fontSize: '2.2rem', fontWeight: 800, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{s.v}</div>
-                                <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>{s.l}</div>
                             </div>
                         ))}
                     </div>
