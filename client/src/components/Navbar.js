@@ -39,7 +39,9 @@ export default function Navbar() {
                     <div className="navbar-logo">
                         <img src="/logo.png" alt={settings.companyName} />
                     </div>
-                    <span className="navbar-brand-name">{settings.companyName}</span>
+                    <span className="navbar-brand-name">
+                        {settings.companyName}
+                    </span>
                 </Link>
 
                 {/* Desktop Navigation */}

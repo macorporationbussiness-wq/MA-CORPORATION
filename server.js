@@ -23,6 +23,10 @@ app.use('/api/portfolios', require('./routes/portfolios'));
 app.use('/api/certificates', require('./routes/certificates'));
 app.use('/api/settings', require('./routes/settings'));
 app.use('/api/chatbot', require('./routes/chatbot'));
+app.use('/api/upload', require('./routes/upload'));
+
+// Serve uploaded files statically (available in both dev and production)
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {

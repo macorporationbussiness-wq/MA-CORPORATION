@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import API from '../../api';
 import { useSettings } from '../../context/SettingsContext';
+import AdminPageHeader from '../../components/AdminPageHeader';
+import {
+    AdminFormCard,
+    AdminToast,
+} from '../../components/AdminUI';
 
 export default function SettingsManager() {
     const { settings, fetchSettings } = useSettings();
@@ -9,7 +14,7 @@ export default function SettingsManager() {
         facebook: '', instagram: '', linkedin: '', youtube: '', mapsEmbed: '',
         stats: { students: '', courses: '', services: '', team: '', years: '' },
     });
-    const [msg, setMsg] = useState('');
+    const [msg, setMsg] = useState({ text: '', type: 'success' });
 
     useEffect(() => {
         setForm({
@@ -32,55 +37,162 @@ export default function SettingsManager() {
 
     const submit = async (e) => {
         e.preventDefault();
+        setMsg({ text: '', type: 'success' });
         try {
             await API.put('/settings', form);
             fetchSettings();
-            setMsg('Settings saved successfully');
+            setMsg({ text: 'Settings saved successfully', type: 'success' });
+            setTimeout(() => setMsg({ text: '', type: 'success' }), 3000);
         } catch (err) {
-            setMsg('Error saving settings');
+            setMsg({
+                text: 'Error saving settings: ' + (err.response?.data?.msg || err.message),
+                type: 'error',
+            });
         }
     };
 
     return (
         <div>
-            <h1 style={{ fontSize: '1.8rem', marginBottom: 6 }}>Site Settings</h1>
-            <p className="muted" style={{ marginBottom: 24 }}>Manage company info, contact details, social links, and statistics.</p>
-            {msg && <div className="badge" style={{ marginBottom: 16 }}>{msg}</div>}
+            <AdminPageHeader
+                title="Site Settings"
+                subtitle="Manage company info, contact details, social links, and statistics."
+                icon="⚙️"
+                color="linear-gradient(135deg, #11998e, #38ef7d)"
+            />
 
-            <form className="card" onSubmit={submit}>
-                <h3 style={{ marginBottom: 16 }}>Company & Contact</h3>
-                <div className="grid grid-2">
-                    <div className="field"><label>Company Name</label><input value={form.companyName} onChange={update('companyName')} /></div>
-                    <div className="field"><label>WhatsApp Number</label><input value={form.whatsapp} onChange={update('whatsapp')} placeholder="923001234567" /></div>
-                    <div className="field"><label>Phone</label><input value={form.phone} onChange={update('phone')} /></div>
-                    <div className="field"><label>Email</label><input value={form.email} onChange={update('email')} /></div>
+            <AdminToast msg={msg.text} type={msg.type} />
+
+            <div className="admin-form-card">
+                <AdminFormCard
+                    title="Company & Contact"
+                    icon="🏢"
+                    color="linear-gradient(135deg, #14B8A6, #0EA5A4)"
+                >
+                    <div className="grid grid-2" style={{ gap: 14 }}>
+                        <div className="field">
+                            <label>Company Name</label>
+                            <input value={form.companyName} onChange={update('companyName')} />
+                        </div>
+                        <div className="field">
+                            <label>WhatsApp Number (with country code, no + or spaces)</label>
+                            <input value={form.whatsapp} onChange={update('whatsapp')} placeholder="923001234567" />
+                        </div>
+                        <div className="field">
+                            <label>Phone</label>
+                            <input value={form.phone} onChange={update('phone')} />
+                        </div>
+                        <div className="field">
+                            <label>Email</label>
+                            <input type="email" value={form.email} onChange={update('email')} />
+                        </div>
+                    </div>
+                    <div className="field">
+                        <label>Address</label>
+                        <input value={form.address} onChange={update('address')} />
+                    </div>
+                </AdminFormCard>
+            </div>
+
+            <div className="admin-form-card">
+                <AdminFormCard
+                    title="Social Media"
+                    icon="🌐"
+                    color="linear-gradient(135deg, #667eea, #764ba2)"
+                >
+                    <div className="grid grid-2" style={{ gap: 14 }}>
+                        <div className="field">
+                            <label>Facebook</label>
+                            <input value={form.facebook} onChange={update('facebook')} placeholder="https://facebook.com/..." />
+                        </div>
+                        <div className="field">
+                            <label>Instagram</label>
+                            <input value={form.instagram} onChange={update('instagram')} placeholder="https://instagram.com/..." />
+                        </div>
+                        <div className="field">
+                            <label>LinkedIn</label>
+                            <input value={form.linkedin} onChange={update('linkedin')} placeholder="https://linkedin.com/..." />
+                        </div>
+                        <div className="field">
+                            <label>YouTube</label>
+                            <input value={form.youtube} onChange={update('youtube')} placeholder="https://youtube.com/..." />
+                        </div>
+                    </div>
+                </AdminFormCard>
+            </div>
+
+            <div className="admin-form-card">
+                <AdminFormCard
+                    title="Statistics (displayed on home page)"
+                    icon="📊"
+                    color="linear-gradient(135deg, #f093fb, #f5576c)"
+                >
+                    <div
+                        style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+                            gap: 14,
+                        }}
+                    >
+                        {[
+                            { key: 'students', l: 'Students / Clients' },
+                            { key: 'courses', l: 'Courses' },
+                            { key: 'services', l: 'Services' },
+                            { key: 'team', l: 'Team' },
+                            { key: 'years', l: 'Years' },
+                        ].map((s) => (
+                            <div key={s.key} className="field">
+                                <label>{s.l}</label>
+                                <input value={form.stats[s.key]} onChange={updateStat(s.key)} placeholder="1,000+" />
+                            </div>
+                        ))}
+                    </div>
+                </AdminFormCard>
+            </div>
+
+            <div className="admin-form-card">
+                <AdminFormCard
+                    title="Google Maps Embed"
+                    icon="📍"
+                    color="linear-gradient(135deg, #43e97b, #38f9d7)"
+                >
+                    <div className="field">
+                        <label>Embed iframe HTML</label>
+                        <textarea
+                            value={form.mapsEmbed}
+                            onChange={update('mapsEmbed')}
+                            placeholder='<iframe src="..." width="600" height="450" ...></iframe>'
+                            rows={4}
+                        />
+                        <p style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: 6 }}>
+                            Paste the full iframe HTML from Google Maps. Shown on the Contact page.
+                        </p>
+                    </div>
+                </AdminFormCard>
+            </div>
+
+            <form onSubmit={submit}>
+                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                    <button
+                        type="submit"
+                        className="btn-glow"
+                        style={{
+                            padding: '14px 36px',
+                            borderRadius: 12,
+                            background: 'linear-gradient(135deg, #14B8A6, #0EA5A4)',
+                            color: '#fff',
+                            border: 'none',
+                            fontSize: '1rem',
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                            boxShadow: '0 8px 22px rgba(20,184,166,0.4)',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: 8,
+                        }}
+                    >
+                        💾 Save All Settings
+                    </button>
                 </div>
-                <div className="field"><label>Address</label><input value={form.address} onChange={update('address')} /></div>
-
-                <h3 style={{ margin: '24px 0 16px' }}>Social Media</h3>
-                <div className="grid grid-2">
-                    <div className="field"><label>Facebook</label><input value={form.facebook} onChange={update('facebook')} /></div>
-                    <div className="field"><label>Instagram</label><input value={form.instagram} onChange={update('instagram')} /></div>
-                    <div className="field"><label>LinkedIn</label><input value={form.linkedin} onChange={update('linkedin')} /></div>
-                    <div className="field"><label>YouTube</label><input value={form.youtube} onChange={update('youtube')} /></div>
-                </div>
-
-                <h3 style={{ margin: '24px 0 16px' }}>Statistics</h3>
-                <div className="grid grid-5">
-                    <div className="field"><label>Students</label><input value={form.stats.students} onChange={updateStat('students')} /></div>
-                    <div className="field"><label>Courses</label><input value={form.stats.courses} onChange={updateStat('courses')} /></div>
-                    <div className="field"><label>Services</label><input value={form.stats.services} onChange={updateStat('services')} /></div>
-                    <div className="field"><label>Team</label><input value={form.stats.team} onChange={updateStat('team')} /></div>
-                    <div className="field"><label>Years</label><input value={form.stats.years} onChange={updateStat('years')} /></div>
-                </div>
-
-                <h3 style={{ margin: '24px 0 16px' }}>Google Maps Embed</h3>
-                <div className="field">
-                    <label>Embed iframe HTML</label>
-                    <textarea value={form.mapsEmbed} onChange={update('mapsEmbed')} placeholder="<iframe src='...' ...></iframe>" />
-                </div>
-
-                <button type="submit" className="btn btn-primary">Save Settings</button>
             </form>
         </div>
     );

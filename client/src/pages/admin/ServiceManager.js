@@ -1,36 +1,82 @@
 import React, { useEffect, useState } from 'react';
 import API from '../../api';
+import AdminPageHeader from '../../components/AdminPageHeader';
+import {
+    AdminFormCard,
+    AdminItemCard,
+    AdminSubmitButton,
+    AdminCancelButton,
+    AdminToast,
+    AdminToggle,
+    AdminImageUpload,
+} from '../../components/AdminUI';
 
 const empty = { title: '', category: 'General', description: '', icon: 'star', image: '', isActive: true };
+
+const colorPalette = [
+    'linear-gradient(135deg, #f093fb, #f5576c)',
+    'linear-gradient(135deg, #667eea, #764ba2)',
+    'linear-gradient(135deg, #4facfe, #00f2fe)',
+    'linear-gradient(135deg, #43e97b, #38f9d7)',
+    'linear-gradient(135deg, #fa709a, #fee140)',
+    'linear-gradient(135deg, #8E2DE2, #4A00E0)',
+];
 
 export default function ServiceManager() {
     const [services, setServices] = useState([]);
     const [form, setForm] = useState(empty);
     const [editingId, setEditingId] = useState(null);
-    const [msg, setMsg] = useState('');
+    const [msg, setMsg] = useState({ text: '', type: 'success' });
 
     const load = () => API.get('/services/all').then((r) => setServices(r.data)).catch(() => { });
     useEffect(() => { load(); }, []);
+
+    const uploadFile = async (file) => {
+        const formData = new FormData();
+        formData.append('image', file);
+        const resp = await fetch('http://localhost:5000/api/upload/single', {
+            method: 'POST',
+            body: formData,
+        });
+        const data = await resp.json();
+        return data.url;
+    };
+
+    const handleImageUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        try {
+            const url = await uploadFile(file);
+            setForm((prev) => ({ ...prev, image: url }));
+        } catch (err) {
+            setMsg({ text: 'Error uploading image', type: 'error' });
+        }
+    };
 
     const submit = async (e) => {
         e.preventDefault();
         try {
             if (editingId) {
                 await API.put(`/services/${editingId}`, form);
-                setMsg('Service updated');
+                setMsg({ text: 'Service updated', type: 'success' });
             } else {
                 await API.post('/services', form);
-                setMsg('Service created');
+                setMsg({ text: 'Service created', type: 'success' });
             }
             setForm(empty);
             setEditingId(null);
             load();
+            setTimeout(() => setMsg({ text: '', type: 'success' }), 3000);
         } catch (err) {
-            setMsg('Error saving service');
+            setMsg({ text: 'Error saving service', type: 'error' });
         }
     };
 
-    const edit = (s) => { setForm(s); setEditingId(s._id); };
+    const edit = (s) => {
+        setForm(s);
+        setEditingId(s._id);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
     const remove = async (id) => {
         if (!window.confirm('Delete this service?')) return;
         await API.delete(`/services/${id}`);
@@ -39,37 +85,101 @@ export default function ServiceManager() {
 
     return (
         <div>
-            <h1 style={{ fontSize: '1.8rem', marginBottom: 6 }}>Service Management</h1>
-            <p className="muted" style={{ marginBottom: 24 }}>Manage your professional service offerings.</p>
-            {msg && <div className="badge" style={{ marginBottom: 16 }}>{msg}</div>}
+            <AdminPageHeader
+                title="Service Management"
+                subtitle="Manage your professional service offerings."
+                icon="⚙️"
+                color="linear-gradient(135deg, #f093fb, #f5576c)"
+            />
 
-            <form className="card" onSubmit={submit} style={{ marginBottom: 30 }}>
-                <h3 style={{ marginBottom: 16 }}>{editingId ? 'Edit Service' : 'Add Service'}</h3>
-                <div className="grid grid-2">
-                    <div className="field"><label>Title</label><input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required /></div>
-                    <div className="field"><label>Category</label><input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} /></div>
-                </div>
-                <div className="field"><label>Description</label><textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></div>
-                <div className="field"><label>Icon (name)</label><input value={form.icon} onChange={(e) => setForm({ ...form, icon: e.target.value })} /></div>
-                <div style={{ display: 'flex', gap: 10 }}>
-                    <button type="submit" className="btn btn-primary">{editingId ? 'Update' : 'Create'}</button>
-                    {editingId && <button type="button" className="btn btn-outline" onClick={() => { setForm(empty); setEditingId(null); }}>Cancel</button>}
-                </div>
-            </form>
+            <AdminToast msg={msg.text} type={msg.type} />
 
-            <div className="grid grid-3">
-                {services.map((s) => (
-                    <div key={s._id} className="card">
-                        <h4 style={{ fontSize: '1.05rem' }}>{s.title}</h4>
-                        <p className="muted" style={{ fontSize: '0.82rem', margin: '8px 0' }}>{s.category}</p>
-                        <p className="muted" style={{ fontSize: '0.85rem' }}>{s.description}</p>
-                        <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
-                            <button className="btn btn-ghost" style={{ padding: '6px 12px', fontSize: '0.8rem' }} onClick={() => edit(s)}>Edit</button>
-                            <button className="btn btn-outline" style={{ padding: '6px 12px', fontSize: '0.8rem', color: '#ef4444' }} onClick={() => remove(s._id)}>Delete</button>
+            <div className="admin-form-card">
+                <AdminFormCard
+                    title={editingId ? 'Edit Service' : 'Add New Service'}
+                    icon={editingId ? '✎' : '+'}
+                    color="linear-gradient(135deg, #f093fb, #f5576c)"
+                >
+                    <form onSubmit={submit}>
+                        <div className="grid grid-2" style={{ gap: 14 }}>
+                            <div className="field">
+                                <label>Title *</label>
+                                <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
+                            </div>
+                            <div className="field">
+                                <label>Category</label>
+                                <input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} />
+                            </div>
                         </div>
-                    </div>
+                        <div className="field">
+                            <label>Description</label>
+                            <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} />
+                        </div>
+                        <div className="grid grid-2" style={{ gap: 14 }}>
+                            <div className="field">
+                                <label>Icon (name)</label>
+                                <input value={form.icon} onChange={(e) => setForm({ ...form, icon: e.target.value })} />
+                            </div>
+                            <div className="field">
+                                <label>Image</label>
+                                <AdminImageUpload
+                                    value={form.image}
+                                    onChange={(v) => setForm({ ...form, image: v })}
+                                    onUpload={handleImageUpload}
+                                />
+                            </div>
+                        </div>
+                        <div style={{ marginBottom: 18 }}>
+                            <AdminToggle
+                                checked={form.isActive}
+                                onChange={(v) => setForm({ ...form, isActive: v })}
+                                label="Active"
+                            />
+                        </div>
+                        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                            <AdminSubmitButton editing={!!editingId} label="Service" />
+                            {editingId && <AdminCancelButton onClick={() => { setForm(empty); setEditingId(null); }} />}
+                        </div>
+                    </form>
+                </AdminFormCard>
+            </div>
+
+            <div
+                style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+                    gap: 18,
+                }}
+            >
+                {services.map((s, i) => (
+                    <AdminItemCard
+                        key={s._id}
+                        title={s.title}
+                        subtitle={s.description}
+                        badges={[s.category, s.isActive ? 'Active' : 'Inactive'].filter(Boolean)}
+                        image={s.image}
+                        icon={s.icon?.charAt(0).toUpperCase() || '⚙️'}
+                        color={colorPalette[i % colorPalette.length]}
+                        onEdit={() => edit(s)}
+                        onDelete={() => remove(s._id)}
+                    />
                 ))}
             </div>
+            {services.length === 0 && (
+                <div
+                    style={{
+                        background: '#fff',
+                        borderRadius: 16,
+                        padding: 48,
+                        textAlign: 'center',
+                        color: '#94a3b8',
+                        boxShadow: '0 4px 18px rgba(10,23,51,0.06)',
+                    }}
+                >
+                    <div style={{ fontSize: '2.5rem', marginBottom: 8 }}>⚙️</div>
+                    No services yet. Create one using the form above.
+                </div>
+            )}
         </div>
     );
 }

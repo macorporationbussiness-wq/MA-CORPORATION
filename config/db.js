@@ -1,3 +1,6 @@
+const dns = require('dns');
+dns.setServers(['1.1.1.1', '1.0.0.1']);
+
 const mongoose = require('mongoose');
 
 const connectDB = async () => {
@@ -7,12 +10,12 @@ const connectDB = async () => {
         mongoose.set('bufferCommands', false);
 
         await mongoose.connect(process.env.MONGO_URI, {
-            serverSelectionTimeoutMS: 3000, // Fail after 3s instead of 30s default
-            socketTimeoutMS: 5000,
-            connectTimeoutMS: 3000,
+            serverSelectionTimeoutMS: 10000,
+            socketTimeoutMS: 10000,
+            connectTimeoutMS: 10000,
             maxPoolSize: 10,
         });
-        console.log('MongoDB Connected...');
+        console.log('MongoDB Connected successfully to', process.env.MONGO_URI.replace(/\/\/.*@/, '//***@'));
     } catch (err) {
         console.error('MongoDB connection error:', err.message);
         console.error('Server will continue running. Database features require a MongoDB connection (local or Atlas).');
