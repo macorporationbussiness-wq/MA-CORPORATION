@@ -24,13 +24,20 @@ export default function Services() {
             />
             <section className="section-white">
                 <div className="container">
-                    <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 40 }}>
+                    <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 40 }}>
                         {categories.map((c) => (
                             <button
                                 key={c}
                                 onClick={() => setCategory(c)}
                                 className={category === c ? 'btn btn-primary' : 'btn btn-outline'}
-                                style={{ padding: '8px 18px', fontSize: '0.88rem' }}
+                                style={{
+                                    padding: '10px 24px',
+                                    fontSize: '0.95rem',
+                                    fontWeight: 600,
+                                    borderRadius: 8,
+                                    transition: 'all 0.2s ease',
+                                    boxShadow: category === c ? '0 4px 14px rgba(20, 184, 166, 0.3)' : 'none',
+                                }}
                             >
                                 {c}
                             </button>

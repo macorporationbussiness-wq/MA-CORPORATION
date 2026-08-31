@@ -22,9 +22,7 @@ export default function Portfolios() {
                 <div className="container">
                     {loading ? (
                         <p className="text-center muted">Loading portfolios…</p>
-                    ) : portfolios.length === 0 ? (
-                        <p className="text-center muted">No portfolios available yet.</p>
-                    ) : (
+                    ) : portfolios.length > 0 ? (
                         <div className="grid grid-3">
                             {portfolios.map((p) => (
                                 <div key={p._id} className="card">
@@ -58,6 +56,16 @@ export default function Portfolios() {
                                     )}
                                 </div>
                             ))}
+                        </div>
+                    ) : (
+                        <div className="card" style={{ textAlign: 'center', padding: '60px 40px', background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)', border: '1px solid #e2e8f0' }}>
+                            <p className="muted" style={{ fontSize: '1rem', marginBottom: '24px', maxWidth: 400, margin: '0 auto 24px' }}>
+                                Our team members haven't added their portfolio projects yet.
+                                Check back soon to see their work, skills, and achievements.
+                            </p>
+                            <Link to="/team" className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                                Meet the Team →
+                            </Link>
                         </div>
                     )}
                     <div className="text-center mt-3">

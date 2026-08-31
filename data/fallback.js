@@ -191,7 +191,7 @@ const portfolios = [
         teamMember: { name: 'Bilal Sheikh', position: 'Lead Developer' },
         title: 'Enterprise SaaS Dashboard',
         description:
-            'A multi-tenant analytics dashboard built with React, Node.js, and MongoDB, serving 5,000+ daily users.',
+            'A multi-tier analytics dashboard built with React, Node.js, and MongoDB, serving 5,000+ daily users.',
         skills: ['React', 'Node.js', 'MongoDB', 'AWS'],
         projectUrl: 'https://example.com/project-1',
     },
