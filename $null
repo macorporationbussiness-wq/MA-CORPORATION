@@ -1,2 +1,2 @@
-curl: option -Force: is badly used here
-curl: try 'curl --help' for more information
+'ls' is not recognized as an internal or external command,
+operable program or batch file.
