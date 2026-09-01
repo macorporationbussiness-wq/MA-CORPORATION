@@ -27,13 +27,17 @@ router.get('/', async (req, res) => {
 // @access  Private
 router.post('/', auth, async (req, res) => {
     try {
-        let portfolio = new Portfolio(req.body);
+        const { teamMember, ...rest } = req.body;
+        const data = { ...rest };
+        if (teamMember) data.teamMember = teamMember;
+        let portfolio = new Portfolio(data);
         await portfolio.save();
         res.json(portfolio);
     } catch (err) {
         console.error('DB unavailable, adding portfolio to fallback:', err.message);
         // Fallback: add to in-memory array with a temporary ID
-        const newPortfolio = { ...req.body, _id: 'fb_' + Date.now(), teamMember: req.body.teamMember || { name: 'Unknown', position: '—' } };
+        const { teamMember, ...rest } = req.body;
+        const newPortfolio = { ...rest, _id: 'fb_' + Date.now(), teamMember: teamMember || { name: 'Unknown', position: '—' } };
         fallbackPortfolios.unshift(newPortfolio);
         res.json(newPortfolio);
     }
@@ -43,9 +47,13 @@ router.post('/', auth, async (req, res) => {
 // @access  Private
 router.put('/:id', auth, async (req, res) => {
     try {
+        const { teamMember, ...rest } = req.body;
+        const update = { $set: { ...rest } };
+        if (teamMember) update.$set.teamMember = teamMember;
+        else update.$unset = { teamMember: 1 };
         const portfolio = await Portfolio.findByIdAndUpdate(
             req.params.id,
-            { $set: req.body },
+            update,
             { new: true }
         );
         if (!portfolio) return res.status(404).json({ msg: 'Portfolio not found' });
@@ -53,9 +61,10 @@ router.put('/:id', auth, async (req, res) => {
     } catch (err) {
         console.error('DB unavailable, updating fallback portfolio:', err.message);
         // Fallback: update in-memory array
+        const { teamMember, ...rest } = req.body;
         const idx = fallbackPortfolios.findIndex((p) => p._id === req.params.id);
         if (idx === -1) return res.status(404).json({ msg: 'Portfolio not found' });
-        const updated = { ...fallbackPortfolios[idx], ...req.body, _id: req.params.id };
+        const updated = { ...fallbackPortfolios[idx], ...rest, _id: req.params.id, teamMember: teamMember || { name: 'Unknown', position: '—' } };
         fallbackPortfolios[idx] = updated;
         res.json(updated);
     }
@@ -67,7 +76,7 @@ router.delete('/:id', auth, async (req, res) => {
     try {
         const portfolio = await Portfolio.findById(req.params.id);
         if (!portfolio) return res.status(404).json({ msg: 'Portfolio not found' });
-        await Portfolio.findByIdAndRemove(req.params.id);
+        await Portfolio.findByIdAndDelete(req.params.id);
         res.json({ msg: 'Portfolio removed' });
     } catch (err) {
         console.error('DB unavailable, deleting fallback portfolio:', err.message);

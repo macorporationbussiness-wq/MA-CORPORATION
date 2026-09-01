@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const TeamMember = require('../models/TeamMember');
 const auth = require('../middleware/auth');
 const { team: fallbackTeam } = require('../data/fallback');
@@ -30,6 +31,18 @@ router.get('/all', auth, async (req, res) => {
 
 // @route   GET api/team/:id
 router.get('/:id', async (req, res) => {
+    // Support fetching by portfolioSlug instead of MongoDB _id
+    if (!mongoose.Types.ObjectId.isValid(req.params.id) && !req.params.id.startsWith('fb_')) {
+        const bySlug = fallbackTeam.find((m) => m.portfolioSlug === req.params.id);
+        if (bySlug) return res.json(bySlug);
+        try {
+            const byDbSlug = await TeamMember.findOne({ portfolioSlug: req.params.id });
+            if (byDbSlug) return res.json(byDbSlug);
+        } catch (err) {
+            // fall through to 404
+        }
+        return res.status(404).json({ msg: 'Member not found' });
+    }
     try {
         const member = await TeamMember.findById(req.params.id);
         if (!member) return res.status(404).json({ msg: 'Member not found' });
@@ -78,7 +91,7 @@ router.delete('/:id', auth, async (req, res) => {
     try {
         const member = await TeamMember.findById(req.params.id);
         if (!member) return res.status(404).json({ msg: 'Member not found' });
-        await TeamMember.findByIdAndRemove(req.params.id);
+        await TeamMember.findByIdAndDelete(req.params.id);
         res.json({ msg: 'Member removed' });
     } catch (err) {
         console.error(err.message);

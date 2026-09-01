@@ -10,7 +10,7 @@ import {
     AdminToggle,
 } from '../../components/AdminUI';
 
-const empty = { title: '', issuedTo: '', course: '', certificateUrl: '', isActive: true };
+const empty = { title: '', issuedTo: '', course: '', issueDate: '', certificateUrl: '', isActive: true };
 
 const colorPalette = [
     'linear-gradient(135deg, #43e97b, #38f9d7)',
@@ -111,6 +111,14 @@ export default function CertificateManager() {
                             <div className="field">
                                 <label>Course *</label>
                                 <input value={form.course} onChange={(e) => setForm({ ...form, course: e.target.value })} required />
+                            </div>
+                            <div className="field">
+                                <label>Issue Date</label>
+                                <input
+                                    type="date"
+                                    value={form.issueDate ? new Date(form.issueDate).toISOString().split('T')[0] : ''}
+                                    onChange={(e) => setForm({ ...form, issueDate: e.target.value })}
+                                />
                             </div>
                             <div className="field">
                                 <label>Certificate (Image or PDF)</label>

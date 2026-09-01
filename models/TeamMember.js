@@ -17,6 +17,7 @@ const TeamMemberSchema = new mongoose.Schema({
         twitter: { type: String, default: '' },
     },
     hasPortfolio: { type: Boolean, default: true },
+    portfolioSlug: { type: String, default: '' },
     isActive: { type: Boolean, default: true },
     order: { type: Number, default: 0 },
     createdAt: { type: Date, default: Date.now },

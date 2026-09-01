@@ -16,6 +16,11 @@ const colorPalette = [
     'linear-gradient(135deg, #fbc2eb, #a6c1ee)',
 ];
 
+const formatDate = (d) => {
+    if (!d) return null;
+    return new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+};
+
 export default function Portfolios() {
     const [portfolios, setPortfolios] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -253,7 +258,7 @@ export default function Portfolios() {
                                                             position: 'relative',
                                                         }}
                                                     >
-                                                        {(p.teamMember?.name || p.title || '?')
+                                                        {(p.teamMember?.name || p.teamMemberName || p.title || '?')
                                                             .split(' ')
                                                             .map((n) => n[0])
                                                             .join('')
@@ -309,7 +314,7 @@ export default function Portfolios() {
                                         </div>
 
                                         <div style={{ padding: 24 }}>
-                                            {p.teamMember?.name && (
+                                            {(p.teamMember?.name || p.teamMemberName) && (
                                                 <div
                                                     style={{
                                                         display: 'flex',
@@ -332,7 +337,7 @@ export default function Portfolios() {
                                                             fontSize: '0.8rem',
                                                         }}
                                                     >
-                                                        {p.teamMember.name
+                                                        {p.teamMember?.name || p.teamMemberName
                                                             .split(' ')
                                                             .map((n) => n[0])
                                                             .join('')
@@ -347,7 +352,7 @@ export default function Portfolios() {
                                                                 fontWeight: 700,
                                                             }}
                                                         >
-                                                            {p.teamMember.name}
+                                                            {p.teamMember?.name || p.teamMemberName}
                                                         </div>
                                                         <div
                                                             style={{
@@ -355,10 +360,23 @@ export default function Portfolios() {
                                                                 color: 'rgba(255,255,255,0.6)',
                                                             }}
                                                         >
-                                                            {p.teamMember.position}
+                                                            {p.teamMember?.position}
                                                         </div>
                                                     </div>
                                                 </div>
+                                            )}
+
+                                            {p.startDate && p.endDate && (
+                                                <p
+                                                    style={{
+                                                        color: 'rgba(255,255,255,0.6)',
+                                                        fontSize: '0.78rem',
+                                                        marginBottom: 10,
+                                                        fontFamily: 'var(--font-mono)',
+                                                    }}
+                                                >
+                                                    {formatDate(p.startDate)} — {formatDate(p.endDate)}
+                                                </p>
                                             )}
 
                                             <h3

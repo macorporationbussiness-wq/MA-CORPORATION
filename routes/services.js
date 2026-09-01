@@ -100,7 +100,7 @@ router.delete('/:id', auth, async (req, res) => {
     try {
         const service = await Service.findById(req.params.id);
         if (!service) return res.status(404).json({ msg: 'Service not found' });
-        await Service.findByIdAndRemove(req.params.id);
+        await Service.findByIdAndDelete(req.params.id);
         res.json({ msg: 'Service removed' });
     } catch (err) {
         console.error(err.message);

@@ -190,11 +190,19 @@ export default function Certificates() {
                                                 fontSize: '1.1rem',
                                                 marginBottom: 12,
                                                 fontWeight: 800,
-                                                color: '#0A1733',
                                                 lineHeight: 1.4,
                                             }}
                                         >
-                                            {c.title}
+                                            <Link
+                                                to={`/certificates/${c._id}`}
+                                                style={{
+                                                    color: '#0A1733',
+                                                    textDecoration: 'none',
+                                                }}
+                                                className="cert-title-link"
+                                            >
+                                                {c.title}
+                                            </Link>
                                         </h3>
                                         <div
                                             style={{
@@ -218,10 +226,8 @@ export default function Certificates() {
                                             </div>
                                         </div>
                                         {c.certificateUrl && (
-                                            <a
-                                                href={c.certificateUrl}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
+                                            <Link
+                                                to={`/certificates/${c._id}`}
                                                 className="btn-glow"
                                                 style={{
                                                     display: 'inline-flex',
@@ -238,7 +244,7 @@ export default function Certificates() {
                                                 }}
                                             >
                                                 View Certificate →
-                                            </a>
+                                            </Link>
                                         )}
                                     </div>
                                 </div>
@@ -259,6 +265,9 @@ export default function Certificates() {
                 .cert-card:hover {
                     transform: translateY(-10px) !important;
                     box-shadow: 0 24px 60px rgba(10,23,51,0.18) !important;
+                }
+                .cert-title-link:hover {
+                    color: #0ea5a4 !important;
                 }
             `}</style>
         </div>

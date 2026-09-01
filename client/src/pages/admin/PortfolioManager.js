@@ -13,6 +13,7 @@ import {
 
 const empty = {
     teamMember: '',
+    teamMemberName: '',
     title: '',
     slug: '',
     description: '',
@@ -63,6 +64,23 @@ export default function PortfolioManager() {
             ...prev,
             [name]: type === 'checkbox' ? checked : value,
         }));
+    };
+
+    // Searchable combo: if the typed text matches an existing member, store the ObjectId;
+    // otherwise keep the typed name so submit() can create the new member.
+    const handleTeamMemberChange = (e) => {
+        const value = e.target.value;
+        setForm((prev) => {
+            // Try to match by name
+            const match = members.find(
+                (m) => m.name.toLowerCase() === value.toLowerCase()
+            );
+            if (match) {
+                return { ...prev, teamMember: match._id, teamMemberName: match.name };
+            }
+            // Typed a new name not in the list
+            return { ...prev, teamMember: '', teamMemberName: value };
+        });
     };
 
     const addProjectImage = () => {
@@ -177,6 +195,7 @@ export default function PortfolioManager() {
             ...p,
             skills: (p.skills || []).join(', '),
             teamMember: p.teamMember?._id || p.teamMember || '',
+            teamMemberName: p.teamMember?.name || '',
             projectImages: p.projectImages && p.projectImages.length > 0 ? p.projectImages : (p.projectImage ? [p.projectImage] : []),
             projectUrls: p.projectUrls && p.projectUrls.length > 0 ? p.projectUrls : (p.projectUrl ? [{ label: 'Live Demo', url: p.projectUrl }] : []),
             startDate: p.startDate ? new Date(p.startDate).toISOString().split('T')[0] : '',
@@ -217,12 +236,39 @@ export default function PortfolioManager() {
                         <div className="grid grid-3" style={{ gap: 14 }}>
                             <div className="field">
                                 <label>Team Member *</label>
-                                <select name="teamMember" value={form.teamMember} onChange={handleChange} required>
-                                    <option value="">Select member</option>
-                                    {members.map((m) => (
-                                        <option key={m._id} value={m._id}>{m.name} — {m.position}</option>
-                                    ))}
-                                </select>
+                                <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                                    <input
+                                        name="teamMemberName"
+                                        value={form.teamMemberName || ''}
+                                        onChange={handleTeamMemberChange}
+                                        placeholder="Type or select a team member..."
+                                        list="team-member-options"
+                                        required
+                                    />
+                                    <datalist id="team-member-options">
+                                        {members.map((m) => (
+                                            <option key={m._id} value={m.name} />
+                                        ))}
+                                    </datalist>
+                                    <button
+                                        type="button"
+                                        onClick={() => window.location.assign('/admin/team')}
+                                        style={{
+                                            padding: '6px 12px',
+                                            borderRadius: 8,
+                                            background: 'rgba(20,184,166,0.1)',
+                                            color: '#0ea5a4',
+                                            border: '1px solid rgba(20,184,166,0.3)',
+                                            fontSize: '0.78rem',
+                                            fontWeight: 700,
+                                            cursor: 'pointer',
+                                            whiteSpace: 'nowrap',
+                                        }}
+                                        title="Add a new team member"
+                                    >
+                                        + Add New
+                                    </button>
+                                </div>
                             </div>
                             <div className="field">
                                 <label>Title *</label>
@@ -487,7 +533,7 @@ export default function PortfolioManager() {
                             </div>
                         </div>
                         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                            <AdminSubmitButton editing={!!editingId} label="Portfolio" />
+                            <AdminSubmitButton editing={!!editingId} label="Project" />
                             {editingId && <AdminCancelButton onClick={resetForm} />}
                         </div>
                     </form>
@@ -509,10 +555,10 @@ export default function PortfolioManager() {
                         <AdminItemCard
                             key={p._id}
                             title={p.title}
-                            subtitle={`${p.teamMember?.name || 'Unassigned'} • ${p.role || p.projectType}`}
+                            subtitle={`${p.teamMember?.name || p.teamMemberName || 'Unassigned'} • ${p.role || p.projectType}`}
                             badges={[p.projectType, p.featured && '⭐ Featured', p.isActive ? 'Active' : 'Inactive'].filter(Boolean)}
                             image={primaryImage}
-                            icon={p.teamMember?.name?.split(' ').map((n) => n[0]).join('').slice(0, 2) || '📁'}
+                            icon={(p.teamMember?.name || p.teamMemberName || '').split(' ').map((n) => n[0]).join('').slice(0, 2) || '📁'}
                             color={colorPalette[i % colorPalette.length]}
                             onEdit={() => edit(p)}
                             onDelete={() => remove(p._id)}

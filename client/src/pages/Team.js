@@ -15,6 +15,10 @@ const colorPalette = [
     'linear-gradient(135deg, #fbc2eb, #a6c1ee)',
 ];
 
+// If a team member's portfolioSlug is a full URL, open it as an external link;
+// otherwise treat it as an internal slug routed to /team-portfolio/:slug.
+const isExternalUrl = (s) => typeof s === 'string' && /^https?:\/\//i.test(s.trim());
+
 export default function Team() {
     const [team, setTeam] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -174,9 +178,27 @@ export default function Team() {
                                                 border: '5px solid #fff',
                                                 position: 'relative',
                                                 zIndex: 1,
+                                                overflow: 'hidden',
+                                                objectFit: 'cover',
                                             }}
                                         >
-                                            {m.name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase()}
+                                            {m.photo ? (
+                                                <img
+                                                    src={m.photo}
+                                                    alt={m.name}
+                                                    style={{
+                                                        width: '100%',
+                                                        height: '100%',
+                                                        objectFit: 'cover',
+                                                        borderRadius: '50%',
+                                                    }}
+                                                    onError={(e) => {
+                                                        e.target.style.display = 'none';
+                                                    }}
+                                                />
+                                            ) : (
+                                                m.name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase()
+                                            )}
                                         </div>
                                         <div style={{ padding: '0 24px 28px', textAlign: 'center' }}>
                                             <h3 style={{ fontSize: '1.2rem', marginBottom: 6, fontWeight: 800, color: '#0A1733' }}>
@@ -234,25 +256,49 @@ export default function Team() {
                                                     ))}
                                                 </div>
                                             )}
-                                            <Link
-                                                to="/portfolios"
-                                                className="btn-glow"
-                                                style={{
-                                                    display: 'inline-flex',
-                                                    alignItems: 'center',
-                                                    gap: 6,
-                                                    padding: '9px 20px',
-                                                    borderRadius: 10,
-                                                    background: 'linear-gradient(135deg, #14B8A6, #0EA5A4)',
-                                                    color: '#fff',
-                                                    textDecoration: 'none',
-                                                    fontSize: '0.85rem',
-                                                    fontWeight: 700,
-                                                    boxShadow: '0 6px 18px rgba(20,184,166,0.3)',
-                                                }}
-                                            >
-                                                View Projects <span>→</span>
-                                            </Link>
+                                            {isExternalUrl(m.portfolioSlug) ? (
+                                                <a
+                                                    href={m.portfolioSlug}
+                                                    className="btn-glow"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    style={{
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        gap: 6,
+                                                        padding: '9px 20px',
+                                                        borderRadius: 10,
+                                                        background: 'linear-gradient(135deg, #14B8A6, #0EA5A4)',
+                                                        color: '#fff',
+                                                        textDecoration: 'none',
+                                                        fontSize: '0.85rem',
+                                                        fontWeight: 700,
+                                                        boxShadow: '0 6px 18px rgba(20,184,166,0.3)',
+                                                    }}
+                                                >
+                                                    View Portfolio <span>→</span>
+                                                </a>
+                                            ) : (
+                                                <Link
+                                                    to={m.portfolioSlug ? `/team-portfolio/${m.portfolioSlug}` : '/portfolios'}
+                                                    className="btn-glow"
+                                                    style={{
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        gap: 6,
+                                                        padding: '9px 20px',
+                                                        borderRadius: 10,
+                                                        background: 'linear-gradient(135deg, #14B8A6, #0EA5A4)',
+                                                        color: '#fff',
+                                                        textDecoration: 'none',
+                                                        fontSize: '0.85rem',
+                                                        fontWeight: 700,
+                                                        boxShadow: '0 6px 18px rgba(20,184,166,0.3)',
+                                                    }}
+                                                >
+                                                    View Portfolio <span>→</span>
+                                                </Link>
+                                            )}
                                         </div>
                                     </div>
                                 );

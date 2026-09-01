@@ -15,6 +15,8 @@ import Team from './pages/Team';
 import Portfolios from './pages/Portfolios';
 import PortfolioDetails from './pages/PortfolioDetails';
 import Certificates from './pages/Certificates';
+import CertificateDetails from './pages/CertificateDetails';
+import TeamPortfolio from './pages/TeamPortfolio';
 import Admissions from './pages/Admissions';
 import Contact from './pages/Contact';
 import Privacy from './pages/Privacy';
@@ -53,7 +55,9 @@ export default function App() {
                                 <Route path="/team" element={<Team />} />
                                 <Route path="/portfolios" element={<Portfolios />} />
                                 <Route path="/portfolios/:slug" element={<PortfolioDetails />} />
+                                <Route path="/team-portfolio/:slug" element={<TeamPortfolio />} />
                                 <Route path="/certificates" element={<Certificates />} />
+                                <Route path="/certificates/:id" element={<CertificateDetails />} />
                                 <Route path="/admissions" element={<Admissions />} />
                                 <Route path="/contact" element={<Contact />} />
                                 <Route path="/privacy" element={<Privacy />} />

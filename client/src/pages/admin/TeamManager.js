@@ -14,6 +14,7 @@ import {
 const empty = {
     name: '', position: '', email: '', phone: '', bio: '', photo: '',
     skills: '', education: '', experience: '', projects: '',
+    portfolioSlug: '',
     social: { linkedin: '', github: '', twitter: '' },
     hasPortfolio: true, isActive: true, order: 0,
 };
@@ -137,6 +138,17 @@ export default function TeamManager() {
                             <div className="field">
                                 <label>Phone</label>
                                 <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+                            </div>
+                            <div className="field">
+                                <label>Portfolio Slug (URL)</label>
+                                <input
+                                    value={form.portfolioSlug || ''}
+                                    onChange={(e) => setForm({ ...form, portfolioSlug: e.target.value })}
+                                    placeholder="e.g. ai-rag-chatbot-platform"
+                                />
+                                <small className="muted" style={{ fontSize: '0.75rem', display: 'block', marginTop: 4 }}>
+                                    The slug of this member's portfolio. Leave empty to use the default projects page.
+                                </small>
                             </div>
                             <div className="field">
                                 <label>Photo</label>

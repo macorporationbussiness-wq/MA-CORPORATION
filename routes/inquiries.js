@@ -73,7 +73,7 @@ router.delete('/:id', auth, async (req, res) => {
     try {
         const inquiry = await Inquiry.findById(req.params.id);
         if (!inquiry) return res.status(404).json({ msg: 'Inquiry not found' });
-        await Inquiry.findByIdAndRemove(req.params.id);
+        await Inquiry.findByIdAndDelete(req.params.id);
         res.json({ msg: 'Inquiry removed' });
     } catch (err) {
         console.error(err.message);

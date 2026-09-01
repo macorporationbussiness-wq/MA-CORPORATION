@@ -5,7 +5,12 @@ const PortfolioSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'TeamMember',
     },
+    teamMemberName: {
+        type: String,
+        default: '',
+    },
     title: { type: String, required: true },
+    slug: { type: String, default: '', unique: true },
     description: { type: String },
     image: { type: String, default: '' },
     projectImage: { type: String, default: '' },

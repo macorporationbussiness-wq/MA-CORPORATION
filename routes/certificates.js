@@ -63,7 +63,7 @@ router.delete('/:id', auth, async (req, res) => {
     try {
         const cert = await Certificate.findById(req.params.id);
         if (!cert) return res.status(404).json({ msg: 'Certificate not found' });
-        await Certificate.findByIdAndRemove(req.params.id);
+        await Certificate.findByIdAndDelete(req.params.id);
         res.json({ msg: 'Certificate removed' });
     } catch (err) {
         console.error(err.message);

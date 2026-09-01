@@ -3,88 +3,106 @@ import { useParams, Link } from 'react-router-dom';
 import API from '../api';
 import PageHeader from '../components/PageHeader';
 
-export default function PortfolioDetails() {
+const colorPalette = [
+    'linear-gradient(135deg, #667eea, #764ba2)',
+    'linear-gradient(135deg, #f093fb, #f5576c)',
+    'linear-gradient(135deg, #4facfe, #00f2fe)',
+    'linear-gradient(135deg, #43e97b, #38f9d7)',
+    'linear-gradient(135deg, #fa709a, #fee140)',
+    'linear-gradient(135deg, #8E2DE2, #4A00E0)',
+    'linear-gradient(135deg, #11998e, #38ef7d)',
+    'linear-gradient(135deg, #fbc2eb, #a6c1ee)',
+];
+
+const formatDate = (d) => {
+    if (!d) return null;
+    return new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+};
+
+const getCategoryColor = (type) => {
+    const colors = {
+        'Web App': '#6C63FF',
+        'Mobile App': '#4ECDC4',
+        'Branding': '#FF6B6B',
+        'UI/UX Design': '#FFE66D',
+        'AI/ML': '#00D4AA',
+        'Other': '#8B85FF',
+    };
+    return colors[type] || '#6C63FF';
+};
+
+const initials = (name) => {
+    if (!name) return '👤';
+    return name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase();
+};
+
+export default function TeamPortfolio() {
     const { slug } = useParams();
-    const [p, setP] = useState(null);
+    const [portfolio, setPortfolio] = useState(null);
     const [loading, setLoading] = useState(true);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-    const getImages = (portfolio) => {
-        if (portfolio?.projectImages && portfolio.projectImages.length > 0) {
-            return portfolio.projectImages;
+    useEffect(() => {
+        const fetchPortfolio = async () => {
+            setLoading(true);
+            try {
+                // The slug in the URL is the portfolio's slug (from TeamMember.portfolioSlug).
+                // Fetch all portfolios and find the one matching this slug.
+                const res = await API.get('/portfolios');
+                const list = res.data || [];
+                const found = list.find((p) => p.slug === slug);
+                setPortfolio(found || null);
+            } catch (err) {
+                setPortfolio(null);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchPortfolio();
+    }, [slug]);
+
+    const getImages = (p) => {
+        if (p?.projectImages && p.projectImages.length > 0) {
+            return p.projectImages;
         }
-        return portfolio?.projectImage ? [portfolio.projectImage] : [];
+        return p?.projectImage ? [p.projectImage] : [];
     };
 
     const nextImage = () => {
-        const imgs = getImages(p);
+        const imgs = getImages(portfolio);
         if (imgs.length > 1) {
             setCurrentImageIndex((i) => (i + 1) % imgs.length);
         }
     };
 
     const prevImage = () => {
-        const imgs = getImages(p);
+        const imgs = getImages(portfolio);
         if (imgs.length > 1) {
             setCurrentImageIndex((i) => (i - 1 + imgs.length) % imgs.length);
         }
     };
 
-    useEffect(() => {
-        setCurrentImageIndex(0);
-        API.get('/portfolios')
-            .then((r) => {
-                const list = r.data || [];
-                const found = list.find((item) => item.slug === slug) || list[0];
-                setP(found || null);
-            })
-            .catch(() => setP(null))
-            .finally(() => setLoading(false));
-    }, [slug]);
-
-    const formatDate = (d) => {
-        if (!d) return null;
-        return new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
-    };
-
-    const getCategoryColor = (type) => {
-        const colors = {
-            'Web App': '#6C63FF',
-            'Mobile App': '#4ECDC4',
-            'Branding': '#FF6B6B',
-            'UI/UX Design': '#FFE66D',
-            'AI/ML': '#00D4AA',
-            'Other': '#8B85FF',
-        };
-        return colors[type] || '#6C63FF';
-    };
-
-    const initials = (name) => {
-        if (!name) return '📁';
-        return name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase();
-    };
-
     if (loading) {
         return (
             <div>
-                <PageHeader eyebrow="PROJECTS" title="Loading…" subtitle="Fetching project details…" />
+                <PageHeader eyebrow="TEAM PORTFOLIO" title="Loading…" subtitle="Fetching portfolio details…" />
                 <section className="section-dark" style={{ paddingTop: '40px', paddingBottom: '80px' }}>
                     <div className="container">
-                        <p className="muted text-center">Loading project details…</p>
+                        <p className="muted text-center">Loading portfolio…</p>
                     </div>
                 </section>
             </div>
         );
     }
 
-    if (!p) {
+    if (!portfolio) {
         return (
             <div>
-                <PageHeader eyebrow="PROJECTS" title="Not Found" subtitle="The project you are looking for does not exist." />
+                <PageHeader eyebrow="TEAM PORTFOLIO" title="Not Found" subtitle="Portfolio not found." />
                 <section className="section-dark" style={{ padding: '40px 0' }}>
                     <div className="container" style={{ textAlign: 'center' }}>
-                        <Link to="/portfolios" className="btn btn-primary">
-                            Back to All Projects
+                        <Link to="/team" className="btn btn-primary">
+                            Back to Team
                         </Link>
                     </div>
                 </section>
@@ -92,16 +110,43 @@ export default function PortfolioDetails() {
         );
     }
 
+    const p = portfolio;
+    const member = p.teamMember && typeof p.teamMember === 'object' ? p.teamMember : null;
+    const images = p ? getImages(p) : [];
+    const gradient = colorPalette[0];
+
     return (
         <div>
             <PageHeader
-                eyebrow="PORTFOLIO"
-                title={p.title}
-                subtitle={p.teamMember ? `${p.teamMember.name} — ${p.teamMember.position}` : (p.teamMemberName || '')}
+                eyebrow="TEAM PORTFOLIO"
+                title={member?.name || p.title}
+                subtitle={member?.position || p.projectType}
             />
 
             <section className="section-dark" style={{ paddingTop: '32px', paddingBottom: '80px' }}>
                 <div className="container">
+                    {member && (
+                        <div className="card" style={{ marginBottom: 28, background: 'var(--card)', border: '1px solid var(--border-dark)', borderRadius: 'var(--radius)' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: 24 }}>
+                                <div
+                                    style={{
+                                        width: 64, height: 64, borderRadius: '50%',
+                                        background: gradient,
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        fontWeight: 700, color: '#fff', fontSize: '1.4rem',
+                                        fontFamily: 'var(--font-mono)',
+                                    }}
+                                >
+                                    {initials(member.name)}
+                                </div>
+                                <div>
+                                    <h3 style={{ fontSize: '1.4rem', marginBottom: 4, color: 'var(--text)' }}>{member.name}</h3>
+                                    <p style={{ fontSize: '0.95rem', color: '#0ea5a4', fontWeight: 700 }}>{member.position}</p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Hero Card */}
                     <div
                         className="card"
@@ -125,11 +170,11 @@ export default function PortfolioDetails() {
                             {/* Left: Image Gallery Slider */}
                             <div style={{ position: 'relative' }}>
                                 {(() => {
-                                    const images = getImages(p);
-                                    return images.length > 0 ? (
+                                    const imgs = getImages(p);
+                                    return imgs.length > 0 ? (
                                         <img
                                             key={currentImageIndex}
-                                            src={images[currentImageIndex]}
+                                            src={imgs[currentImageIndex]}
                                             alt={`${p.title} - ${currentImageIndex + 1}`}
                                             style={{ width: '100%', height: '100%', objectFit: 'cover', minHeight: 320 }}
                                         />
@@ -152,7 +197,7 @@ export default function PortfolioDetails() {
                                         </div>
                                     );
                                 })()}
-                                {getImages(p).length > 1 && (
+                                {images.length > 1 && (
                                     <>
                                         <button
                                             type="button"
@@ -208,7 +253,7 @@ export default function PortfolioDetails() {
                                             display: 'flex',
                                             gap: 6,
                                         }}>
-                                            {getImages(p).map((_, idx) => (
+                                            {images.map((_, idx) => (
                                                 <span
                                                     key={idx}
                                                     onClick={() => setCurrentImageIndex(idx)}
@@ -237,7 +282,7 @@ export default function PortfolioDetails() {
                                         borderRadius: '4px',
                                         fontFamily: 'var(--font-mono)',
                                     }}>
-                                        Featured
+                                        ⭐ Featured
                                     </span>
                                 )}
                             </div>
@@ -317,41 +362,12 @@ export default function PortfolioDetails() {
                         </div>
                     )}
 
-                    {/* Team Member Info */}
-                    {(p.teamMember || p.teamMemberName) && (
-                        <div className="card" style={{ marginBottom: 28, background: 'var(--card)', border: '1px solid var(--border-dark)', borderRadius: 'var(--radius)' }}>
-                            <h4 style={{ fontSize: '1.1rem', marginBottom: 14, color: 'var(--primary-light)' }}>Team Member</h4>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                                <div
-                                    style={{
-                                        width: 56, height: 56, borderRadius: '50%',
-                                        background: `linear-gradient(135deg, ${getCategoryColor(p.projectType)}, ${getCategoryColor(p.projectType)}99)`,
-                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                        fontWeight: 700, color: '#fff', fontSize: '1.4rem',
-                                        fontFamily: 'var(--font-mono)',
-                                    }}
-                                >
-                                    {initials(p.teamMember?.name || p.teamMemberName)}
-                                </div>
-                                <div>
-                                    <h5 style={{ fontSize: '1.05rem', marginBottom: 4, color: 'var(--text)' }}>{p.teamMember?.name || p.teamMemberName}</h5>
-                                    {p.teamMember?.position && (
-                                        <p style={{ fontSize: '0.9rem', color: 'var(--text-light)', fontFamily: 'var(--font-mono)' }}>
-                                            {p.teamMember.position}
-                                        </p>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
                     {/* Action Buttons */}
                     <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 40 }}>
                         {(() => {
                             const urls = (p.projectUrls && p.projectUrls.length > 0)
                                 ? p.projectUrls
                                 : (p.projectUrl ? [{ label: 'Live Demo', url: p.projectUrl }] : []);
-
                             return urls.map((item, idx) => (
                                 <a
                                     key={idx}
@@ -379,7 +395,7 @@ export default function PortfolioDetails() {
                             ));
                         })()}
                         <Link
-                            to="/portfolios"
+                            to="/team"
                             className="btn btn-secondary"
                             style={{
                                 background: 'var(--surface)',
@@ -393,7 +409,7 @@ export default function PortfolioDetails() {
                                 gap: '8px',
                             }}
                         >
-                            ← Back to All Projects
+                            ← Back to Team
                         </Link>
                     </div>
                 </div>

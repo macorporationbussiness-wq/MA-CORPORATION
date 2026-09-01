@@ -4,6 +4,7 @@ const Admin = require('./models/Admin');
 const Course = require('./models/Course');
 const Service = require('./models/Service');
 const TeamMember = require('./models/TeamMember');
+const Portfolio = require('./models/Portfolio');
 const Setting = require('./models/Setting');
 const bcrypt = require('bcryptjs');
 
@@ -450,6 +451,7 @@ const seed = async () => {
                 education: ['MBA, Business Administration'],
                 experience: ['10+ years in EdTech'],
                 projects: ['M.A. Corporation Platform'],
+                portfolioSlug: 'https://muhammadawaisportfolio.pythonanywhere.com/',
                 order: 1,
             },
             {
@@ -461,6 +463,7 @@ const seed = async () => {
                 education: ['MSc, Computer Science'],
                 experience: ['8 years in education'],
                 projects: ['Course Development Framework'],
+                portfolioSlug: 'career-ready-curriculum',
                 order: 2,
             },
             {
@@ -472,11 +475,106 @@ const seed = async () => {
                 education: ['BSc, Software Engineering'],
                 experience: ['6 years in software development'],
                 projects: ['Multiple SaaS Products'],
+                portfolioSlug: 'ai-rag-chatbot-platform',
                 order: 3,
             },
         ];
-        await TeamMember.insertMany(team);
+        const createdTeam = await TeamMember.insertMany(team);
+        const teamMap = {};
+        createdTeam.forEach((m) => { teamMap[m.name] = m._id; });
         console.log('Team seeded');
+
+        // Portfolios
+        if ((await Portfolio.countDocuments()) === 0) {
+            const portfolios = [
+                {
+                    teamMember: teamMap['M. Ali Khan'],
+                    title: 'Enterprise SaaS Dashboard',
+                    slug: 'enterprise-saas-dashboard',
+                    description:
+                        'A multi-tenant analytics dashboard built with React, Node.js, and MongoDB, serving 5,000+ daily users.',
+                    projectImage: 'https://images.pexels.com/photos/3182809/pexels-photo-3182809.jpeg',
+                    projectImages: [
+                        'https://images.pexels.com/photos/3182809/pexels-photo-3182809.jpeg',
+                        'https://images.pexels.com/photos/2366833/pexels-photo-2366833.jpeg',
+                        'https://images.pexels.com/photos/590224/pexels-photo-590224.jpeg',
+                    ],
+                    projectUrl: 'https://github.com/macorporation/enterprise-dashboard',
+                    projectUrls: [
+                        { label: 'GitHub', url: 'https://github.com/macorporation/enterprise-dashboard' },
+                        { label: 'Live Demo', url: 'https://dashboard.macorporation.com' },
+                    ],
+                    projectType: 'Web App',
+                    role: 'Lead Full-Stack Developer',
+                    skills: ['React', 'Node.js', 'MongoDB', 'AWS', 'Docker'],
+                    challenges: 'Scaling the dashboard to handle 5,000+ concurrent users while maintaining sub-200ms response times.',
+                    results: 'Achieved 99.9% uptime with 40% faster load times after migration to a microservices architecture.',
+                    startDate: '2024-03-01T00:00:00.000Z',
+                    endDate: '2024-09-15T00:00:00.000Z',
+                    featured: true,
+                    isActive: true,
+                    order: 1,
+                },
+                {
+                    teamMember: teamMap['Sara Ahmed'],
+                    title: 'Career-Ready Curriculum Framework',
+                    slug: 'career-ready-curriculum',
+                    description:
+                        'A modular curriculum framework adopted across all M.A. Corporation professional courses.',
+                    projectImage: 'https://images.pexels.com/photos/4092656/pexels-photo-4092656.jpeg',
+                    projectImages: [
+                        'https://images.pexels.com/photos/4092656/pexels-photo-4092656.jpeg',
+                        'https://images.pexels.com/photos/4592538/pexels-photo-4592538.jpeg',
+                        'https://images.pexels.com/photos/5902221/pexels-photo-5902221.jpeg',
+                    ],
+                    projectUrl: '',
+                    projectUrls: [
+                        { label: 'Case Study', url: 'https://macorporation.com/case-studies/curriculum-framework' },
+                        { label: 'LinkedIn Article', url: 'https://linkedin.com/pulse/curriculum-framework' },
+                    ],
+                    projectType: 'UI/UX Design',
+                    role: 'Curriculum Lead',
+                    skills: ['Curriculum Design', 'Assessment', 'Training', 'Figma'],
+                    challenges: 'Designing a unified framework that scales across 25+ courses and 1,000+ students.',
+                    results: 'Increased student placement rate by 35% and reduced course handoff time by 50%.',
+                    startDate: '2024-01-10T00:00:00.000Z',
+                    endDate: '2024-06-30T00:00:00.000Z',
+                    featured: true,
+                    isActive: true,
+                    order: 2,
+                },
+                {
+                    teamMember: teamMap['Bilal Sheikh'],
+                    title: 'AI-RAG Chatbot Platform',
+                    slug: 'ai-rag-chatbot-platform',
+                    description:
+                        'An intelligent chatbot platform leveraging RAG systems for real-time Q&A across documentation, courses, and support.',
+                    projectImage: 'https://images.pexels.com/photos/8092633/pexels-photo-8092633.jpeg',
+                    projectImages: [
+                        'https://images.pexels.com/photos/8092633/pexels-photo-8092633.jpeg',
+                        'https://images.pexels.com/photos/210987/pexels-photo-210987.jpeg',
+                        'https://images.pexels.com/photos/3855399/pexels-photo-3855399.jpeg',
+                    ],
+                    projectUrl: '',
+                    projectUrls: [
+                        { label: 'GitHub', url: 'https://github.com/macorporation/ai-rag-chatbot' },
+                        { label: 'Live Demo', url: 'https://chat.macorporation.com' },
+                    ],
+                    projectType: 'AI/ML',
+                    role: 'AI/ML Engineer',
+                    skills: ['Python', 'LangChain', 'Vector DB', 'FastAPI', 'Docker'],
+                    challenges: 'Building a cost-effective RAG pipeline that ingests 10GB+ of documentation with sub-2s response.',
+                    results: 'Improved support ticket volume by 60% and reduced average resolution time from 4h to 30min.',
+                    startDate: '2025-01-15T00:00:00.000Z',
+                    endDate: '2025-08-01T00:00:00.000Z',
+                    featured: false,
+                    isActive: true,
+                    order: 4,
+                },
+            ];
+            await Portfolio.insertMany(portfolios);
+            console.log('Portfolios seeded');
+        }
     }
 
     console.log('Seed complete.');
