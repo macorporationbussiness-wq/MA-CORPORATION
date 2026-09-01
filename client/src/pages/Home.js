@@ -6,20 +6,45 @@ import { useSettings } from '../context/SettingsContext';
 import { buildWhatsAppLink } from '../components/WhatsAppButton';
 import useInView from '../hooks/useInView';
 
-const coreValues = [
-    { title: 'Integrity', desc: 'We believe in honesty and transparency.', icon: '🤝' },
-    { title: 'Excellence', desc: 'We continuously work to improve the quality of our services.', icon: '⭐' },
-    { title: 'Customer Focus', desc: 'Our clients and students remain at the center of our work.', icon: '🎯' },
-    { title: 'Growth', desc: 'We believe in continuous personal, professional, and organizational development.', icon: '📈' },
-    { title: 'Innovation', desc: 'We encourage modern ideas, technology, and new approaches.', icon: '💡' },
-];
+const keyAreaEmoji = (icon) => {
+    const map = {
+        graduation: '🎓',
+        'icon-graduation.png': '🎓',
+        briefcase: '💼',
+        'icon-briefcase.png': '💼',
+        team: '👥',
+        'icon-team.png': '👥',
+        rocket: '🚀',
+        'icon-rocket.png': '🚀',
+    };
+    return map[icon] || '⭐';
+};
 
-const keyAreas = [
-    { title: 'Professional Courses', desc: 'Practical and career-focused courses designed to develop valuable professional skills.', icon: '🎓' },
-    { title: 'Business Services', desc: 'Reliable professional services tailored to meet individual and business requirements.', icon: '💼' },
-    { title: 'Expert Team', desc: 'Experienced professionals committed to providing quality guidance and support.', icon: '👥' },
-    { title: 'Career Development', desc: 'Helping students and professionals develop skills for better career opportunities.', icon: '🚀' },
-];
+const serviceEmoji = (icon) => {
+    const map = {
+        code: '💻',
+        'trending-up': '📈',
+        design: '🎨',
+        briefcase: '💼',
+    };
+    return map[icon] || '⚙️';
+};
+
+const coreValueEmoji = (icon) => {
+    const map = {
+        handshake: '🤝',
+        'icon-handshake.png': '🤝',
+        star: '⭐',
+        'icon-star.png': '⭐',
+        target: '🎯',
+        'icon-target.png': '🎯',
+        growth: '📈',
+        'icon-growth.png': '📈',
+        lightbulb: '💡',
+        'icon-lightbulb.png': '💡',
+    };
+    return map[icon] || '⭐';
+};
 
 export default function Home() {
     const { settings } = useSettings();
@@ -30,6 +55,15 @@ export default function Home() {
     const [coursesRef, coursesVisible] = useInView();
     const [valuesRef, valuesVisible] = useInView();
     const [ctaRef, ctaVisible] = useInView();
+
+    // Use settings with fallback to defaults
+    const homeHero = settings.homeHero || {};
+    const homeIntro = settings.homeIntro || {};
+    const homeKeyAreas = settings.homeKeyAreas || [];
+    const homeCoreValues = settings.homeCoreValues || [];
+    const homeServices = settings.homeServices || {};
+    const homeValues = settings.homeValues || {};
+    const homeCta = settings.homeCta || {};
 
     useEffect(() => {
         API.get('/courses?featured=true').then((r) => setCourses(r.data)).catch(() => { });
@@ -115,7 +149,7 @@ export default function Home() {
                                     backdropFilter: 'blur(8px)',
                                 }}
                             >
-                                ✨ Professional Education & Services
+                                {homeHero.badge || '✨ Professional Education & Services'}
                             </span>
                             <h1
                                 className="hero-title"
@@ -130,10 +164,7 @@ export default function Home() {
                                     letterSpacing: '-0.02em',
                                 }}
                             >
-                                Empowering People.{' '}
-                                <span className="gradient-text">Building Skills.</span>
-                                <br />
-                                <span className="gradient-text">Creating Opportunities.</span>
+                                {homeHero.title || 'Empowering People. Building Skills. Creating Opportunities.'}
                             </h1>
                             <p
                                 style={{
@@ -146,9 +177,7 @@ export default function Home() {
                                     textShadow: '0 2px 10px rgba(0,0,0,0.5)',
                                 }}
                             >
-                                M.A. Corporation provides professional courses and quality business
-                                services designed to help individuals, students, and organizations
-                                achieve their goals.
+                                {homeHero.subtitle || 'M.A. Corporation provides professional courses and quality business services designed to help individuals, students, and organizations achieve their goals.'}
                             </p>
                             <div style={{ display: 'flex', gap: 18, justifyContent: 'center', flexWrap: 'wrap' }}>
                                 <Link
@@ -169,7 +198,7 @@ export default function Home() {
                                         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                                     }}
                                 >
-                                    Explore Courses
+                                    {homeHero.primaryBtnText || 'Explore Courses'}
                                     <span style={{ fontSize: '1.2rem' }}>→</span>
                                 </Link>
                                 <Link
@@ -191,7 +220,7 @@ export default function Home() {
                                         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                                     }}
                                 >
-                                    Our Services
+                                    {homeHero.secondaryBtnText || 'Our Services'}
                                 </Link>
                             </div>
                         </div>
@@ -257,7 +286,7 @@ export default function Home() {
                             marginBottom: 14,
                         }}
                     >
-                        Who We Are
+                        {homeIntro.badge || 'Who We Are'}
                     </span>
                     <h2
                         style={{
@@ -272,7 +301,7 @@ export default function Home() {
                             animation: 'shimmer 8s ease-in-out infinite',
                         }}
                     >
-                        Welcome to M.A. Corporation
+                        {homeIntro.title || 'Welcome to M.A. Corporation'}
                     </h2>
                     <p
                         className="muted"
@@ -282,11 +311,7 @@ export default function Home() {
                             lineHeight: 1.8,
                         }}
                     >
-                        M.A. Corporation is a professional organization committed to providing
-                        quality education, practical learning opportunities, and reliable
-                        professional services. Our goal is to connect knowledge with real-world
-                        skills and provide individuals and businesses with solutions that create
-                        meaningful and sustainable results.
+                        {homeIntro.description || 'M.A. Corporation is a professional organization committed to providing quality education, practical learning opportunities, and reliable professional services. Our goal is to connect knowledge with real-world skills and provide individuals and businesses with solutions that create meaningful and sustainable results.'}
                     </p>
                     <Link
                         to="/about"
@@ -304,7 +329,7 @@ export default function Home() {
                             transition: 'all 0.3s ease',
                         }}
                     >
-                        Read More <span>→</span>
+                        {homeIntro.readMoreText || 'Read More'} <span>→</span>
                     </Link>
                 </div>
             </section>
@@ -327,7 +352,7 @@ export default function Home() {
                         <h2 style={{ fontWeight: 800 }}>Our Key Areas</h2>
                     </div>
                     <div className={clsx('grid', 'grid-4')}>
-                        {keyAreas.map((a, i) => (
+                        {homeKeyAreas.map((a, i) => (
                             <div
                                 key={a.title}
                                 className={`glass-card ${keyAreasVisible ? 'visible' : ''}`}
@@ -337,21 +362,20 @@ export default function Home() {
                                     transitionDelay: `${i * 100}ms`,
                                 }}
                             >
-                                <div
-                                    style={{
-                                        width: 64,
-                                        height: 64,
-                                        borderRadius: 16,
-                                        background: 'linear-gradient(135deg, rgba(45,212,191,0.2), rgba(20,184,166,0.2))',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        fontSize: '2rem',
-                                        margin: '0 auto 18px',
-                                        border: '1px solid rgba(45,212,191,0.3)',
-                                    }}
-                                >
-                                    {a.icon}
+                                <div style={{
+                                    width: 64,
+                                    height: 64,
+                                    borderRadius: 16,
+                                    background: 'linear-gradient(135deg, rgba(45,212,191,0.2), rgba(20,184,166,0.2))',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    margin: '0 auto 18px',
+                                    border: '1px solid rgba(45,212,191,0.3)',
+                                }}>
+                                    <span style={{ fontSize: 36 }}>
+                                        {keyAreaEmoji(a.icon)}
+                                    </span>
                                 </div>
                                 <h3 style={{ fontSize: '1.2rem', marginBottom: 10, fontWeight: 700 }}>{a.title}</h3>
                                 <p className="muted" style={{ fontSize: '0.95rem', lineHeight: 1.6 }}>{a.desc}</p>
@@ -365,9 +389,9 @@ export default function Home() {
             <section className={clsx('section', 'section-white')}>
                 <div className="container" ref={servicesRef}>
                     <div className="section-head">
-                        <span className="eyebrow">Services</span>
-                        <h2 style={{ fontWeight: 800 }}>Our Professional Services</h2>
-                        <p>Reliable, customized services designed to meet the needs of individuals, professionals, and businesses.</p>
+                        <span className="eyebrow">{homeServices.eyebrow || 'Services'}</span>
+                        <h2 style={{ fontWeight: 800 }}>{homeServices.title || 'Our Professional Services'}</h2>
+                        <p>{homeServices.subtitle || 'Reliable, customized services designed to meet the needs of individuals, professionals, and businesses.'}</p>
                     </div>
                     <div className={clsx('grid', 'grid-4')}>
                         {services.map((s, i) => (
@@ -380,21 +404,21 @@ export default function Home() {
                                     transitionDelay: `${i * 100}ms`,
                                 }}
                             >
-                                <div
-                                    style={{
-                                        width: 56,
-                                        height: 56,
-                                        borderRadius: 14,
-                                        background: 'linear-gradient(135deg, #14B8A6, #0EA5A4)',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        fontSize: '1.5rem',
-                                        margin: '0 auto 16px',
-                                        boxShadow: '0 8px 20px rgba(20,184,166,0.3)',
-                                    }}
-                                >
-                                    ⚙️
+                                <div style={{
+                                    width: 56,
+                                    height: 56,
+                                    borderRadius: 14,
+                                    background: 'linear-gradient(135deg, #14B8A6, #0EA5A4)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    margin: '0 auto 16px',
+                                    boxShadow: '0 8px 20px rgba(20,184,166,0.3)',
+                                    fontSize: '1.5rem',
+                                }}>
+                                    <span style={{ fontSize: 28 }}>
+                                        {serviceEmoji(s.icon)}
+                                    </span>
                                 </div>
                                 <h3 style={{ fontSize: '1.15rem', marginBottom: 10, fontWeight: 700 }}>{s.title}</h3>
                                 <p className="muted" style={{ fontSize: '0.92rem', lineHeight: 1.6 }}>{s.description}</p>
@@ -402,7 +426,7 @@ export default function Home() {
                         ))}
                     </div>
                     <div className={clsx('text-center', 'mt-3')}>
-                        <Link to="/services" className={clsx('btn', 'btn-outline')}>View All Services →</Link>
+                        <Link to="/services" className={clsx('btn', 'btn-outline')}>{homeServices.viewAllText || 'View All Services'} →</Link>
                     </div>
                 </div>
             </section>
@@ -411,11 +435,11 @@ export default function Home() {
             <section className={clsx('section', 'section-light')}>
                 <div className="container" ref={valuesRef}>
                     <div className="section-head">
-                        <span className="eyebrow">Why Choose Us</span>
-                        <h2 style={{ fontWeight: 800 }}>Our Core Values</h2>
+                        <span className="eyebrow">{homeValues.eyebrow || 'Why Choose Us'}</span>
+                        <h2 style={{ fontWeight: 800 }}>{homeValues.title || 'Our Core Values'}</h2>
                     </div>
                     <div className={clsx('grid', 'grid-3')} style={{ justifyContent: 'center' }}>
-                        {coreValues.slice(0, 3).map((v, i) => (
+                        {homeCoreValues.slice(0, 3).map((v, i) => (
                             <div
                                 key={v.title}
                                 className={`glass-card ${valuesVisible ? 'visible' : ''}`}
@@ -425,14 +449,20 @@ export default function Home() {
                                     transitionDelay: `${i * 100}ms`,
                                 }}
                             >
-                                <div
-                                    style={{
-                                        fontSize: '2.5rem',
-                                        marginBottom: 14,
-                                        filter: 'drop-shadow(0 4px 8px rgba(20,184,166,0.3))',
-                                    }}
-                                >
-                                    {v.icon}
+                                <div style={{
+                                    width: 64,
+                                    height: 64,
+                                    borderRadius: 16,
+                                    background: 'linear-gradient(135deg, rgba(45,212,191,0.2), rgba(20,184,166,0.2))',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    margin: '0 auto 18px',
+                                    border: '1px solid rgba(45,212,191,0.3)',
+                                }}>
+                                    <span style={{ fontSize: 36 }}>
+                                        {coreValueEmoji(v.icon)}
+                                    </span>
                                 </div>
                                 <h3 style={{ fontSize: '1.15rem', marginBottom: 8, fontWeight: 700 }}>{v.title}</h3>
                                 <p className="muted" style={{ fontSize: '0.92rem', lineHeight: 1.6 }}>{v.desc}</p>
@@ -441,7 +471,7 @@ export default function Home() {
                     </div>
                     <div style={{ maxWidth: 'calc(66.667% + 28px)', margin: '28px auto 0 auto' }}>
                         <div className={clsx('grid', 'grid-2')} style={{ justifyContent: 'center' }}>
-                            {coreValues.slice(3).map((v, i) => (
+                            {homeCoreValues.slice(3).map((v, i) => (
                                 <div
                                     key={v.title}
                                     className={`glass-card ${valuesVisible ? 'visible' : ''}`}
@@ -453,12 +483,20 @@ export default function Home() {
                                 >
                                     <div
                                         style={{
-                                            fontSize: '2.5rem',
-                                            marginBottom: 14,
-                                            filter: 'drop-shadow(0 4px 8px rgba(20,184,166,0.3))',
+                                            width: 64,
+                                            height: 64,
+                                            borderRadius: 16,
+                                            background: 'linear-gradient(135deg, rgba(45,212,191,0.2), rgba(20,184,166,0.2))',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            margin: '0 auto 18px',
+                                            border: '1px solid rgba(45,212,191,0.3)',
                                         }}
                                     >
-                                        {v.icon}
+                                        <span style={{ fontSize: 36 }}>
+                                            {coreValueEmoji(v.icon)}
+                                        </span>
                                     </div>
                                     <h3 style={{ fontSize: '1.15rem', marginBottom: 8, fontWeight: 700 }}>{v.title}</h3>
                                     <p className="muted" style={{ fontSize: '0.92rem', lineHeight: 1.6 }}>{v.desc}</p>
@@ -488,7 +526,7 @@ export default function Home() {
                                 fontWeight: 800,
                             }}
                         >
-                            Ready to Start Your Journey?
+                            {homeCta.title || 'Ready to Start Your Journey?'}
                         </h2>
                         <p
                             style={{
@@ -501,8 +539,7 @@ export default function Home() {
                                 lineHeight: 1.6,
                             }}
                         >
-                            Join thousands of students and professionals building their future with
-                            M.A. Corporation.
+                            {homeCta.description || 'Join thousands of students and professionals building their future with M.A. Corporation.'}
                         </p>
                         <div
                             style={{
@@ -532,10 +569,10 @@ export default function Home() {
                                     transition: 'all 0.3s ease',
                                 }}
                             >
-                                Get Started <span>→</span>
+                                {homeCta.primaryBtnText || 'Get Started'} <span>→</span>
                             </Link>
                             <a
-                                href={buildWhatsAppLink(settings.whatsapp, 'Hello! I want to enroll in a course.')}
+                                href={buildWhatsAppLink(settings.whatsapp, homeCta.whatsappMessage || 'Hello! I want to enroll in a course.')}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 style={{
@@ -553,7 +590,7 @@ export default function Home() {
                                     transition: 'all 0.3s ease',
                                 }}
                             >
-                                💬 Chat on WhatsApp
+                                {homeCta.whatsappBtnText || 'Chat on WhatsApp'}
                             </a>
                         </div>
                     </div>

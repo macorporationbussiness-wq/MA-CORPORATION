@@ -10,6 +10,12 @@ import PortfolioManager from './PortfolioManager';
 import CertificateManager from './CertificateManager';
 import InquiryManager from './InquiryManager';
 import SettingsManager from './SettingsManager';
+import HomePageManager from './HomePageManager';
+import AboutPageManager from './AboutPageManager';
+import ContactPageManager from './ContactPageManager';
+import AdmissionsPageManager from './AdmissionsPageManager';
+import PrivacyPageManager from './PrivacyPageManager';
+import TermsPageManager from './TermsPageManager';
 
 const links = [
     { to: '/admin', label: 'Dashboard', icon: '📊', end: true, color: 'linear-gradient(135deg, #667eea, #764ba2)' },
@@ -19,6 +25,12 @@ const links = [
     { to: '/admin/portfolios', label: 'Projects', icon: '📁', color: 'linear-gradient(135deg, #fa709a, #fee140)' },
     { to: '/admin/certificates', label: 'Certificates', icon: '🏅', color: 'linear-gradient(135deg, #43e97b, #38f9d7)' },
     { to: '/admin/inquiries', label: 'Inquiries', icon: '✉️', color: 'linear-gradient(135deg, #8E2DE2, #4A00E0)' },
+    { to: '/admin/home', label: 'Home Page', icon: '🏠', color: 'linear-gradient(135deg, #667eea, #764ba2)' },
+    { to: '/admin/about', label: 'About Page', icon: 'ℹ️', color: 'linear-gradient(135deg, #667eea, #764ba2)' },
+    { to: '/admin/contact', label: 'Contact Page', icon: '📞', color: 'linear-gradient(135deg, #43e97b, #38f9d7)' },
+    { to: '/admin/admissions', label: 'Admissions', icon: '📝', color: 'linear-gradient(135deg, #f093fb, #f5576c)' },
+    { to: '/admin/privacy', label: 'Privacy', icon: '🔒', color: 'linear-gradient(135deg, #8E2DE2, #4A00E0)' },
+    { to: '/admin/terms', label: 'Terms', icon: '📄', color: 'linear-gradient(135deg, #fa709a, #fee140)' },
     { to: '/admin/settings', label: 'Settings', icon: '⚙️', color: 'linear-gradient(135deg, #11998e, #38ef7d)' },
 ];
 
@@ -175,7 +187,13 @@ export default function AdminLayout() {
                     <Route path="/portfolios" element={<PortfolioManager />} />
                     <Route path="/certificates" element={<CertificateManager />} />
                     <Route path="/inquiries" element={<InquiryManager />} />
+                    <Route path="/home" element={<HomePageManager />} />
                     <Route path="/settings" element={<SettingsManager />} />
+                    <Route path="/about" element={<AboutPageManager />} />
+                    <Route path="/contact" element={<ContactPageManager />} />
+                    <Route path="/admissions" element={<AdmissionsPageManager />} />
+                    <Route path="/privacy" element={<PrivacyPageManager />} />
+                    <Route path="/terms" element={<TermsPageManager />} />
                 </Routes>
             </main>
         </div>

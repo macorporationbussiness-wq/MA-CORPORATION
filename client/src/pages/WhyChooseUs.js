@@ -4,12 +4,12 @@ import PageHeader from '../components/PageHeader';
 import useInView from '../hooks/useInView';
 
 const reasons = [
-    { title: 'Practical Learning', desc: 'Courses built around real-world application, not just theory.', icon: '🎓', color: 'linear-gradient(135deg, #667eea, #764ba2)' },
-    { title: 'Expert Instructors', desc: 'Learn from experienced professionals active in their fields.', icon: '👨‍🏫', color: 'linear-gradient(135deg, #f093fb, #f5576c)' },
-    { title: 'Career Focused', desc: 'Programs designed to improve employability and skills.', icon: '💼', color: 'linear-gradient(135deg, #4facfe, #00f2fe)' },
-    { title: 'Flexible Online Mode', desc: 'Study from anywhere with fully online delivery.', icon: '🌐', color: 'linear-gradient(135deg, #43e97b, #38f9d7)' },
-    { title: 'Customer Satisfaction', desc: 'We put our students and clients at the center of everything.', icon: '⭐', color: 'linear-gradient(135deg, #fa709a, #fee140)' },
-    { title: 'Trusted Services', desc: 'Reliable business services from SEO to AI systems.', icon: '🛡️', color: 'linear-gradient(135deg, #8E2DE2, #4A00E0)' },
+    { title: 'Practical Learning', desc: 'Courses built around real-world application, not just theory.', icon: 'icon-graduation.png', color: 'linear-gradient(135deg, #667eea, #764ba2)' },
+    { title: 'Expert Instructors', desc: 'Learn from experienced professionals active in their fields.', icon: 'icon-teacher.png', color: 'linear-gradient(135deg, #f093fb, #f5576c)' },
+    { title: 'Career Focused', desc: 'Programs designed to improve employability and skills.', icon: 'icon-target.png', color: 'linear-gradient(135deg, #4facfe, #00f2fe)' },
+    { title: 'Flexible Online Mode', desc: 'Study from anywhere with fully online delivery.', icon: 'icon-globe.png', color: 'linear-gradient(135deg, #43e97b, #38f9d7)' },
+    { title: 'Customer Satisfaction', desc: 'We put our students and clients at the center of everything.', icon: 'icon-star.png', color: 'linear-gradient(135deg, #fa709a, #fee140)' },
+    { title: 'Trusted Services', desc: 'Reliable business services from SEO to AI systems.', icon: 'icon-shield.png', color: 'linear-gradient(135deg, #8E2DE2, #4A00E0)' },
 ];
 
 const stats = [
@@ -18,6 +18,15 @@ const stats = [
     { v: '50+', l: 'Industry Partners' },
     { v: '95%', l: 'Completion Rate' },
 ];
+
+const reasonEmoji = {
+    'icon-graduation.png': '🎓',
+    'icon-teacher.png': '🧑‍🏫',
+    'icon-target.png': '🎯',
+    'icon-globe.png': '🌐',
+    'icon-star.png': '⭐',
+    'icon-shield.png': '🛡️',
+};
 
 export default function WhyChooseUs() {
     const [gridRef, gridVisible] = useInView();
@@ -89,14 +98,15 @@ export default function WhyChooseUs() {
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        fontSize: '2.4rem',
                                         margin: '0 auto 20px',
                                         boxShadow: '0 12px 24px rgba(0,0,0,0.15)',
                                         transition: 'transform 0.4s ease',
                                     }}
                                     className="reason-icon"
                                 >
-                                    {r.icon}
+                                    <span style={{ fontSize: 36 }}>
+                                        {reasonEmoji[r.icon] || '⭐'}
+                                    </span>
                                 </div>
                                 <h3
                                     style={{

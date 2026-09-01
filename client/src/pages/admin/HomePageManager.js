@@ -7,12 +7,9 @@ import {
     AdminToast,
 } from '../../components/AdminUI';
 
-export default function SettingsManager() {
+export default function HomePageManager() {
     const { settings, fetchSettings } = useSettings();
     const [form, setForm] = useState({
-        companyName: '', address: '', phone: '', email: '', whatsapp: '',
-        facebook: '', instagram: '', linkedin: '', youtube: '', mapsEmbed: '',
-        stats: { students: '', courses: '', services: '', team: '', years: '' },
         homeHero: { badge: '', title: '', subtitle: '', primaryBtnText: '', secondaryBtnText: '' },
         homeIntro: { badge: '', title: '', description: '', readMoreText: '' },
         homeKeyAreas: [],
@@ -25,17 +22,6 @@ export default function SettingsManager() {
 
     useEffect(() => {
         setForm({
-            companyName: settings.companyName || '',
-            address: settings.address || '',
-            phone: settings.phone || '',
-            email: settings.email || '',
-            whatsapp: settings.whatsapp || '',
-            facebook: settings.facebook || '',
-            instagram: settings.instagram || '',
-            linkedin: settings.linkedin || '',
-            youtube: settings.youtube || '',
-            mapsEmbed: settings.mapsEmbed || '',
-            stats: settings.stats || { students: '', courses: '', services: '', team: '', years: '' },
             homeHero: settings.homeHero || { badge: '', title: '', subtitle: '', primaryBtnText: '', secondaryBtnText: '' },
             homeIntro: settings.homeIntro || { badge: '', title: '', description: '', readMoreText: '' },
             homeKeyAreas: settings.homeKeyAreas || [],
@@ -46,8 +32,6 @@ export default function SettingsManager() {
         });
     }, [settings]);
 
-    const update = (k) => (e) => setForm({ ...form, [k]: e.target.value });
-    const updateStat = (k) => (e) => setForm({ ...form, stats: { ...form.stats, [k]: e.target.value } });
     const updateNested = (parent, k) => (e) => setForm({ ...form, [parent]: { ...form[parent], [k]: e.target.value } });
 
     const updateArrayItem = (arrayName, index, field, value) => {
@@ -72,7 +56,7 @@ export default function SettingsManager() {
         try {
             await API.put('/settings', form);
             fetchSettings();
-            setMsg({ text: 'Settings saved successfully', type: 'success' });
+            setMsg({ text: 'Home page settings saved successfully', type: 'success' });
             setTimeout(() => setMsg({ text: '', type: 'success' }), 3000);
         } catch (err) {
             setMsg({
@@ -88,127 +72,19 @@ export default function SettingsManager() {
     return (
         <div>
             <AdminPageHeader
-                title="Site Settings"
-                subtitle="Manage company info, contact details, social links, statistics, and home page content."
-                icon="⚙️"
-                color="linear-gradient(135deg, #11998e, #38ef7d)"
+                title="Home Page Manager"
+                subtitle="Edit all home page content: hero, introduction, key areas, core values, services, and CTA."
+                icon="🏠"
+                color="linear-gradient(135deg, #667eea, #764ba2)"
             />
 
             <AdminToast msg={msg.text} type={msg.type} />
 
             <form onSubmit={submit}>
-                <div className="admin-form-card">
-                    <AdminFormCard
-                        title="Company & Contact"
-                        icon="🏢"
-                        color="linear-gradient(135deg, #14B8A6, #0EA5A4)"
-                    >
-                        <div className="grid grid-2" style={{ gap: 14 }}>
-                            <div className="field">
-                                <label>Company Name</label>
-                                <input value={form.companyName} onChange={update('companyName')} />
-                            </div>
-                            <div className="field">
-                                <label>WhatsApp Number (with country code, no + or spaces)</label>
-                                <input value={form.whatsapp} onChange={update('whatsapp')} placeholder="923001234567" />
-                            </div>
-                            <div className="field">
-                                <label>Phone</label>
-                                <input value={form.phone} onChange={update('phone')} />
-                            </div>
-                            <div className="field">
-                                <label>Email</label>
-                                <input type="email" value={form.email} onChange={update('email')} />
-                            </div>
-                        </div>
-                        <div className="field">
-                            <label>Address</label>
-                            <input value={form.address} onChange={update('address')} />
-                        </div>
-                    </AdminFormCard>
-                </div>
-
-                <div className="admin-form-card">
-                    <AdminFormCard
-                        title="Social Media"
-                        icon="🌐"
-                        color="linear-gradient(135deg, #667eea, #764ba2)"
-                    >
-                        <div className="grid grid-2" style={{ gap: 14 }}>
-                            <div className="field">
-                                <label>Facebook</label>
-                                <input value={form.facebook} onChange={update('facebook')} placeholder="https://facebook.com/..." />
-                            </div>
-                            <div className="field">
-                                <label>Instagram</label>
-                                <input value={form.instagram} onChange={update('instagram')} placeholder="https://instagram.com/..." />
-                            </div>
-                            <div className="field">
-                                <label>LinkedIn</label>
-                                <input value={form.linkedin} onChange={update('linkedin')} placeholder="https://linkedin.com/..." />
-                            </div>
-                            <div className="field">
-                                <label>YouTube</label>
-                                <input value={form.youtube} onChange={update('youtube')} placeholder="https://youtube.com/..." />
-                            </div>
-                        </div>
-                    </AdminFormCard>
-                </div>
-
-                <div className="admin-form-card">
-                    <AdminFormCard
-                        title="Statistics (displayed on home page)"
-                        icon="📊"
-                        color="linear-gradient(135deg, #f093fb, #f5576c)"
-                    >
-                        <div
-                            style={{
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-                                gap: 14,
-                            }}
-                        >
-                            {[
-                                { key: 'students', l: 'Students / Clients' },
-                                { key: 'courses', l: 'Courses' },
-                                { key: 'services', l: 'Services' },
-                                { key: 'team', l: 'Team' },
-                                { key: 'years', l: 'Years' },
-                            ].map((s) => (
-                                <div key={s.key} className="field">
-                                    <label>{s.l}</label>
-                                    <input value={form.stats[s.key]} onChange={updateStat(s.key)} placeholder="1,000+" />
-                                </div>
-                            ))}
-                        </div>
-                    </AdminFormCard>
-                </div>
-
-                <div className="admin-form-card">
-                    <AdminFormCard
-                        title="Google Maps Embed"
-                        icon="📍"
-                        color="linear-gradient(135deg, #43e97b, #38f9d7)"
-                    >
-                        <div className="field">
-                            <label>Embed iframe HTML</label>
-                            <textarea
-                                value={form.mapsEmbed}
-                                onChange={update('mapsEmbed')}
-                                placeholder='<iframe src="..." width="600" height="450" ...></iframe>'
-                                rows={4}
-                            />
-                            <p style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: 6 }}>
-                                Paste the full iframe HTML from Google Maps. Shown on the Contact page.
-                            </p>
-                        </div>
-                    </AdminFormCard>
-                </div>
-
                 {/* Home Page Hero Section */}
                 <div className="admin-form-card">
                     <AdminFormCard
-                        title="Home Page — Hero Section"
+                        title="Hero Section"
                         icon="🎬"
                         color="linear-gradient(135deg, #667eea, #764ba2)"
                     >
@@ -245,7 +121,7 @@ export default function SettingsManager() {
                 {/* Home Page Intro Section */}
                 <div className="admin-form-card">
                     <AdminFormCard
-                        title="Home Page — Company Introduction"
+                        title="Company Introduction"
                         icon="👋"
                         color="linear-gradient(135deg, #f093fb, #f5576c)"
                     >
@@ -276,7 +152,7 @@ export default function SettingsManager() {
                 {/* Home Page Key Areas */}
                 <div className="admin-form-card">
                     <AdminFormCard
-                        title="Home Page — Key Areas"
+                        title="Key Areas"
                         icon="🎯"
                         color="linear-gradient(135deg, #4facfe, #00f2fe)"
                     >
@@ -361,7 +237,7 @@ export default function SettingsManager() {
                 {/* Home Page Core Values */}
                 <div className="admin-form-card">
                     <AdminFormCard
-                        title="Home Page — Core Values"
+                        title="Core Values"
                         icon="💎"
                         color="linear-gradient(135deg, #8E2DE2, #4A00E0)"
                     >
@@ -446,7 +322,7 @@ export default function SettingsManager() {
                 {/* Home Page Services Section */}
                 <div className="admin-form-card">
                     <AdminFormCard
-                        title="Home Page — Services Section"
+                        title="Services Section"
                         icon="⚙️"
                         color="linear-gradient(135deg, #14B8A6, #0EA5A4)"
                     >
@@ -477,7 +353,7 @@ export default function SettingsManager() {
                 {/* Home Page Values Section */}
                 <div className="admin-form-card">
                     <AdminFormCard
-                        title="Home Page — Core Values Section"
+                        title="Core Values Section"
                         icon="💎"
                         color="linear-gradient(135deg, #fa709a, #fee140)"
                     >
@@ -495,7 +371,7 @@ export default function SettingsManager() {
                 {/* Home Page CTA Section */}
                 <div className="admin-form-card">
                     <AdminFormCard
-                        title="Home Page — Call to Action"
+                        title="Call to Action"
                         icon="🚀"
                         color="linear-gradient(135deg, #11998e, #38ef7d)"
                     >
@@ -548,7 +424,7 @@ export default function SettingsManager() {
                             gap: 8,
                         }}
                     >
-                        💾 Save All Settings
+                        💾 Save Home Page Settings
                     </button>
                 </div>
             </form>

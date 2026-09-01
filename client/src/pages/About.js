@@ -3,23 +3,35 @@ import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import useInView from '../hooks/useInView';
-
-const values = [
-    { title: 'Integrity', desc: 'We believe in honesty and transparency in everything we do.', icon: '🤝' },
-    { title: 'Excellence', desc: 'We continuously work to improve the quality of our services.', icon: '⭐' },
-    { title: 'Customer Focus', desc: 'Our clients and students remain at the center of our work.', icon: '🎯' },
-    { title: 'Growth', desc: 'We believe in continuous personal, professional, and organizational development.', icon: '📈' },
-    { title: 'Innovation', desc: 'We encourage modern ideas, technology, and new approaches.', icon: '💡' },
-];
-
-const journey = [
-    { year: '2019', title: 'Founded', desc: 'M.A. Corporation was established with a clear vision to bridge education and real-world skills.' },
-    { year: '2021', title: 'Expansion', desc: 'Launched digital services, expanded our team, and onboarded our first 500 students.' },
-    { year: '2023', title: 'Innovation', desc: 'Introduced AI-powered learning paths and corporate consulting services.' },
-    { year: 'Today', title: 'Growing Strong', desc: 'Trusted by thousands of students and businesses across the region.' },
-];
+import { useSettings } from '../context/SettingsContext';
 
 export default function About() {
+    const { settings } = useSettings();
+    const p = settings.aboutPage || {};
+
+    const values = p.values || [
+        { title: 'Integrity', desc: 'We believe in honesty and transparency in everything we do.', icon: 'icon-handshake.png' },
+        { title: 'Excellence', desc: 'We continuously work to improve the quality of our services.', icon: 'icon-star.png' },
+        { title: 'Customer Focus', desc: 'Our clients and students remain at the center of our work.', icon: 'icon-target.png' },
+        { title: 'Growth', desc: 'We believe in continuous personal, professional, and organizational development.', icon: 'icon-growth.png' },
+        { title: 'Innovation', desc: 'We encourage modern ideas, technology, and new approaches.', icon: 'icon-lightbulb.png' },
+    ];
+
+    const coreValueEmoji = {
+        'icon-handshake.png': '🤝',
+        'icon-star.png': '⭐',
+        'icon-target.png': '🎯',
+        'icon-growth.png': '📈',
+        'icon-lightbulb.png': '💡',
+    };
+
+    const journey = p.journey || [
+        { year: '2019', title: 'Founded', desc: 'M.A. Corporation was established with a clear vision to bridge education and real-world skills.' },
+        { year: '2021', title: 'Expansion', desc: 'Launched digital services, expanded our team, and onboarded our first 500 students.' },
+        { year: '2023', title: 'Innovation', desc: 'Introduced AI-powered learning paths and corporate consulting services.' },
+        { year: 'Today', title: 'Growing Strong', desc: 'Trusted by thousands of students and businesses across the region.' },
+    ];
+
     const [introRef, introVisible] = useInView();
     const [visionRef, visionVisible] = useInView();
     const [missionRef, missionVisible] = useInView();
@@ -30,9 +42,9 @@ export default function About() {
     return (
         <div>
             <PageHeader
-                eyebrow="About Us"
-                title="About M.A. Corporation"
-                subtitle="Quality education, professional services, and practical learning under one platform."
+                eyebrow={p.eyebrow || 'About Us'}
+                title={p.title || 'About M.A. Corporation'}
+                subtitle={p.subtitle || 'Quality education, professional services, and practical learning under one platform.'}
             />
 
             {/* Intro section with image */}
@@ -76,7 +88,7 @@ export default function About() {
                                     marginBottom: 14,
                                 }}
                             >
-                                Our Story
+                                {p.introEyebrow || 'Our Story'}
                             </span>
                             <h2
                                 style={{
@@ -90,54 +102,52 @@ export default function About() {
                                     backgroundClip: 'text',
                                 }}
                             >
-                                Building Skills. Creating Opportunities.
+                                {p.introTitle || 'Building Skills. Creating Opportunities.'}
                             </h2>
                             <p className="muted" style={{ fontSize: 'clamp(1rem, 2vw, 1.1rem)', marginBottom: 18, lineHeight: 1.8 }}>
-                                M.A. Corporation was established with the vision of providing reliable
-                                professional services and practical learning opportunities under one
-                                platform. We believe that knowledge becomes valuable when it can be
-                                applied in the real world.
+                                {p.introDesc1 || 'M.A. Corporation was established with the vision of providing reliable professional services and practical learning opportunities under one platform. We believe that knowledge becomes valuable when it can be applied in the real world.'}
                             </p>
                             <p className="muted" style={{ fontSize: 'clamp(1rem, 2vw, 1.1rem)', lineHeight: 1.8 }}>
-                                Our approach focuses on practical learning, professional guidance,
-                                customer satisfaction, and continuous improvement. Our team works to
-                                understand the needs of every client and student and provide solutions
-                                that are practical, accessible, and results-oriented.
+                                {p.introDesc2 || 'Our approach focuses on practical learning, professional guidance, customer satisfaction, and continuous improvement. Our team works to understand the needs of every client and student and provide solutions that are practical, accessible, and results-oriented.'}
                             </p>
                         </div>
                         <div
                             className={`animate-on-scroll ${introVisible ? 'visible' : ''}`}
-                            style={{ transitionDelay: '200ms' }}
+                            style={{ transitionDelay: '200ms', textAlign: 'center' }}
                         >
-                            <div
-                                style={{
-                                    position: 'relative',
-                                    borderRadius: 24,
-                                    overflow: 'hidden',
-                                    boxShadow: '0 30px 60px rgba(10,23,51,0.2)',
-                                    aspectRatio: '4/5',
-                                    background: 'linear-gradient(135deg, #0A1733, #102A5C)',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                }}
-                            >
+                            <div style={{ position: 'relative', display: 'inline-block' }}>
                                 <div
                                     style={{
                                         position: 'absolute',
                                         inset: 0,
-                                        background: 'radial-gradient(circle at 30% 30%, rgba(45,212,191,0.3), transparent 60%)',
+                                        borderRadius: '50%',
+                                        background: 'radial-gradient(circle, rgba(45,212,191,0.15), transparent 70%)',
+                                        filter: 'blur(20px)',
+                                        width: 200,
+                                        height: 200,
+                                        margin: '-40px auto 0',
                                     }}
                                 />
-                                <div style={{ textAlign: 'center', color: '#fff', padding: 32, position: 'relative' }}>
-                                    <div style={{ fontSize: '5rem', marginBottom: 16 }}>🎓💼</div>
-                                    <h3 style={{ fontSize: '1.5rem', color: '#fff', marginBottom: 8, fontWeight: 800 }}>
-                                        Since 2019
-                                    </h3>
-                                    <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '0.95rem' }}>
-                                        Empowering learners and businesses
-                                    </p>
-                                </div>
+                                <img
+                                    src={p.logoImage || '/logo.png'}
+                                    alt="M.A. Corporation Logo"
+                                    style={{
+                                        maxWidth: '100%',
+                                        maxHeight: 280,
+                                        width: 'auto',
+                                        height: 'auto',
+                                        objectFit: 'contain',
+                                        filter: 'drop-shadow(0 8px 32px rgba(45,212,191,0.25))',
+                                    }}
+                                />
+                            </div>
+                            <div style={{ marginTop: 32 }}>
+                                <h3 style={{ fontSize: '1.5rem', color: '#0A1733', marginBottom: 8, fontWeight: 800 }}>
+                                    {p.introBadge || 'Since 2019'}
+                                </h3>
+                                <p style={{ color: '#647489', fontSize: '0.95rem', lineHeight: 1.6 }}>
+                                    {p.introBadgeDesc || 'Empowering learners and businesses'}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -169,8 +179,8 @@ export default function About() {
                 />
                 <div className="container" ref={visionRef} style={{ position: 'relative' }}>
                     <div className="section-head">
-                        <span className="eyebrow">What Drives Us</span>
-                        <h2 style={{ fontWeight: 800 }}>Vision & Mission</h2>
+                        <span className="eyebrow">{p.valuesEyebrow || 'What Drives Us'}</span>
+                        <h2 style={{ fontWeight: 800 }}>{p.visionTitle || 'Our Vision'} & {p.missionTitle || 'Mission'}</h2>
                     </div>
                     <div className={clsx('grid', 'grid-2')} style={{ gap: 32 }}>
                         <div
@@ -179,27 +189,26 @@ export default function About() {
                         >
                             <div
                                 style={{
-                                    width: 72,
-                                    height: 72,
-                                    borderRadius: 18,
-                                    background: 'linear-gradient(135deg, rgba(45,212,191,0.2), rgba(20,184,166,0.2))',
+                                    width: 80,
+                                    height: 80,
+                                    borderRadius: 20,
+                                    background: 'linear-gradient(135deg, rgba(45,212,191,0.15), rgba(20,184,166,0.15))',
                                     border: '1px solid rgba(45,212,191,0.3)',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    fontSize: '2rem',
                                     marginBottom: 20,
+                                    boxShadow: '0 8px 32px rgba(45,212,191,0.25)',
+                                    backdropFilter: 'blur(10px)',
                                 }}
                             >
-                                👁️
+                                                                    <span style={{ fontSize: 40 }}>👁️</span>
                             </div>
                             <h3 style={{ fontSize: 'clamp(1.4rem, 3vw, 1.8rem)', margin: '0 0 16px', fontWeight: 800, color: '#fff' }}>
-                                Our Vision
+                                {p.visionTitle || 'Our Vision'}
                             </h3>
                             <p style={{ color: 'rgba(255,255,255,0.8)', lineHeight: 1.7, fontSize: '1rem' }}>
-                                To become a trusted and recognized organization known for quality
-                                education, professional services, innovation, and customer
-                                satisfaction.
+                                {p.visionDesc || 'To become a trusted and recognized organization known for quality education, professional services, innovation, and customer satisfaction.'}
                             </p>
                         </div>
                         <div
@@ -209,27 +218,26 @@ export default function About() {
                         >
                             <div
                                 style={{
-                                    width: 72,
-                                    height: 72,
-                                    borderRadius: 18,
-                                    background: 'linear-gradient(135deg, rgba(45,212,191,0.2), rgba(20,184,166,0.2))',
+                                    width: 80,
+                                    height: 80,
+                                    borderRadius: 20,
+                                    background: 'linear-gradient(135deg, rgba(45,212,191,0.15), rgba(20,184,166,0.15))',
                                     border: '1px solid rgba(45,212,191,0.3)',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    fontSize: '2rem',
                                     marginBottom: 20,
+                                    boxShadow: '0 8px 32px rgba(45,212,191,0.25)',
+                                    backdropFilter: 'blur(10px)',
                                 }}
                             >
-                                🎯
+                                                                    <span style={{ fontSize: 40 }}>🎯</span>
                             </div>
                             <h3 style={{ fontSize: 'clamp(1.4rem, 3vw, 1.8rem)', margin: '0 0 16px', fontWeight: 800, color: '#fff' }}>
-                                Our Mission
+                                {p.missionTitle || 'Our Mission'}
                             </h3>
                             <p style={{ color: 'rgba(255,255,255,0.8)', lineHeight: 1.7, fontSize: '1rem' }}>
-                                Our mission is to empower individuals and organizations through
-                                practical knowledge, professional services, and opportunities that
-                                contribute to personal and business growth.
+                                {p.missionDesc || 'Our mission is to empower individuals and organizations through practical knowledge, professional services, and opportunities that contribute to personal and business growth.'}
                             </p>
                         </div>
                     </div>
@@ -240,7 +248,7 @@ export default function About() {
             <section className={clsx('section', 'section-light')}>
                 <div className="container" ref={valuesRef}>
                     <div className="section-head">
-                        <span className="eyebrow">What Drives Us</span>
+                        <span className="eyebrow">{p.valuesEyebrow || 'What Drives Us'}</span>
                         <h2
                             style={{
                                 fontWeight: 800,
@@ -250,9 +258,9 @@ export default function About() {
                                 backgroundClip: 'text',
                             }}
                         >
-                            Our Core Values
+                            {p.valuesTitle || 'Our Core Values'}
                         </h2>
-                        <p>The principles that guide everything we do at M.A. Corporation.</p>
+                        <p>{p.valuesDesc || 'The principles that guide everything we do at M.A. Corporation.'}</p>
                     </div>
                     <div className={clsx('grid', 'grid-3')} style={{ justifyContent: 'center' }}>
                         {values.slice(0, 3).map((v, i) => (
@@ -267,12 +275,20 @@ export default function About() {
                             >
                                 <div
                                     style={{
-                                        fontSize: '2.8rem',
+                                        width: 80,
+                                        height: 80,
+                                        borderRadius: 20,
+                                        background: 'linear-gradient(135deg, rgba(45,212,191,0.15), rgba(20,184,166,0.15))',
+                                        border: '1px solid rgba(45,212,191,0.3)',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
                                         marginBottom: 16,
-                                        filter: 'drop-shadow(0 4px 12px rgba(20,184,166,0.3))',
+                                        boxShadow: '0 8px 32px rgba(45,212,191,0.25)',
+                                        backdropFilter: 'blur(10px)',
                                     }}
                                 >
-                                    {v.icon}
+                                                                                <span style={{ fontSize: 40 }}>{coreValueEmoji[v.icon] || '⭐'}</span>
                                 </div>
                                 <h3 style={{ fontSize: '1.2rem', marginBottom: 10, fontWeight: 700 }}>
                                     {v.title}
@@ -297,12 +313,20 @@ export default function About() {
                                 >
                                     <div
                                         style={{
-                                            fontSize: '2.8rem',
+                                            width: 80,
+                                            height: 80,
+                                            borderRadius: 20,
+                                            background: 'linear-gradient(135deg, rgba(45,212,191,0.15), rgba(20,184,166,0.15))',
+                                            border: '1px solid rgba(45,212,191,0.3)',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
                                             marginBottom: 16,
-                                            filter: 'drop-shadow(0 4px 12px rgba(20,184,166,0.3))',
+                                            boxShadow: '0 8px 32px rgba(45,212,191,0.25)',
+                                            backdropFilter: 'blur(10px)',
                                         }}
                                     >
-                                        {v.icon}
+                                        <span style={{ fontSize: 40 }}>{coreValueEmoji[v.icon] || '⭐'}</span>
                                     </div>
                                     <h3 style={{ fontSize: '1.2rem', marginBottom: 10, fontWeight: 700 }}>
                                         {v.title}
@@ -321,7 +345,7 @@ export default function About() {
             <section className={clsx('section', 'section-white')}>
                 <div className="container" ref={journeyRef}>
                     <div className="section-head">
-                        <span className="eyebrow">Our Journey</span>
+                        <span className="eyebrow">{p.journeyEyebrow || 'Our Journey'}</span>
                         <h2
                             style={{
                                 fontWeight: 800,
@@ -331,9 +355,9 @@ export default function About() {
                                 backgroundClip: 'text',
                             }}
                         >
-                            Milestones That Shaped Us
+                            {p.journeyTitle || 'Milestones That Shaped Us'}
                         </h2>
-                        <p>A timeline of growth, learning, and impact.</p>
+                        <p>{p.journeyDesc || 'A timeline of growth, learning, and impact.'}</p>
                     </div>
                     <div
                         style={{
@@ -460,7 +484,7 @@ export default function About() {
                                 fontWeight: 800,
                             }}
                         >
-                            Want to Work With Us?
+                            {p.ctaTitle || 'Want to Work With Us?'}
                         </h2>
                         <p
                             style={{
@@ -473,7 +497,7 @@ export default function About() {
                                 lineHeight: 1.6,
                             }}
                         >
-                            Join our team or partner with us to create meaningful impact through education and services.
+                            {p.ctaDesc || 'Join our team or partner with us to create meaningful impact through education and services.'}
                         </p>
                         <div
                             style={{
@@ -502,7 +526,7 @@ export default function About() {
                                     boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
                                 }}
                             >
-                                Meet Our Team <span>→</span>
+                                {p.ctaTeamBtn || 'Meet Our Team'} <span>→</span>
                             </Link>
                             <Link
                                 to="/contact"
@@ -522,7 +546,7 @@ export default function About() {
                                     gap: 8,
                                 }}
                             >
-                                Contact Us
+                                {p.ctaContactBtn || 'Contact Us'}
                             </Link>
                         </div>
                     </div>
