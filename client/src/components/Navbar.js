@@ -8,7 +8,7 @@ const navLinks = [
     { to: '/courses', label: 'Courses' },
     { to: '/services', label: 'Services' },
     { to: '/team', label: 'Team' },
-    { to: '/portfolios', label: 'Portfolios' },
+    { to: '/portfolios', label: 'Projects' },
     { to: '/certificates', label: 'Certificates' },
     { to: '/contact', label: 'Contact' },
 ];

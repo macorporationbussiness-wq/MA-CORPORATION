@@ -67,10 +67,10 @@ export default function PortfolioDetails() {
     if (loading) {
         return (
             <div>
-                <PageHeader eyebrow="PORTFOLIO" title="Loading…" subtitle="Fetching portfolio details…" />
+                <PageHeader eyebrow="PROJECTS" title="Loading…" subtitle="Fetching project details…" />
                 <section className="section-dark" style={{ paddingTop: '40px', paddingBottom: '80px' }}>
                     <div className="container">
-                        <p className="muted text-center">Loading portfolio details…</p>
+                        <p className="muted text-center">Loading project details…</p>
                     </div>
                 </section>
             </div>
@@ -80,7 +80,7 @@ export default function PortfolioDetails() {
     if (!p) {
         return (
             <div>
-                <PageHeader eyebrow="PORTFOLIO" title="Not Found" subtitle="The portfolio you are looking for does not exist." />
+                <PageHeader eyebrow="PROJECTS" title="Not Found" subtitle="The project you are looking for does not exist." />
                 <section className="section-dark" style={{ padding: '40px 0' }}>
                     <div className="container" style={{ textAlign: 'center' }}>
                         <Link to="/portfolios" className="btn btn-primary">
@@ -391,7 +391,7 @@ export default function PortfolioDetails() {
                                 gap: '8px',
                             }}
                         >
-                            ← Back to All Portfolios
+                            ← Back to All Projects
                         </Link>
                     </div>
                 </div>

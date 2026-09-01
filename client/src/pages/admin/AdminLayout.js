@@ -16,7 +16,7 @@ const links = [
     { to: '/admin/courses', label: 'Courses', icon: '🎓', color: 'linear-gradient(135deg, #14B8A6, #0EA5A4)' },
     { to: '/admin/services', label: 'Services', icon: '⚙️', color: 'linear-gradient(135deg, #f093fb, #f5576c)' },
     { to: '/admin/team', label: 'Team', icon: '👥', color: 'linear-gradient(135deg, #4facfe, #00f2fe)' },
-    { to: '/admin/portfolios', label: 'Portfolios', icon: '📁', color: 'linear-gradient(135deg, #fa709a, #fee140)' },
+    { to: '/admin/portfolios', label: 'Projects', icon: '📁', color: 'linear-gradient(135deg, #fa709a, #fee140)' },
     { to: '/admin/certificates', label: 'Certificates', icon: '🏅', color: 'linear-gradient(135deg, #43e97b, #38f9d7)' },
     { to: '/admin/inquiries', label: 'Inquiries', icon: '✉️', color: 'linear-gradient(135deg, #8E2DE2, #4A00E0)' },
     { to: '/admin/settings', label: 'Settings', icon: '⚙️', color: 'linear-gradient(135deg, #11998e, #38ef7d)' },

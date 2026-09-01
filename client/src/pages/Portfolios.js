@@ -37,8 +37,8 @@ export default function Portfolios() {
     return (
         <div>
             <PageHeader
-                eyebrow="Portfolio"
-                title="Team Portfolios & Projects"
+                eyebrow="Projects"
+                title="Team Projects"
                 subtitle="Explore the skills, education, experience, and projects of our team members."
             />
 
@@ -131,7 +131,7 @@ export default function Portfolios() {
                                     animation: 'spin 0.8s linear infinite',
                                 }}
                             />
-                            Loading portfolios…
+                            Loading projects…
                         </div>
                     ) : filtered.length === 0 ? (
                         <div
@@ -145,7 +145,7 @@ export default function Portfolios() {
                         >
                             <div style={{ fontSize: '3rem', marginBottom: 12 }}>📁</div>
                             <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.05rem', marginBottom: 20 }}>
-                                Our team members haven't added their portfolio projects yet.
+                                Our team members haven't added their projects yet.
                             </p>
                             <Link
                                 to="/team"

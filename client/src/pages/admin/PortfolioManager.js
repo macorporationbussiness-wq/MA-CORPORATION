@@ -158,10 +158,10 @@ export default function PortfolioManager() {
         try {
             if (editingId) {
                 await API.put(`/portfolios/${editingId}`, payload);
-                setMsg({ text: 'Portfolio updated', type: 'success' });
+                setMsg({ text: 'Project updated', type: 'success' });
             } else {
                 await API.post('/portfolios', payload);
-                setMsg({ text: 'Portfolio created', type: 'success' });
+                setMsg({ text: 'Project created', type: 'success' });
             }
             setForm(empty);
             setEditingId(null);
@@ -199,8 +199,8 @@ export default function PortfolioManager() {
     return (
         <div>
             <AdminPageHeader
-                title="Portfolio Management"
-                subtitle="Manage portfolio projects, skills, roles, and project details."
+                title="Project Management"
+                subtitle="Manage projects, skills, roles, and project details."
                 icon="📁"
                 color="linear-gradient(135deg, #fa709a, #fee140)"
             />
@@ -209,7 +209,7 @@ export default function PortfolioManager() {
 
             <div className="admin-form-card">
                 <AdminFormCard
-                    title={editingId ? 'Edit Portfolio' : 'Add New Portfolio'}
+                    title={editingId ? 'Edit Project' : 'Add New Project'}
                     icon={editingId ? '✎' : '+'}
                     color="linear-gradient(135deg, #fa709a, #fee140)"
                 >
@@ -532,7 +532,7 @@ export default function PortfolioManager() {
                     }}
                 >
                     <div style={{ fontSize: '2.5rem', marginBottom: 8 }}>📁</div>
-                    No portfolios yet. Create one using the form above.
+                    No projects yet. Create one using the form above.
                 </div>
             )}
         </div>

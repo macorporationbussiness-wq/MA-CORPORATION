@@ -251,7 +251,7 @@ export default function Team() {
                                                     boxShadow: '0 6px 18px rgba(20,184,166,0.3)',
                                                 }}
                                             >
-                                                View Portfolio <span>→</span>
+                                                View Projects <span>→</span>
                                             </Link>
                                         </div>
                                     </div>

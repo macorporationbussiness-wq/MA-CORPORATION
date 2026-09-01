@@ -67,7 +67,7 @@ export default function Footer() {
                                 { to: '/privacy', label: 'Privacy Policy' },
                                 { to: '/terms', label: 'Terms & Conditions' },
                                 { to: '/certificates', label: 'Certification' },
-                                { to: '/portfolios', label: 'Portfolios' },
+                                { to: '/portfolios', label: 'Projects' },
                             ].map((l) => (
                                 <li key={l.to}>
                                     <Link to={l.to} style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.92rem' }}>

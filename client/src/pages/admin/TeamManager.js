@@ -107,7 +107,7 @@ export default function TeamManager() {
         <div>
             <AdminPageHeader
                 title="Team Management"
-                subtitle="Manage team members, roles, skills, and portfolios."
+                subtitle="Manage team members, roles, skills, and projects."
                 icon="👥"
                 color="linear-gradient(135deg, #4facfe, #00f2fe)"
             />
@@ -221,7 +221,7 @@ export default function TeamManager() {
                         subtitle={m.position}
                         badges={[
                             m.email,
-                            m.hasPortfolio && '📁 Portfolio',
+                            m.hasPortfolio && '📁 Project',
                             m.isActive ? 'Active' : 'Inactive',
                         ].filter(Boolean)}
                         image={m.photo}

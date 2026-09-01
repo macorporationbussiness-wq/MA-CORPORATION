@@ -22,7 +22,7 @@ export default function Dashboard() {
         { label: 'Courses', value: counts.courses, icon: '🎓', gradient: 'linear-gradient(135deg, #14B8A6, #0EA5A4)' },
         { label: 'Services', value: counts.services, icon: '⚙️', gradient: 'linear-gradient(135deg, #f093fb, #f5576c)' },
         { label: 'Team Members', value: counts.team, icon: '👥', gradient: 'linear-gradient(135deg, #4facfe, #00f2fe)' },
-        { label: 'Portfolios', value: counts.portfolios, icon: '📁', gradient: 'linear-gradient(135deg, #fa709a, #fee140)' },
+        { label: 'Projects', value: counts.portfolios, icon: '📁', gradient: 'linear-gradient(135deg, #fa709a, #fee140)' },
         { label: 'Certificates', value: counts.certs, icon: '🏅', gradient: 'linear-gradient(135deg, #43e97b, #38f9d7)' },
     ];
 
