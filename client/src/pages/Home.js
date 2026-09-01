@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 import API from '../api';
 import { useSettings } from '../context/SettingsContext';
@@ -8,9 +9,9 @@ import useInView from '../hooks/useInView';
 const coreValues = [
     { title: 'Integrity', desc: 'We believe in honesty and transparency.', icon: '🤝' },
     { title: 'Excellence', desc: 'We continuously work to improve the quality of our services.', icon: '⭐' },
-    { title: 'Innovation', desc: 'We encourage modern ideas, technology, and new approaches.', icon: '💡' },
     { title: 'Customer Focus', desc: 'Our clients and students remain at the center of our work.', icon: '🎯' },
     { title: 'Growth', desc: 'We believe in continuous personal, professional, and organizational development.', icon: '📈' },
+    { title: 'Innovation', desc: 'We encourage modern ideas, technology, and new approaches.', icon: '💡' },
 ];
 
 const keyAreas = [
@@ -24,18 +25,15 @@ export default function Home() {
     const { settings } = useSettings();
     const [courses, setCourses] = useState([]);
     const [services, setServices] = useState([]);
-    const [team, setTeam] = useState([]);
     const [keyAreasRef, keyAreasVisible] = useInView();
     const [servicesRef, servicesVisible] = useInView();
     const [coursesRef, coursesVisible] = useInView();
     const [valuesRef, valuesVisible] = useInView();
-    const [teamRef, teamVisible] = useInView();
     const [ctaRef, ctaVisible] = useInView();
 
     useEffect(() => {
         API.get('/courses?featured=true').then((r) => setCourses(r.data)).catch(() => { });
         API.get('/services').then((r) => setServices(r.data.slice(0, 4))).catch(() => { });
-        API.get('/team').then((r) => setTeam(r.data.slice(0, 4))).catch(() => { });
     }, []);
 
     return (
@@ -198,40 +196,38 @@ export default function Home() {
                             </div>
                         </div>
                     </div>
+
+                    <button
+                        onClick={() => window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })}
+                        aria-label="Scroll down"
+                        style={{
+                            position: 'absolute',
+                            bottom: -60,
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            zIndex: 10,
+                            background: 'rgba(255,255,255,0.1)',
+                            border: '1px solid rgba(255,255,255,0.3)',
+                            borderRadius: '50%',
+                            width: 48,
+                            height: 48,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#fff',
+                            cursor: 'pointer',
+                            backdropFilter: 'blur(8px)',
+                            animation: 'bounce 2s ease-in-out infinite',
+                        }}
+                    >
+                        ↓
+                    </button>
                 </div>
-
-
-
-                <button
-                    onClick={() => window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })}
-                    aria-label="Scroll down"
-                    style={{
-                        position: 'absolute',
-                        bottom: 100,
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        zIndex: 4,
-                        background: 'rgba(255,255,255,0.1)',
-                        border: '1px solid rgba(255,255,255,0.3)',
-                        borderRadius: '50%',
-                        width: 48,
-                        height: 48,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: '#fff',
-                        cursor: 'pointer',
-                        backdropFilter: 'blur(8px)',
-                        animation: 'bounce 2s ease-in-out infinite',
-                    }}
-                >
-                    ↓
-                </button>
             </section>
 
             {/* Company Introduction — light */}
             <section
-                className="section section-light"
+                className={clsx('section', 'section-light')}
                 style={{ position: 'relative', overflow: 'hidden' }}
             >
                 <div
@@ -314,7 +310,7 @@ export default function Home() {
             </section>
 
             {/* Key Areas — dark */}
-            <section className="section-sm section-dark" style={{ position: 'relative', overflow: 'hidden' }}>
+            <section className={clsx('section-sm', 'section-dark')} style={{ position: 'relative', overflow: 'hidden' }}>
                 <div
                     style={{
                         position: 'absolute',
@@ -330,7 +326,7 @@ export default function Home() {
                         <span className="eyebrow">What We Do</span>
                         <h2 style={{ fontWeight: 800 }}>Our Key Areas</h2>
                     </div>
-                    <div className="grid grid-4">
+                    <div className={clsx('grid', 'grid-4')}>
                         {keyAreas.map((a, i) => (
                             <div
                                 key={a.title}
@@ -366,14 +362,14 @@ export default function Home() {
             </section>
 
             {/* Services — light */}
-            <section className="section section-white">
+            <section className={clsx('section', 'section-white')}>
                 <div className="container" ref={servicesRef}>
                     <div className="section-head">
                         <span className="eyebrow">Services</span>
                         <h2 style={{ fontWeight: 800 }}>Our Professional Services</h2>
                         <p>Reliable, customized services designed to meet the needs of individuals, professionals, and businesses.</p>
                     </div>
-                    <div className="grid grid-4">
+                    <div className={clsx('grid', 'grid-4')}>
                         {services.map((s, i) => (
                             <div
                                 key={s._id}
@@ -405,96 +401,21 @@ export default function Home() {
                             </div>
                         ))}
                     </div>
-                    <div className="text-center mt-3">
-                        <Link to="/services" className="btn btn-outline">View All Services →</Link>
-                    </div>
-                </div>
-            </section>
-
-            {/* Popular Courses — dark */}
-            <section className="section-sm section-dark" style={{ position: 'relative', overflow: 'hidden' }}>
-                <div
-                    style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        background: 'radial-gradient(circle at 80% 30%, rgba(45,212,191,0.1), transparent 50%)',
-                    }}
-                />
-                <div className="container" ref={coursesRef} style={{ position: 'relative' }}>
-                    <div className="section-head">
-                        <span className="eyebrow">Courses</span>
-                        <h2 style={{ fontWeight: 800 }}>Explore Our Courses</h2>
-                        <p>Learn practical skills from experienced professionals and take the next step in your career.</p>
-                    </div>
-                    <div className="grid grid-3">
-                        {courses.map((c, i) => (
-                            <div
-                                key={c._id}
-                                className={`glass-card ${coursesVisible ? 'visible' : ''}`}
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    padding: 28,
-                                    transitionDelay: `${i * 100}ms`,
-                                }}
-                            >
-                                <span
-                                    className="badge"
-                                    style={{ alignSelf: 'flex-start', marginBottom: 12, padding: '6px 14px' }}
-                                >
-                                    {c.level}
-                                </span>
-                                <h3 style={{ fontSize: '1.2rem', marginBottom: 10, fontWeight: 700 }}>{c.name}</h3>
-                                <p className="muted" style={{ fontSize: '0.92rem', flex: 1, lineHeight: 1.6 }}>{c.shortDescription}</p>
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        margin: '20px 0',
-                                        fontSize: '0.85rem',
-                                        flexWrap: 'wrap',
-                                        gap: 8,
-                                    }}
-                                    className="muted"
-                                >
-                                    <span>⏱ {c.durationWeeks} Weeks</span>
-                                    <span>🌐 {c.mode}</span>
-                                    <span style={{ color: '#2DD4BF', fontWeight: 700 }}>PKR {c.fee.toLocaleString()}</span>
-                                </div>
-                                <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                                    <Link
-                                        to={`/courses/${c.slug}`}
-                                        className="btn btn-outline"
-                                        style={{ flex: 1, justifyContent: 'center', padding: '10px', minWidth: 120 }}
-                                    >
-                                        View Details
-                                    </Link>
-                                    <Link
-                                        to="/admissions"
-                                        className="btn btn-primary"
-                                        style={{ flex: 1, justifyContent: 'center', padding: '10px', minWidth: 120 }}
-                                    >
-                                        Enroll Now
-                                    </Link>
-                                </div>
-                            </div>
-                        ))}
+                    <div className={clsx('text-center', 'mt-3')}>
+                        <Link to="/services" className={clsx('btn', 'btn-outline')}>View All Services →</Link>
                     </div>
                 </div>
             </section>
 
             {/* Why Choose Us — light */}
-            <section className="section section-light">
+            <section className={clsx('section', 'section-light')}>
                 <div className="container" ref={valuesRef}>
                     <div className="section-head">
                         <span className="eyebrow">Why Choose Us</span>
                         <h2 style={{ fontWeight: 800 }}>Our Core Values</h2>
                     </div>
-                    <div className="grid grid-3">
-                        {coreValues.map((v, i) => (
+                    <div className={clsx('grid', 'grid-3')} style={{ justifyContent: 'center' }}>
+                        {coreValues.slice(0, 3).map((v, i) => (
                             <div
                                 key={v.title}
                                 className={`glass-card ${valuesVisible ? 'visible' : ''}`}
@@ -518,57 +439,38 @@ export default function Home() {
                             </div>
                         ))}
                     </div>
-                </div>
-            </section>
-
-            {/* Team — dark */}
-            <section className="section section-dark" style={{ position: 'relative', overflow: 'hidden' }}>
-                <div
-                    style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        background: 'radial-gradient(circle at 50% 50%, rgba(45,212,191,0.08), transparent 50%)',
-                    }}
-                />
-                <div className="container" ref={teamRef} style={{ position: 'relative' }}>
-                    <div className="section-head">
-                        <span className="eyebrow">Our Team</span>
-                        <h2 style={{ fontWeight: 800 }}>Meet The Experts</h2>
-                    </div>
-                    <div className="grid grid-4">
-                        {team.map((m, i) => (
-                            <div
-                                key={m._id}
-                                className={`glass-card ${teamVisible ? 'visible' : ''}`}
-                                style={{
-                                    textAlign: 'center',
-                                    padding: 28,
-                                    transitionDelay: `${i * 100}ms`,
-                                }}
-                            >
-                                <div className="team-avatar">
-                                    {m.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}
-                                </div>
-                                <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>{m.name}</h3>
-                                <p className="accent" style={{ fontSize: '0.88rem', marginBottom: 12 }}>{m.position}</p>
-                                <Link
-                                    to="/team"
-                                    className="btn btn-ghost"
-                                    style={{ padding: '8px 18px', fontSize: '0.85rem' }}
+                    <div style={{ maxWidth: 'calc(66.667% + 28px)', margin: '28px auto 0 auto' }}>
+                        <div className={clsx('grid', 'grid-2')} style={{ justifyContent: 'center' }}>
+                            {coreValues.slice(3).map((v, i) => (
+                                <div
+                                    key={v.title}
+                                    className={`glass-card ${valuesVisible ? 'visible' : ''}`}
+                                    style={{
+                                        textAlign: 'center',
+                                        padding: 28,
+                                        transitionDelay: `${(i + 3) * 100}ms`,
+                                    }}
                                 >
-                                    Visit Portfolio
-                                </Link>
-                            </div>
-                        ))}
+                                    <div
+                                        style={{
+                                            fontSize: '2.5rem',
+                                            marginBottom: 14,
+                                            filter: 'drop-shadow(0 4px 8px rgba(20,184,166,0.3))',
+                                        }}
+                                    >
+                                        {v.icon}
+                                    </div>
+                                    <h3 style={{ fontSize: '1.15rem', marginBottom: 8, fontWeight: 700 }}>{v.title}</h3>
+                                    <p className="muted" style={{ fontSize: '0.92rem', lineHeight: 1.6 }}>{v.desc}</p>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </section>
 
             {/* CTA — light */}
-            <section className="section-sm section-light">
+            <section className={clsx('section-sm', 'section-light')}>
                 <div className="container" ref={ctaRef}>
                     <div className={`cta-card ${ctaVisible ? 'visible' : ''}`}>
                         <h2

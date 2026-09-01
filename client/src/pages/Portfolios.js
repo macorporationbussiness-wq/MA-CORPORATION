@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 import API from '../api';
 import PageHeader from '../components/PageHeader';
@@ -42,7 +43,7 @@ export default function Portfolios() {
             />
 
             <section
-                className="section section-dark"
+                className={clsx('section', 'section-dark')}
                 style={{
                     paddingTop: 48,
                     paddingBottom: 80,
@@ -440,7 +441,7 @@ export default function Portfolios() {
                                                             padding: '9px 16px',
                                                             borderRadius: 10,
                                                             background: 'rgba(255,255,255,0.08)',
-                                                        color: '#fff',
+                                                            color: '#fff',
                                                             textDecoration: 'none',
                                                             fontSize: '0.85rem',
                                                             fontWeight: 600,
@@ -457,27 +458,6 @@ export default function Portfolios() {
                             })}
                         </div>
                     )}
-
-                    <div className="text-center mt-3">
-                        <Link
-                            to="/team"
-                            style={{
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: 8,
-                                padding: '12px 28px',
-                                borderRadius: 12,
-                                background: 'transparent',
-                                border: '2px solid rgba(255,255,255,0.3)',
-                                color: '#fff',
-                                textDecoration: 'none',
-                                fontSize: '0.95rem',
-                                fontWeight: 700,
-                            }}
-                        >
-                            ← Back to Team
-                        </Link>
-                    </div>
                 </div>
             </section>
 

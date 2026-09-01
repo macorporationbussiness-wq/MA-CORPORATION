@@ -180,7 +180,7 @@ export default function Contact() {
                             ))}
                         </div>
 
-                        {settings.mapsEmbed ? (
+                        {settings.mapsEmbed && (
                             <div
                                 className="glass-card"
                                 style={{
@@ -191,20 +191,6 @@ export default function Contact() {
                                 }}
                                 dangerouslySetInnerHTML={{ __html: settings.mapsEmbed }}
                             />
-                        ) : (
-                            <div
-                                className="glass-card"
-                                style={{
-                                    padding: 32,
-                                    textAlign: 'center',
-                                    color: '#94A3B8',
-                                    background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
-                                    border: '1px solid #e2e8f0',
-                                }}
-                            >
-                                <div style={{ fontSize: '2rem', marginBottom: 8 }}>📍</div>
-                                Map will appear here once configured
-                            </div>
                         )}
                     </div>
 

@@ -168,18 +168,6 @@ export default function Courses() {
                         </div>
                     ) : (
                         <>
-                            <div
-                                style={{
-                                    textAlign: 'center',
-                                    marginBottom: 24,
-                                    color: '#475569',
-                                    fontSize: '0.95rem',
-                                    fontWeight: 500,
-                                }}
-                            >
-                                Showing <strong style={{ color: '#0ea5a4' }}>{filtered.length}</strong>{' '}
-                                {filtered.length === 1 ? 'course' : 'courses'}
-                            </div>
                             <div className="grid grid-3" ref={gridRef}>
                                 {filtered.map((c, i) => (
                                     <div

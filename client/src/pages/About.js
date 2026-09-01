@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import useInView from '../hooks/useInView';
@@ -6,9 +7,9 @@ import useInView from '../hooks/useInView';
 const values = [
     { title: 'Integrity', desc: 'We believe in honesty and transparency in everything we do.', icon: '🤝' },
     { title: 'Excellence', desc: 'We continuously work to improve the quality of our services.', icon: '⭐' },
-    { title: 'Innovation', desc: 'We encourage modern ideas, technology, and new approaches.', icon: '💡' },
     { title: 'Customer Focus', desc: 'Our clients and students remain at the center of our work.', icon: '🎯' },
     { title: 'Growth', desc: 'We believe in continuous personal, professional, and organizational development.', icon: '📈' },
+    { title: 'Innovation', desc: 'We encourage modern ideas, technology, and new approaches.', icon: '💡' },
 ];
 
 const journey = [
@@ -35,7 +36,7 @@ export default function About() {
             />
 
             {/* Intro section with image */}
-            <section className="section section-light" style={{ position: 'relative', overflow: 'hidden' }}>
+            <section className={clsx('section', 'section-light')} style={{ position: 'relative', overflow: 'hidden' }}>
                 <div
                     style={{
                         position: 'absolute',
@@ -60,7 +61,7 @@ export default function About() {
                 />
                 <div className="container" ref={introRef} style={{ position: 'relative' }}>
                     <div
-                        className="grid grid-2"
+                        className={clsx('grid', 'grid-2')}
                         style={{ gap: 60, alignItems: 'center' }}
                     >
                         <div className={`animate-on-scroll ${introVisible ? 'visible' : ''}`}>
@@ -103,31 +104,6 @@ export default function About() {
                                 understand the needs of every client and student and provide solutions
                                 that are practical, accessible, and results-oriented.
                             </p>
-                            <div style={{ display: 'flex', gap: 32, marginTop: 32, flexWrap: 'wrap' }}>
-                                {[
-                                    { v: '1,000+', l: 'Students Trained' },
-                                    { v: '25+', l: 'Courses Offered' },
-                                    { v: '5+', l: 'Years Experience' },
-                                ].map((s) => (
-                                    <div key={s.l}>
-                                        <div
-                                            style={{
-                                                fontSize: 'clamp(1.4rem, 3vw, 1.8rem)',
-                                                fontWeight: 800,
-                                                background: 'linear-gradient(135deg, #0A1733, #2DD4BF)',
-                                                WebkitBackgroundClip: 'text',
-                                                WebkitTextFillColor: 'transparent',
-                                                backgroundClip: 'text',
-                                            }}
-                                        >
-                                            {s.v}
-                                        </div>
-                                        <div className="muted" style={{ fontSize: '0.85rem', fontWeight: 600 }}>
-                                            {s.l}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
                         </div>
                         <div
                             className={`animate-on-scroll ${introVisible ? 'visible' : ''}`}
@@ -169,7 +145,7 @@ export default function About() {
             </section>
 
             {/* Vision & Mission */}
-            <section className="section-sm section-dark" style={{ position: 'relative', overflow: 'hidden' }}>
+            <section className={clsx('section-sm', 'section-dark')} style={{ position: 'relative', overflow: 'hidden' }}>
                 <div
                     style={{
                         position: 'absolute',
@@ -196,7 +172,7 @@ export default function About() {
                         <span className="eyebrow">What Drives Us</span>
                         <h2 style={{ fontWeight: 800 }}>Vision & Mission</h2>
                     </div>
-                    <div className="grid grid-2" style={{ gap: 32 }}>
+                    <div className={clsx('grid', 'grid-2')} style={{ gap: 32 }}>
                         <div
                             className={`glass-card ${visionVisible ? 'visible' : ''}`}
                             style={{ padding: 40 }}
@@ -261,7 +237,7 @@ export default function About() {
             </section>
 
             {/* Core Values */}
-            <section className="section section-light">
+            <section className={clsx('section', 'section-light')}>
                 <div className="container" ref={valuesRef}>
                     <div className="section-head">
                         <span className="eyebrow">What Drives Us</span>
@@ -278,8 +254,8 @@ export default function About() {
                         </h2>
                         <p>The principles that guide everything we do at M.A. Corporation.</p>
                     </div>
-                    <div className="grid grid-3">
-                        {values.map((v, i) => (
+                    <div className={clsx('grid', 'grid-3')} style={{ justifyContent: 'center' }}>
+                        {values.slice(0, 3).map((v, i) => (
                             <div
                                 key={v.title}
                                 className={`glass-card ${valuesVisible ? 'visible' : ''}`}
@@ -307,11 +283,42 @@ export default function About() {
                             </div>
                         ))}
                     </div>
+                    <div style={{ maxWidth: 'calc(66.667% + 28px)', margin: '28px auto 0 auto' }}>
+                        <div className={clsx('grid', 'grid-2')} style={{ justifyContent: 'center' }}>
+                            {values.slice(3).map((v, i) => (
+                                <div
+                                    key={v.title}
+                                    className={`glass-card ${valuesVisible ? 'visible' : ''}`}
+                                    style={{
+                                        textAlign: 'center',
+                                        padding: 32,
+                                        transitionDelay: `${(i + 3) * 100}ms`,
+                                    }}
+                                >
+                                    <div
+                                        style={{
+                                            fontSize: '2.8rem',
+                                            marginBottom: 16,
+                                            filter: 'drop-shadow(0 4px 12px rgba(20,184,166,0.3))',
+                                        }}
+                                    >
+                                        {v.icon}
+                                    </div>
+                                    <h3 style={{ fontSize: '1.2rem', marginBottom: 10, fontWeight: 700 }}>
+                                        {v.title}
+                                    </h3>
+                                    <p className="muted" style={{ fontSize: '0.95rem', lineHeight: 1.6 }}>
+                                        {v.desc}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </section>
 
             {/* Our Journey */}
-            <section className="section section-white">
+            <section className={clsx('section', 'section-white')}>
                 <div className="container" ref={journeyRef}>
                     <div className="section-head">
                         <span className="eyebrow">Our Journey</span>
@@ -440,7 +447,7 @@ export default function About() {
             </section>
 
             {/* CTA */}
-            <section className="section-sm section-light">
+            <section className={clsx('section-sm', 'section-light')}>
                 <div className="container" ref={ctaRef}>
                     <div className={`cta-card ${ctaVisible ? 'visible' : ''}`}>
                         <h2
