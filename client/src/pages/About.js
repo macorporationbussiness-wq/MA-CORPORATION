@@ -73,8 +73,8 @@ export default function About() {
                 />
                 <div className="container" ref={introRef} style={{ position: 'relative' }}>
                     <div
-                        className={clsx('grid', 'grid-2')}
-                        style={{ gap: 60, alignItems: 'center' }}
+                        className={clsx('grid', 'grid-2', 'about-intro-grid')}
+                        style={{ gap: 'clamp(32px, 6vw, 60px)', alignItems: 'center' }}
                     >
                         <div className={`animate-on-scroll ${introVisible ? 'visible' : ''}`}>
                             <span
@@ -142,10 +142,10 @@ export default function About() {
                                 />
                             </div>
                             <div style={{ marginTop: 32 }}>
-                                <h3 style={{ fontSize: '1.5rem', color: '#0A1733', marginBottom: 8, fontWeight: 800 }}>
+                                <h3 style={{ fontSize: 'clamp(1.2rem, 3vw, 1.5rem)', color: '#0A1733', marginBottom: 8, fontWeight: 800 }}>
                                     {p.introBadge || 'Since 2019'}
                                 </h3>
-                                <p style={{ color: '#647489', fontSize: '0.95rem', lineHeight: 1.6 }}>
+                                <p style={{ color: '#647489', fontSize: 'clamp(0.85rem, 2vw, 0.95rem)', lineHeight: 1.6 }}>
                                     {p.introBadgeDesc || 'Empowering learners and businesses'}
                                 </p>
                             </div>
@@ -202,7 +202,7 @@ export default function About() {
                                     backdropFilter: 'blur(10px)',
                                 }}
                             >
-                                                                    <span style={{ fontSize: 40 }}>👁️</span>
+                                <span style={{ fontSize: 40 }}>👁️</span>
                             </div>
                             <h3 style={{ fontSize: 'clamp(1.4rem, 3vw, 1.8rem)', margin: '0 0 16px', fontWeight: 800, color: '#fff' }}>
                                 {p.visionTitle || 'Our Vision'}
@@ -231,7 +231,7 @@ export default function About() {
                                     backdropFilter: 'blur(10px)',
                                 }}
                             >
-                                                                    <span style={{ fontSize: 40 }}>🎯</span>
+                                <span style={{ fontSize: 40 }}>🎯</span>
                             </div>
                             <h3 style={{ fontSize: 'clamp(1.4rem, 3vw, 1.8rem)', margin: '0 0 16px', fontWeight: 800, color: '#fff' }}>
                                 {p.missionTitle || 'Our Mission'}
@@ -288,7 +288,7 @@ export default function About() {
                                         backdropFilter: 'blur(10px)',
                                     }}
                                 >
-                                                                                <span style={{ fontSize: 40 }}>{coreValueEmoji[v.icon] || '⭐'}</span>
+                                    <span style={{ fontSize: 40 }}>{coreValueEmoji[v.icon] || '⭐'}</span>
                                 </div>
                                 <h3 style={{ fontSize: '1.2rem', marginBottom: 10, fontWeight: 700 }}>
                                     {v.title}
@@ -299,7 +299,7 @@ export default function About() {
                             </div>
                         ))}
                     </div>
-                    <div style={{ maxWidth: 'calc(66.667% + 28px)', margin: '28px auto 0 auto' }}>
+                    <div className="about-values-row2" style={{ margin: '28px auto 0 auto' }}>
                         <div className={clsx('grid', 'grid-2')} style={{ justifyContent: 'center' }}>
                             {values.slice(3).map((v, i) => (
                                 <div
@@ -360,6 +360,7 @@ export default function About() {
                         <p>{p.journeyDesc || 'A timeline of growth, learning, and impact.'}</p>
                     </div>
                     <div
+                        className="about-journey"
                         style={{
                             position: 'relative',
                             maxWidth: 800,
@@ -381,7 +382,7 @@ export default function About() {
                         {journey.map((item, i) => (
                             <div
                                 key={item.year}
-                                className={`animate-on-scroll ${journeyVisible ? 'visible' : ''}`}
+                                className={`journey-item animate-on-scroll ${journeyVisible ? 'visible' : ''}`}
                                 style={{
                                     display: 'grid',
                                     gridTemplateColumns: '1fr auto 1fr',
@@ -394,7 +395,7 @@ export default function About() {
                                 {i % 2 === 0 ? (
                                     <>
                                         <div
-                                            className="glass-card"
+                                            className="journey-card glass-card"
                                             style={{ padding: 24, textAlign: 'right' }}
                                         >
                                             <div
@@ -417,6 +418,7 @@ export default function About() {
                                             </p>
                                         </div>
                                         <div
+                                            className="journey-dot"
                                             style={{
                                                 width: 18,
                                                 height: 18,
@@ -425,12 +427,13 @@ export default function About() {
                                                 boxShadow: '0 0 0 4px #fff, 0 0 0 6px rgba(45,212,191,0.3)',
                                             }}
                                         />
-                                        <div />
+                                        <div className="journey-spacer" />
                                     </>
                                 ) : (
                                     <>
-                                        <div />
+                                        <div className="journey-spacer" />
                                         <div
+                                            className="journey-dot"
                                             style={{
                                                 width: 18,
                                                 height: 18,
@@ -440,7 +443,7 @@ export default function About() {
                                             }}
                                         />
                                         <div
-                                            className="glass-card"
+                                            className="journey-card glass-card"
                                             style={{ padding: 24, textAlign: 'left' }}
                                         >
                                             <div
@@ -502,7 +505,7 @@ export default function About() {
                         <div
                             style={{
                                 display: 'flex',
-                                gap: 16,
+                                gap: 'clamp(12px, 3vw, 16px)',
                                 justifyContent: 'center',
                                 flexWrap: 'wrap',
                                 position: 'relative',
@@ -513,10 +516,10 @@ export default function About() {
                                 to="/team"
                                 className="btn-glow"
                                 style={{
-                                    padding: '14px 36px',
-                                    fontSize: '1.05rem',
+                                    padding: 'clamp(12px, 3vw, 14px) clamp(24px, 6vw, 36px)',
+                                    fontSize: 'clamp(0.95rem, 2vw, 1.05rem)',
                                     fontWeight: 700,
-                                    borderRadius: 12,
+                                    borderRadius: 'clamp(8px, 2vw, 12px)',
                                     background: '#fff',
                                     color: '#0A1733',
                                     textDecoration: 'none',
@@ -532,10 +535,10 @@ export default function About() {
                                 to="/contact"
                                 className="btn-glass"
                                 style={{
-                                    padding: '14px 36px',
-                                    fontSize: '1.05rem',
+                                    padding: 'clamp(12px, 3vw, 14px) clamp(24px, 6vw, 36px)',
+                                    fontSize: 'clamp(0.95rem, 2vw, 1.05rem)',
                                     fontWeight: 700,
-                                    borderRadius: 12,
+                                    borderRadius: 'clamp(8px, 2vw, 12px)',
                                     border: '2px solid rgba(255,255,255,0.4)',
                                     color: '#fff',
                                     background: 'rgba(255,255,255,0.1)',

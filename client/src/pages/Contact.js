@@ -41,7 +41,7 @@ export default function Contact() {
             />
 
             <section
-                className="section-light"
+                className="section-light contact-section"
                 style={{
                     padding: '80px 0',
                     position: 'relative',
@@ -72,7 +72,7 @@ export default function Contact() {
                 />
 
                 <div
-                    className="container"
+                    className="container contact-grid"
                     style={{
                         display: 'grid',
                         gridTemplateColumns: '1fr 1.2fr',
@@ -137,6 +137,7 @@ export default function Contact() {
                                     }}
                                 >
                                     <div
+                                        className="icon-wrap"
                                         style={{
                                             width: 48,
                                             height: 48,
@@ -301,7 +302,7 @@ export default function Contact() {
                                     </div>
                                     <button
                                         type="submit"
-                                        className="btn-glow"
+                                        className="btn-glow contact-submit-btn"
                                         style={{
                                             width: '100%',
                                             padding: '14px 24px',
