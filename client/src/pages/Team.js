@@ -4,6 +4,17 @@ import API from '../api';
 import PageHeader from '../components/PageHeader';
 import useInView from '../hooks/useInView';
 
+const getIconInfo = (icon) => {
+    if (!icon) return { isImageIcon: false, iconSrc: null, emoji: '👤' };
+    if (icon.startsWith('http') || icon.startsWith('https://res.cloudinary.com')) {
+        return { isImageIcon: true, iconSrc: icon, emoji: null };
+    }
+    if (icon.endsWith('.png') || icon.endsWith('.jpg') || icon.endsWith('.jpeg') || icon.endsWith('.svg') || icon.endsWith('.webp')) {
+        return { isImageIcon: true, iconSrc: `/${icon}`, emoji: null };
+    }
+    return { isImageIcon: false, iconSrc: null, emoji: icon };
+};
+
 const colorPalette = [
     'linear-gradient(135deg, #667eea, #764ba2)',
     'linear-gradient(135deg, #f093fb, #f5576c)',
@@ -196,9 +207,25 @@ export default function Team() {
                                                         e.target.style.display = 'none';
                                                     }}
                                                 />
-                                            ) : (
-                                                m.name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase()
-                                            )}
+                                            ) : (() => {
+                                                const iconInfo = getIconInfo(m.icon);
+                                                if (iconInfo.isImageIcon) {
+                                                    return (
+                                                        <img
+                                                            src={iconInfo.iconSrc}
+                                                            alt=""
+                                                            style={{
+                                                                width: '60px',
+                                                                height: '60px',
+                                                                objectFit: 'contain',
+                                                            }}
+                                                        />
+                                                    );
+                                                }
+                                                return (
+                                                    <span style={{ fontSize: '2.5rem' }}>{iconInfo.emoji}</span>
+                                                );
+                                            })()}
                                         </div>
                                         <div style={{ padding: '0 24px 28px', textAlign: 'center' }}>
                                             <h3 style={{ fontSize: '1.2rem', marginBottom: 6, fontWeight: 800, color: '#0A1733' }}>

@@ -6,7 +6,10 @@ import {
     AdminFormCard,
     AdminToast,
     AdminImageUpload,
+    AdminIconPicker,
 } from '../../components/AdminUI';
+
+const emptyJourneyItem = { year: '', title: '', desc: '', icon: '' };
 
 const emptyAbout = {
     eyebrow: '',
@@ -29,6 +32,12 @@ const emptyAbout = {
     journeyEyebrow: '',
     journeyTitle: '',
     journeyDesc: '',
+    journeyItems: [
+        { year: '2019', title: 'Founded', desc: 'M.A. Corporation was established with a clear vision to bridge education and real-world skills.' },
+        { year: '2021', title: 'Expansion', desc: 'Launched digital services, expanded our team, and onboarded our first 500 students.' },
+        { year: '2023', title: 'Innovation', desc: 'Introduced AI-powered learning paths and corporate consulting services.' },
+        { year: 'Today', title: 'Growing Strong', desc: 'Trusted by thousands of students and businesses across the region.' },
+    ],
     ctaTitle: '',
     ctaDesc: '',
     ctaTeamBtn: '',
@@ -45,6 +54,30 @@ export default function AboutPageManager() {
     }, [settings]);
 
     const update = (k) => (e) => setForm({ ...form, [k]: e.target.value });
+
+    const updateJourneyItem = (index, field, value) => {
+        const newItems = [...form.journeyItems];
+        newItems[index] = { ...newItems[index], [field]: value };
+        setForm({ ...form, journeyItems: newItems });
+    };
+
+    const addJourneyItem = () => {
+        setForm({ ...form, journeyItems: [...form.journeyItems, { ...emptyJourneyItem }] });
+    };
+
+    const removeJourneyItem = (index) => {
+        if (form.journeyItems.length <= 1) return;
+        const newItems = form.journeyItems.filter((_, i) => i !== index);
+        setForm({ ...form, journeyItems: newItems });
+    };
+
+    const moveJourneyItem = (index, direction) => {
+        const newItems = [...form.journeyItems];
+        const newIndex = index + direction;
+        if (newIndex < 0 || newIndex >= newItems.length) return;
+        [newItems[index], newItems[newIndex]] = [newItems[newIndex], newItems[index]];
+        setForm({ ...form, journeyItems: newItems });
+    };
 
     const uploadFile = async (file) => {
         const formData = new FormData();
@@ -230,9 +263,123 @@ export default function AboutPageManager() {
                             <label>Description</label>
                             <textarea value={form.journeyDesc} onChange={update('journeyDesc')} rows={2} />
                         </div>
-                        <p style={{ fontSize: '0.8rem', color: '#94a3b8' }}>
-                            Timeline items can be added/edited on the public site in a future update.
-                        </p>
+
+                        <div style={{ marginTop: 20 }}>
+                            <h4 style={{ marginBottom: 12, fontSize: '1rem', color: '#0A1733' }}>Timeline Items</h4>
+                            {form.journeyItems.map((item, index) => (
+                                <div
+                                    key={index}
+                                    style={{
+                                        border: '1px solid #e2e8f0',
+                                        borderRadius: 10,
+                                        padding: 16,
+                                        marginBottom: 12,
+                                        background: '#fafbfc',
+                                    }}
+                                >
+                                    <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 12 }}>
+                                        <div className="field" style={{ flex: 1, minWidth: 120 }}>
+                                            <label>Year</label>
+                                            <input
+                                                value={item.year}
+                                                onChange={(e) => updateJourneyItem(index, 'year', e.target.value)}
+                                                placeholder="2019"
+                                            />
+                                        </div>
+                                        <div className="field" style={{ flex: 2, minWidth: 150 }}>
+                                            <label>Title</label>
+                                            <input
+                                                value={item.title}
+                                                onChange={(e) => updateJourneyItem(index, 'title', e.target.value)}
+                                                placeholder="Founded"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="field" style={{ marginBottom: 12 }}>
+                                        <label>Description</label>
+                                        <textarea
+                                            value={item.desc}
+                                            onChange={(e) => updateJourneyItem(index, 'desc', e.target.value)}
+                                            rows={2}
+                                            placeholder="Description of this milestone..."
+                                        />
+                                    </div>
+                                    <div className="field" style={{ marginBottom: 12 }}>
+                                        <label>Icon</label>
+                                        <AdminIconPicker
+                                            value={item.icon}
+                                            onChange={(v) => updateJourneyItem(index, 'icon', v)}
+                                            onUpload={handleLogoUpload}
+                                        />
+                                    </div>
+                                    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                                        <button
+                                            type="button"
+                                            onClick={() => moveJourneyItem(index, -1)}
+                                            disabled={index === 0}
+                                            style={{
+                                                padding: '6px 12px',
+                                                borderRadius: 6,
+                                                border: '1px solid #e2e8f0',
+                                                background: '#fff',
+                                                cursor: index === 0 ? 'not-allowed' : 'pointer',
+                                                opacity: index === 0 ? 0.5 : 1,
+                                            }}
+                                        >
+                                            ↑ Up
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => moveJourneyItem(index, 1)}
+                                            disabled={index === form.journeyItems.length - 1}
+                                            style={{
+                                                padding: '6px 12px',
+                                                borderRadius: 6,
+                                                border: '1px solid #e2e8f0',
+                                                background: '#fff',
+                                                cursor: index === form.journeyItems.length - 1 ? 'not-allowed' : 'pointer',
+                                                opacity: index === form.journeyItems.length - 1 ? 0.5 : 1,
+                                            }}
+                                        >
+                                            ↓ Down
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => removeJourneyItem(index)}
+                                            disabled={form.journeyItems.length <= 1}
+                                            style={{
+                                                padding: '6px 12px',
+                                                borderRadius: 6,
+                                                border: '1px solid #ef4444',
+                                                background: '#fff',
+                                                color: '#ef4444',
+                                                cursor: form.journeyItems.length <= 1 ? 'not-allowed' : 'pointer',
+                                                opacity: form.journeyItems.length <= 1 ? 0.5 : 1,
+                                                marginLeft: 'auto',
+                                            }}
+                                        >
+                                            🗑 Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                            <button
+                                type="button"
+                                onClick={addJourneyItem}
+                                style={{
+                                    marginTop: 12,
+                                    padding: '10px 20px',
+                                    borderRadius: 8,
+                                    border: '2px dashed #2DD4BF',
+                                    background: 'transparent',
+                                    color: '#14B8A6',
+                                    fontWeight: 600,
+                                    cursor: 'pointer',
+                                }}
+                            >
+                                + Add Timeline Item
+                            </button>
+                        </div>
                     </AdminFormCard>
                 </div>
 

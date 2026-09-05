@@ -412,3 +412,247 @@ export function AdminImageUpload({ value, onUpload, onChange }) {
         </div>
     );
 }
+
+export function AdminIconPicker({ value, onChange, onUpload }) {
+    const [showEmojiPicker, setShowEmojiPicker] = React.useState(false);
+    const [showFileUpload, setShowFileUpload] = React.useState(false);
+
+    // Common emoji icons for contact items
+    const emojiIcons = [
+        '🏢', '📍', '📞', '✉️', '💬', '🌐', '🎯', '🚀', '💡', '🤝',
+        '⭐', '📈', '🛡️', '👥', '🎓', '👁️', '🏆', '💼', '📚', '🔧',
+        '⚙️', '🔒', '📄', '📝', '📊', '📱', '💻', '☁️', '🔍', '🎨'
+    ];
+
+    // Available PNG icons in public folder
+    const pngIcons = [
+        'icon-globe.png', 'icon-target.png', 'icon-rocket.png', 'icon-lightbulb.png',
+        'icon-handshake.png', 'icon-star.png', 'icon-growth.png', 'icon-team.png',
+        'icon-graduation.png', 'icon-briefcase.png', 'icon-eye.png', 'icon-shield.png',
+        'icon-teacher.png'
+    ];
+
+    const handleEmojiSelect = (emoji) => {
+        onChange(emoji);
+        setShowEmojiPicker(false);
+    };
+
+    const handlePngSelect = (png) => {
+        onChange(png);
+        setShowFileUpload(false);
+    };
+
+    const handleFileUpload = (e) => {
+        const file = e.target.files[0];
+        if (file && onUpload) {
+            onUpload(file);
+        }
+        setShowFileUpload(false);
+    };
+
+    return (
+        <div>
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 8, flexWrap: 'wrap' }}>
+                {/* Current value display */}
+                <div
+                    style={{
+                        width: 44,
+                        height: 44,
+                        borderRadius: 10,
+                        background: 'linear-gradient(135deg, rgba(20,184,166,0.12), rgba(14,165,164,0.12))',
+                        border: '2px solid rgba(20,184,166,0.3)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '1.5rem',
+                        position: 'relative',
+                    }}
+                >
+                    {value && (value.startsWith('icon-') && value.endsWith('.png') ? (
+                        <img src={`/${value}`} alt="icon" style={{ width: 28, height: 28, objectFit: 'contain' }} />
+                    ) : (
+                        <span>{value || '📍'}</span>
+                    ))}
+                </div>
+
+                {/* Emoji picker button */}
+                <button
+                    type="button"
+                    onClick={() => { setShowEmojiPicker(!showEmojiPicker); setShowFileUpload(false); }}
+                    style={{
+                        padding: '8px 14px',
+                        borderRadius: 8,
+                        border: '1px solid rgba(10,23,51,0.15)',
+                        background: showEmojiPicker ? 'linear-gradient(135deg, #14B8A6, #0EA5A4)' : '#fff',
+                        color: showEmojiPicker ? '#fff' : '#0A1733',
+                        fontSize: '0.8rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 6,
+                    }}
+                >
+                    😀 Emoji
+                </button>
+
+                {/* PNG icons button */}
+                <button
+                    type="button"
+                    onClick={() => { setShowFileUpload(!showFileUpload); setShowEmojiPicker(false); }}
+                    style={{
+                        padding: '8px 14px',
+                        borderRadius: 8,
+                        border: '1px solid rgba(10,23,51,0.15)',
+                        background: showFileUpload ? 'linear-gradient(135deg, #14B8A6, #0EA5A4)' : '#fff',
+                        color: showFileUpload ? '#fff' : '#0A1733',
+                        fontSize: '0.8rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 6,
+                    }}
+                >
+                    🖼️ PNG Icons
+                </button>
+
+                {/* Upload custom button */}
+                <label
+                    style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 6,
+                        padding: '8px 14px',
+                        fontSize: '0.8rem',
+                        fontWeight: 700,
+                        background: 'linear-gradient(135deg, rgba(20,184,166,0.12), rgba(14,165,164,0.12))',
+                        color: '#0ea5a4',
+                        borderRadius: 8,
+                        cursor: 'pointer',
+                        border: '1px solid rgba(20,184,166,0.3)',
+                    }}
+                >
+                    ☁️ Upload
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileUpload}
+                        style={{ display: 'none' }}
+                    />
+                </label>
+
+                {/* Clear button */}
+                {value && (
+                    <button
+                        type="button"
+                        onClick={() => onChange('')}
+                        style={{
+                            padding: '8px 14px',
+                            borderRadius: 8,
+                            border: '1px solid rgba(239,68,68,0.2)',
+                            background: 'rgba(239,68,68,0.1)',
+                            color: '#ef4444',
+                            fontSize: '0.8rem',
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                        }}
+                    >
+                        ✕ Clear
+                    </button>
+                )}
+            </div>
+
+            {/* Emoji picker dropdown */}
+            {showEmojiPicker && (
+                <div
+                    style={{
+                        position: 'absolute',
+                        zIndex: 100,
+                        background: '#fff',
+                        border: '1px solid rgba(10,23,51,0.15)',
+                        borderRadius: 12,
+                        padding: 12,
+                        boxShadow: '0 10px 40px rgba(10,23,51,0.15)',
+                        marginTop: 4,
+                        maxWidth: 320,
+                    }}
+                >
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', gap: 6 }}>
+                        {emojiIcons.map((emoji) => (
+                            <button
+                                key={emoji}
+                                type="button"
+                                onClick={() => handleEmojiSelect(emoji)}
+                                style={{
+                                    padding: '10px',
+                                    borderRadius: 8,
+                                    border: '1px solid rgba(10,23,51,0.08)',
+                                    background: '#fafbfc',
+                                    fontSize: '1.3rem',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s ease',
+                                }}
+                                onMouseEnter={(e) => e.target.style.transform = 'scale(1.2)'}
+                                onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+                            >
+                                {emoji}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* PNG icons dropdown */}
+            {showFileUpload && (
+                <div
+                    style={{
+                        position: 'absolute',
+                        zIndex: 100,
+                        background: '#fff',
+                        border: '1px solid rgba(10,23,51,0.15)',
+                        borderRadius: 12,
+                        padding: 12,
+                        boxShadow: '0 10px 40px rgba(10,23,51,0.15)',
+                        marginTop: 4,
+                        maxWidth: 320,
+                    }}
+                >
+                    <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginBottom: 8, fontWeight: 600 }}>
+                        Available PNG Icons
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
+                        {pngIcons.map((png) => (
+                            <button
+                                key={png}
+                                type="button"
+                                onClick={() => handlePngSelect(png)}
+                                style={{
+                                    padding: '10px',
+                                    borderRadius: 8,
+                                    border: '1px solid rgba(10,23,51,0.08)',
+                                    background: '#fafbfc',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s ease',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    gap: 4,
+                                }}
+                            >
+                                <img src={`/${png}`} alt={png} style={{ width: 32, height: 32, objectFit: 'contain' }} />
+                                <span style={{ fontSize: '0.65rem', color: '#64748b' }}>{png.replace('icon-', '').replace('.png', '')}</span>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            <style>{`
+                .admin-icon-picker-wrapper {
+                    position: relative;
+                }
+            `}</style>
+        </div>
+    );
+}

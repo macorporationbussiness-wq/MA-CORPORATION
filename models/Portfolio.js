@@ -30,6 +30,7 @@ const PortfolioSchema = new mongoose.Schema({
     featured: { type: Boolean, default: false },
     isActive: { type: Boolean, default: true },
     order: { type: Number, default: 0 },
+    icon: { type: String, default: '' },
     createdAt: { type: Date, default: Date.now },
 });
 

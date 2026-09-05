@@ -5,6 +5,17 @@ import PageHeader from '../components/PageHeader';
 import useInView from '../hooks/useInView';
 import { useSettings } from '../context/SettingsContext';
 
+const getIconInfo = (icon) => {
+    if (!icon) return { isImageIcon: false, iconSrc: null, emoji: '📍' };
+    if (icon.startsWith('http') || icon.startsWith('https://res.cloudinary.com')) {
+        return { isImageIcon: true, iconSrc: icon, emoji: null };
+    }
+    if (icon.endsWith('.png') || icon.endsWith('.jpg') || icon.endsWith('.jpeg') || icon.endsWith('.svg') || icon.endsWith('.webp')) {
+        return { isImageIcon: true, iconSrc: `/${icon}`, emoji: null };
+    }
+    return { isImageIcon: false, iconSrc: null, emoji: icon };
+};
+
 export default function About() {
     const { settings } = useSettings();
     const p = settings.aboutPage || {};
@@ -25,7 +36,7 @@ export default function About() {
         'icon-lightbulb.png': '💡',
     };
 
-    const journey = p.journey || [
+    const journey = p.journeyItems || p.journey || [
         { year: '2019', title: 'Founded', desc: 'M.A. Corporation was established with a clear vision to bridge education and real-world skills.' },
         { year: '2021', title: 'Expansion', desc: 'Launched digital services, expanded our team, and onboarded our first 500 students.' },
         { year: '2023', title: 'Innovation', desc: 'Introduced AI-powered learning paths and corporate consulting services.' },
@@ -420,13 +431,34 @@ export default function About() {
                                         <div
                                             className="journey-dot"
                                             style={{
-                                                width: 18,
-                                                height: 18,
+                                                width: 50,
+                                                height: 50,
                                                 borderRadius: '50%',
                                                 background: 'linear-gradient(135deg, #2DD4BF, #14B8A6)',
                                                 boxShadow: '0 0 0 4px #fff, 0 0 0 6px rgba(45,212,191,0.3)',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
                                             }}
-                                        />
+                                        >
+                                            {(() => {
+                                                const iconInfo = getIconInfo(item.icon);
+                                                if (iconInfo.isImageIcon) {
+                                                    return (
+                                                        <img
+                                                            src={iconInfo.iconSrc}
+                                                            alt=""
+                                                            style={{
+                                                                width: '30px',
+                                                                height: '30px',
+                                                                objectFit: 'contain',
+                                                            }}
+                                                        />
+                                                    );
+                                                }
+                                                return <span style={{ fontSize: '1.5rem' }}>{iconInfo.emoji}</span>;
+                                            })()}
+                                        </div>
                                         <div className="journey-spacer" />
                                     </>
                                 ) : (
@@ -435,13 +467,34 @@ export default function About() {
                                         <div
                                             className="journey-dot"
                                             style={{
-                                                width: 18,
-                                                height: 18,
+                                                width: 50,
+                                                height: 50,
                                                 borderRadius: '50%',
                                                 background: 'linear-gradient(135deg, #2DD4BF, #14B8A6)',
                                                 boxShadow: '0 0 0 4px #fff, 0 0 0 6px rgba(45,212,191,0.3)',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
                                             }}
-                                        />
+                                        >
+                                            {(() => {
+                                                const iconInfo = getIconInfo(item.icon);
+                                                if (iconInfo.isImageIcon) {
+                                                    return (
+                                                        <img
+                                                            src={iconInfo.iconSrc}
+                                                            alt=""
+                                                            style={{
+                                                                width: '30px',
+                                                                height: '30px',
+                                                                objectFit: 'contain',
+                                                            }}
+                                                        />
+                                                    );
+                                                }
+                                                return <span style={{ fontSize: '1.5rem' }}>{iconInfo.emoji}</span>;
+                                            })()}
+                                        </div>
                                         <div
                                             className="journey-card glass-card"
                                             style={{ padding: 24, textAlign: 'left' }}

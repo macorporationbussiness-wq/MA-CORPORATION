@@ -6,6 +6,24 @@ import { useSettings } from '../context/SettingsContext';
 import { buildWhatsAppLink } from '../components/WhatsAppButton';
 import useInView from '../hooks/useInView';
 
+// Helper to determine icon type and render appropriately
+const getIconInfo = (icon) => {
+    if (!icon) return { type: 'emoji', value: '⭐' };
+
+    // Check if it's a Cloudinary URL
+    if (icon.startsWith('http')) {
+        return { type: 'image', value: icon };
+    }
+
+    // Check if it's a PNG/JPG/SVG/WebP filename
+    if (icon.endsWith('.png') || icon.endsWith('.jpg') || icon.endsWith('.jpeg') || icon.endsWith('.svg') || icon.endsWith('.webp')) {
+        return { type: 'image', value: '/' + icon };
+    }
+
+    // Default to emoji
+    return { type: 'emoji', value: icon };
+};
+
 const keyAreaEmoji = (icon) => {
     const map = {
         graduation: '🎓',
@@ -18,16 +36,6 @@ const keyAreaEmoji = (icon) => {
         'icon-rocket.png': '🚀',
     };
     return map[icon] || '⭐';
-};
-
-const serviceEmoji = (icon) => {
-    const map = {
-        code: '💻',
-        'trending-up': '📈',
-        design: '🎨',
-        briefcase: '💼',
-    };
-    return map[icon] || '⚙️';
 };
 
 const coreValueEmoji = (icon) => {
@@ -352,35 +360,40 @@ export default function Home() {
                         <h2 style={{ fontWeight: 800 }}>Our Key Areas</h2>
                     </div>
                     <div className={clsx('grid', 'grid-4')}>
-                        {homeKeyAreas.map((a, i) => (
-                            <div
-                                key={a.title}
-                                className={`glass-card ${keyAreasVisible ? 'visible' : ''}`}
-                                style={{
-                                    textAlign: 'center',
-                                    padding: 32,
-                                    transitionDelay: `${i * 100}ms`,
-                                }}
-                            >
-                                <div style={{
-                                    width: 64,
-                                    height: 64,
-                                    borderRadius: 16,
-                                    background: 'linear-gradient(135deg, rgba(45,212,191,0.2), rgba(20,184,166,0.2))',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    margin: '0 auto 18px',
-                                    border: '1px solid rgba(45,212,191,0.3)',
-                                }}>
-                                    <span style={{ fontSize: 36 }}>
-                                        {keyAreaEmoji(a.icon)}
-                                    </span>
+                        {homeKeyAreas.map((a, i) => {
+                            const iconInfo = getIconInfo(a.icon);
+                            return (
+                                <div
+                                    key={a.title}
+                                    className={`glass-card ${keyAreasVisible ? 'visible' : ''}`}
+                                    style={{
+                                        textAlign: 'center',
+                                        padding: 32,
+                                        transitionDelay: `${i * 100}ms`,
+                                    }}
+                                >
+                                    <div style={{
+                                        width: 64,
+                                        height: 64,
+                                        borderRadius: 16,
+                                        background: 'linear-gradient(135deg, rgba(45,212,191,0.2), rgba(20,184,166,0.2))',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        margin: '0 auto 18px',
+                                        border: '1px solid rgba(45,212,191,0.3)',
+                                    }}>
+                                        {iconInfo.type === 'image' ? (
+                                            <img src={iconInfo.value} alt={a.title} style={{ width: 36, height: 36, objectFit: 'contain' }} />
+                                        ) : (
+                                            <span style={{ fontSize: 36 }}>{iconInfo.value}</span>
+                                        )}
+                                    </div>
+                                    <h3 style={{ fontSize: '1.2rem', marginBottom: 10, fontWeight: 700 }}>{a.title}</h3>
+                                    <p className="muted" style={{ fontSize: '0.95rem', lineHeight: 1.6 }}>{a.desc}</p>
                                 </div>
-                                <h3 style={{ fontSize: '1.2rem', marginBottom: 10, fontWeight: 700 }}>{a.title}</h3>
-                                <p className="muted" style={{ fontSize: '0.95rem', lineHeight: 1.6 }}>{a.desc}</p>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
             </section>
@@ -394,36 +407,41 @@ export default function Home() {
                         <p>{homeServices.subtitle || 'Reliable, customized services designed to meet the needs of individuals, professionals, and businesses.'}</p>
                     </div>
                     <div className={clsx('grid', 'grid-4')}>
-                        {services.map((s, i) => (
-                            <div
-                                key={s._id}
-                                className={`glass-card ${servicesVisible ? 'visible' : ''}`}
-                                style={{
-                                    textAlign: 'center',
-                                    padding: 28,
-                                    transitionDelay: `${i * 100}ms`,
-                                }}
-                            >
-                                <div style={{
-                                    width: 56,
-                                    height: 56,
-                                    borderRadius: 14,
-                                    background: 'linear-gradient(135deg, #14B8A6, #0EA5A4)',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    margin: '0 auto 16px',
-                                    boxShadow: '0 8px 20px rgba(20,184,166,0.3)',
-                                    fontSize: '1.5rem',
-                                }}>
-                                    <span style={{ fontSize: 28 }}>
-                                        {serviceEmoji(s.icon)}
-                                    </span>
+                        {services.map((s, i) => {
+                            const iconInfo = getIconInfo(s.image || s.icon);
+                            return (
+                                <div
+                                    key={s._id}
+                                    className={`glass-card ${servicesVisible ? 'visible' : ''}`}
+                                    style={{
+                                        textAlign: 'center',
+                                        padding: 28,
+                                        transitionDelay: `${i * 100}ms`,
+                                    }}
+                                >
+                                    <div style={{
+                                        width: 56,
+                                        height: 56,
+                                        borderRadius: 14,
+                                        background: 'linear-gradient(135deg, #14B8A6, #0EA5A4)',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        margin: '0 auto 16px',
+                                        boxShadow: '0 8px 20px rgba(20,184,166,0.3)',
+                                        fontSize: '1.5rem',
+                                    }}>
+                                        {iconInfo.type === 'image' ? (
+                                            <img src={iconInfo.value} alt={s.title} style={{ width: 36, height: 36, objectFit: 'contain' }} />
+                                        ) : (
+                                            <span style={{ fontSize: 28 }}>{iconInfo.value}</span>
+                                        )}
+                                    </div>
+                                    <h3 style={{ fontSize: '1.15rem', marginBottom: 10, fontWeight: 700 }}>{s.title}</h3>
+                                    <p className="muted" style={{ fontSize: '0.92rem', lineHeight: 1.6 }}>{s.description}</p>
                                 </div>
-                                <h3 style={{ fontSize: '1.15rem', marginBottom: 10, fontWeight: 700 }}>{s.title}</h3>
-                                <p className="muted" style={{ fontSize: '0.92rem', lineHeight: 1.6 }}>{s.description}</p>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                     <div className={clsx('text-center', 'mt-3')}>
                         <Link to="/services" className={clsx('btn', 'btn-outline')}>{homeServices.viewAllText || 'View All Services'} →</Link>
@@ -439,69 +457,79 @@ export default function Home() {
                         <h2 style={{ fontWeight: 800 }}>{homeValues.title || 'Our Core Values'}</h2>
                     </div>
                     <div className={clsx('grid', 'grid-3')} style={{ justifyContent: 'center' }}>
-                        {homeCoreValues.slice(0, 3).map((v, i) => (
-                            <div
-                                key={v.title}
-                                className={`glass-card ${valuesVisible ? 'visible' : ''}`}
-                                style={{
-                                    textAlign: 'center',
-                                    padding: 28,
-                                    transitionDelay: `${i * 100}ms`,
-                                }}
-                            >
-                                <div style={{
-                                    width: 64,
-                                    height: 64,
-                                    borderRadius: 16,
-                                    background: 'linear-gradient(135deg, rgba(45,212,191,0.2), rgba(20,184,166,0.2))',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    margin: '0 auto 18px',
-                                    border: '1px solid rgba(45,212,191,0.3)',
-                                }}>
-                                    <span style={{ fontSize: 36 }}>
-                                        {coreValueEmoji(v.icon)}
-                                    </span>
-                                </div>
-                                <h3 style={{ fontSize: '1.15rem', marginBottom: 8, fontWeight: 700 }}>{v.title}</h3>
-                                <p className="muted" style={{ fontSize: '0.92rem', lineHeight: 1.6 }}>{v.desc}</p>
-                            </div>
-                        ))}
-                    </div>
-                    <div style={{ maxWidth: 'calc(66.667% + 28px)', margin: '28px auto 0 auto' }}>
-                        <div className={clsx('grid', 'grid-2')} style={{ justifyContent: 'center' }}>
-                            {homeCoreValues.slice(3).map((v, i) => (
+                        {homeCoreValues.slice(0, 3).map((v, i) => {
+                            const iconInfo = getIconInfo(v.icon);
+                            return (
                                 <div
                                     key={v.title}
                                     className={`glass-card ${valuesVisible ? 'visible' : ''}`}
                                     style={{
                                         textAlign: 'center',
                                         padding: 28,
-                                        transitionDelay: `${(i + 3) * 100}ms`,
+                                        transitionDelay: `${i * 100}ms`,
                                     }}
                                 >
-                                    <div
-                                        style={{
-                                            width: 64,
-                                            height: 64,
-                                            borderRadius: 16,
-                                            background: 'linear-gradient(135deg, rgba(45,212,191,0.2), rgba(20,184,166,0.2))',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            margin: '0 auto 18px',
-                                            border: '1px solid rgba(45,212,191,0.3)',
-                                        }}
-                                    >
-                                        <span style={{ fontSize: 36 }}>
-                                            {coreValueEmoji(v.icon)}
-                                        </span>
+                                    <div style={{
+                                        width: 64,
+                                        height: 64,
+                                        borderRadius: 16,
+                                        background: 'linear-gradient(135deg, rgba(45,212,191,0.2), rgba(20,184,166,0.2))',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        margin: '0 auto 18px',
+                                        border: '1px solid rgba(45,212,191,0.3)',
+                                    }}>
+                                        {iconInfo.type === 'image' ? (
+                                            <img src={iconInfo.value} alt={v.title} style={{ width: 36, height: 36, objectFit: 'contain' }} />
+                                        ) : (
+                                            <span style={{ fontSize: 36 }}>{iconInfo.value}</span>
+                                        )}
                                     </div>
                                     <h3 style={{ fontSize: '1.15rem', marginBottom: 8, fontWeight: 700 }}>{v.title}</h3>
                                     <p className="muted" style={{ fontSize: '0.92rem', lineHeight: 1.6 }}>{v.desc}</p>
                                 </div>
-                            ))}
+                            );
+                        })}
+                    </div>
+                    <div style={{ maxWidth: 'calc(66.667% + 28px)', margin: '28px auto 0 auto' }}>
+                        <div className={clsx('grid', 'grid-2')} style={{ justifyContent: 'center' }}>
+                            {homeCoreValues.slice(3).map((v, i) => {
+                                const iconInfo = getIconInfo(v.icon);
+                                return (
+                                    <div
+                                        key={v.title}
+                                        className={`glass-card ${valuesVisible ? 'visible' : ''}`}
+                                        style={{
+                                            textAlign: 'center',
+                                            padding: 28,
+                                            transitionDelay: `${(i + 3) * 100}ms`,
+                                        }}
+                                    >
+                                        <div
+                                            style={{
+                                                width: 64,
+                                                height: 64,
+                                                borderRadius: 16,
+                                                background: 'linear-gradient(135deg, rgba(45,212,191,0.2), rgba(20,184,166,0.2))',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                margin: '0 auto 18px',
+                                                border: '1px solid rgba(45,212,191,0.3)',
+                                            }}
+                                        >
+                                            {iconInfo.type === 'image' ? (
+                                                <img src={iconInfo.value} alt={v.title} style={{ width: 36, height: 36, objectFit: 'contain' }} />
+                                            ) : (
+                                                <span style={{ fontSize: 36 }}>{iconInfo.value}</span>
+                                            )}
+                                        </div>
+                                        <h3 style={{ fontSize: '1.15rem', marginBottom: 8, fontWeight: 700 }}>{v.title}</h3>
+                                        <p className="muted" style={{ fontSize: '0.92rem', lineHeight: 1.6 }}>{v.desc}</p>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
                 </div>

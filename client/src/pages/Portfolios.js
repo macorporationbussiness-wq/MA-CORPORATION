@@ -5,6 +5,17 @@ import API from '../api';
 import PageHeader from '../components/PageHeader';
 import useInView from '../hooks/useInView';
 
+const getIconInfo = (icon) => {
+    if (!icon) return { isImageIcon: false, iconSrc: null, emoji: '📁' };
+    if (icon.startsWith('http') || icon.startsWith('https://res.cloudinary.com')) {
+        return { isImageIcon: true, iconSrc: icon, emoji: null };
+    }
+    if (icon.endsWith('.png') || icon.endsWith('.jpg') || icon.endsWith('.jpeg') || icon.endsWith('.svg') || icon.endsWith('.webp')) {
+        return { isImageIcon: true, iconSrc: `/${icon}`, emoji: null };
+    }
+    return { isImageIcon: false, iconSrc: null, emoji: icon };
+};
+
 const colorPalette = [
     'linear-gradient(135deg, #667eea, #764ba2)',
     'linear-gradient(135deg, #f093fb, #f5576c)',
@@ -249,22 +260,35 @@ export default function Portfolios() {
                                                             borderRadius: '50%',
                                                         }}
                                                     />
-                                                    <div
-                                                        style={{
-                                                            fontSize: '3.5rem',
-                                                            color: '#fff',
-                                                            fontWeight: 800,
-                                                            textShadow: '0 4px 20px rgba(0,0,0,0.3)',
-                                                            position: 'relative',
-                                                        }}
-                                                    >
-                                                        {(p.teamMember?.name || p.teamMemberName || p.title || '?')
-                                                            .split(' ')
-                                                            .map((n) => n[0])
-                                                            .join('')
-                                                            .slice(0, 2)
-                                                            .toUpperCase()}
-                                                    </div>
+                                                    {(() => {
+                                                        const iconInfo = getIconInfo(p.icon);
+                                                        if (iconInfo.isImageIcon) {
+                                                            return (
+                                                                <img
+                                                                    src={iconInfo.iconSrc}
+                                                                    alt=""
+                                                                    style={{
+                                                                        width: '80px',
+                                                                        height: '80px',
+                                                                        objectFit: 'contain',
+                                                                    }}
+                                                                />
+                                                            );
+                                                        }
+                                                        return (
+                                                            <div
+                                                                style={{
+                                                                    fontSize: '3.5rem',
+                                                                    color: '#fff',
+                                                                    fontWeight: 800,
+                                                                    textShadow: '0 4px 20px rgba(0,0,0,0.3)',
+                                                                    position: 'relative',
+                                                                }}
+                                                            >
+                                                                {iconInfo.emoji}
+                                                            </div>
+                                                        );
+                                                    })()}
                                                 </>
                                             )}
 

@@ -8,9 +8,10 @@ import {
     AdminCancelButton,
     AdminToast,
     AdminToggle,
+    AdminIconPicker,
 } from '../../components/AdminUI';
 
-const empty = { title: '', issuedTo: '', course: '', issueDate: '', certificateUrl: '', isActive: true };
+const empty = { title: '', issuedTo: '', course: '', issueDate: '', certificateUrl: '', isActive: true, icon: '' };
 
 const colorPalette = [
     'linear-gradient(135deg, #43e97b, #38f9d7)',
@@ -71,7 +72,7 @@ export default function CertificateManager() {
     };
 
     const edit = (c) => {
-        setForm(c);
+        setForm({ ...c, icon: c.icon || '' });
         setEditingId(c._id);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
@@ -192,6 +193,14 @@ export default function CertificateManager() {
                                     </div>
                                 )}
                             </div>
+                        </div>
+                        <div className="field">
+                            <label>Icon</label>
+                            <AdminIconPicker
+                                value={form.icon}
+                                onChange={(v) => setForm({ ...form, icon: v })}
+                                onUpload={handleCertificateUpload}
+                            />
                         </div>
                         <div style={{ marginBottom: 18 }}>
                             <AdminToggle

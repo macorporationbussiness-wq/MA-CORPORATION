@@ -9,6 +9,7 @@ import {
     AdminToast,
     AdminToggle,
     AdminImageUpload,
+    AdminIconPicker,
 } from '../../components/AdminUI';
 
 const empty = {
@@ -32,6 +33,7 @@ const empty = {
     featured: false,
     isActive: true,
     order: 0,
+    icon: '',
 };
 
 const projectTypes = ['Web App', 'Mobile App', 'Branding', 'UI/UX Design', 'AI/ML', 'Other'];
@@ -200,6 +202,7 @@ export default function PortfolioManager() {
             projectUrls: p.projectUrls && p.projectUrls.length > 0 ? p.projectUrls : (p.projectUrl ? [{ label: 'Live Demo', url: p.projectUrl }] : []),
             startDate: p.startDate ? new Date(p.startDate).toISOString().split('T')[0] : '',
             endDate: p.endDate ? new Date(p.endDate).toISOString().split('T')[0] : '',
+            icon: p.icon || '',
         });
         setEditingId(p._id);
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -305,6 +308,15 @@ export default function PortfolioManager() {
                             <AdminImageUpload
                                 value={form.image}
                                 onChange={(v) => setForm({ ...form, image: v, projectImage: v })}
+                                onUpload={handleThumbnailUpload}
+                            />
+                        </div>
+
+                        <div className="field">
+                            <label>Icon</label>
+                            <AdminIconPicker
+                                value={form.icon}
+                                onChange={(v) => setForm({ ...form, icon: v })}
                                 onUpload={handleThumbnailUpload}
                             />
                         </div>

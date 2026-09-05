@@ -5,6 +5,7 @@ import AdminPageHeader from '../../components/AdminPageHeader';
 import {
     AdminFormCard,
     AdminToast,
+    AdminIconPicker,
 } from '../../components/AdminUI';
 
 const emptyContact = {
@@ -197,11 +198,20 @@ export default function ContactPageManager() {
                                     />
                                 </div>
                                 <div className="field">
-                                    <label>Icon Filename</label>
-                                    <input
+                                    <label>Icon</label>
+                                    <AdminIconPicker
                                         value={item.icon || ''}
-                                        onChange={(e) => updateItem(i, 'icon', e.target.value)}
-                                        placeholder="icon-globe.png"
+                                        onChange={(val) => updateItem(i, 'icon', val)}
+                                        onUpload={async (file) => {
+                                            const formData = new FormData();
+                                            formData.append('image', file);
+                                            const resp = await fetch('http://localhost:5000/api/upload/single', {
+                                                method: 'POST',
+                                                body: formData,
+                                            });
+                                            const data = await resp.json();
+                                            return data.url;
+                                        }}
                                     />
                                 </div>
                                 <div className="field">

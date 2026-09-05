@@ -408,7 +408,7 @@ const seed = async () => {
                 category: 'Technology',
                 description:
                     'Custom, responsive websites and web applications built with modern frameworks for performance and scalability.',
-                icon: 'code',
+                icon: '💻',
             },
             {
                 title: 'SEO Optimization',
@@ -416,7 +416,7 @@ const seed = async () => {
                 category: 'Marketing',
                 description:
                     'Data-driven search engine optimization to improve visibility, rankings, and organic traffic.',
-                icon: 'search',
+                icon: '📈',
             },
             {
                 title: 'RAG Systems',
@@ -424,7 +424,7 @@ const seed = async () => {
                 category: 'AI',
                 description:
                     'Retrieval-Augmented Generation solutions that connect your data with powerful language models.',
-                icon: 'cpu',
+                icon: '🤖',
             },
             {
                 title: 'Business Consulting',
@@ -432,7 +432,7 @@ const seed = async () => {
                 category: 'Consulting',
                 description:
                     'Strategic guidance to help businesses grow, optimize operations, and adopt new technologies.',
-                icon: 'briefcase',
+                icon: '💼',
             },
         ];
         await Service.insertMany(services);

@@ -24,20 +24,94 @@ export default function Contact() {
         setSent(true);
     };
 
-    const contactItems = [
-        { icon: '🏢', label: 'Company', value: settings.companyName, color: 'linear-gradient(135deg, #667eea, #764ba2)' },
-        { icon: '📍', label: 'Address', value: settings.address, color: 'linear-gradient(135deg, #f093fb, #f5576c)' },
-        { icon: '📞', label: 'Phone', value: settings.phone, link: `tel:${settings.phone}`, color: 'linear-gradient(135deg, #4facfe, #00f2fe)' },
-        { icon: '✉️', label: 'Email', value: settings.email, link: `mailto:${settings.email}`, color: 'linear-gradient(135deg, #43e97b, #38f9d7)' },
-        { icon: '💬', label: 'WhatsApp', value: 'Chat with us', link: buildWhatsAppLink(settings.whatsapp, 'Hello!'), external: true, color: 'linear-gradient(135deg, #25D366, #128C7E)' },
-    ];
+    // Use dynamic contact items from settings.contactPage.contactItems, with fallback to defaults
+    const contactPageConfig = settings.contactPage || {};
+    const contactItemsConfig = contactPageConfig.contactItems || [];
+
+    // Map valueKey to emoji icons
+    const iconMap = {
+        companyName: '🏢',
+        address: '📍',
+        phone: '📞',
+        email: '✉️',
+        whatsapp: '💬',
+        whatsappText: '💬',
+    };
+
+    const contactItems = contactItemsConfig.length > 0
+        ? contactItemsConfig.map((item) => {
+            // Get the value from settings using valueKey
+            const valueKey = item.valueKey;
+            const linkKey = item.linkKey;
+            const linkPrefix = item.linkPrefix || '';
+            const value = settings[valueKey] || '';
+            const linkValue = linkKey ? settings[linkKey] : '';
+
+            let link = '#';
+            if (linkValue && linkPrefix) {
+                link = `${linkPrefix}${linkValue}`;
+            } else if (linkValue) {
+                link = linkValue;
+            }
+
+            // Special handling for WhatsApp
+            if (valueKey === 'whatsappText' || valueKey === 'whatsapp') {
+                link = buildWhatsAppLink(settings.whatsapp, 'Hello!');
+            }
+
+            // Determine icon: emoji, PNG filename, or Cloudinary URL
+            let icon = iconMap[valueKey] || item.icon || '📍';
+            let isImageIcon = false;
+            let iconSrc = icon;
+            if (icon && typeof icon === 'string') {
+                // Check if it's a Cloudinary URL or PNG filename
+                if (icon.startsWith('http') || icon.endsWith('.png') || icon.endsWith('.jpg') || icon.endsWith('.jpeg') || icon.endsWith('.svg') || icon.endsWith('.webp')) {
+                    isImageIcon = true;
+                    // For PNG filenames from public folder, prepend "/"
+                    if (!icon.startsWith('http') && (icon.endsWith('.png') || icon.endsWith('.jpg') || icon.endsWith('.jpeg') || icon.endsWith('.svg') || icon.endsWith('.webp'))) {
+                        iconSrc = '/' + icon;
+                    }
+                }
+            }
+
+            return {
+                icon: iconSrc,
+                isImageIcon: isImageIcon,
+                label: item.label || valueKey,
+                value: value || 'Not configured',
+                link: link,
+                external: item.external || false,
+                color: item.color || 'linear-gradient(135deg, #667eea, #764ba2)',
+            };
+        })
+        : [
+            // Fallback defaults - use emoji icons
+            { icon: '🏢', isImageIcon: false, label: 'Company', value: settings.companyName, color: 'linear-gradient(135deg, #667eea, #764ba2)' },
+            { icon: '📍', isImageIcon: false, label: 'Address', value: settings.address, color: 'linear-gradient(135deg, #f093fb, #f5576c)' },
+            { icon: '📞', isImageIcon: false, label: 'Phone', value: settings.phone, link: `tel:${settings.phone}`, color: 'linear-gradient(135deg, #4facfe, #00f2fe)' },
+            { icon: '✉️', isImageIcon: false, label: 'Email', value: settings.email, link: `mailto:${settings.email}`, color: 'linear-gradient(135deg, #43e97b, #38f9d7)' },
+            { icon: '💬', isImageIcon: false, label: 'WhatsApp', value: 'Chat with us', link: buildWhatsAppLink(settings.whatsapp, 'Hello!'), external: true, color: 'linear-gradient(135deg, #25D366, #128C7E)' },
+        ];
+
+    // Extract dynamic content from contactPage config with fallbacks
+    const eyebrow = contactPageConfig.eyebrow || 'Contact';
+    const title = contactPageConfig.title || 'Get In Touch';
+    const subtitle = contactPageConfig.subtitle || 'We typically respond within a few hours. You can also reach us directly on WhatsApp.';
+    const infoEyebrow = contactPageConfig.infoEyebrow || 'Reach Us';
+    const infoTitle = contactPageConfig.infoTitle || "Let's start a conversation";
+    const formTitle = contactPageConfig.formTitle || 'Send us a message';
+    const formDesc = contactPageConfig.formDesc || "Fill out the form and we'll respond within hours.";
+    const formSuccessTitle = contactPageConfig.formSuccessTitle || 'Message Sent!';
+    const formSuccessDesc = contactPageConfig.formSuccessDesc || 'Thank you for reaching out. Our team will get back to you shortly.';
+    const formSuccessBtn = contactPageConfig.formSuccessBtn || 'Send Another';
+    const submitBtn = contactPageConfig.submitBtn || 'Send Message';
 
     return (
         <div>
             <PageHeader
-                eyebrow="Contact"
-                title="Get In Touch"
-                subtitle="We typically respond within a few hours. You can also reach us directly on WhatsApp."
+                eyebrow={eyebrow}
+                title={title}
+                subtitle={subtitle}
             />
 
             <section
@@ -93,7 +167,7 @@ export default function Contact() {
                                 marginBottom: 12,
                             }}
                         >
-                            Reach Us
+                            {infoEyebrow}
                         </span>
                         <h2
                             style={{
@@ -106,7 +180,7 @@ export default function Contact() {
                                 backgroundClip: 'text',
                             }}
                         >
-                            Let's start a conversation
+                            {infoTitle}
                         </h2>
 
                         <div
@@ -151,7 +225,19 @@ export default function Contact() {
                                             flexShrink: 0,
                                         }}
                                     >
-                                        {item.icon}
+                                        {item.isImageIcon ? (
+                                            <img
+                                                src={item.icon}
+                                                alt={item.label}
+                                                style={{
+                                                    width: 28,
+                                                    height: 28,
+                                                    objectFit: 'contain',
+                                                }}
+                                            />
+                                        ) : (
+                                            <span style={{ fontSize: '1.3rem' }}>{item.icon}</span>
+                                        )}
                                     </div>
                                     <div style={{ flex: 1, minWidth: 0 }}>
                                         <div
@@ -230,10 +316,10 @@ export default function Contact() {
                                             color: '#0A1733',
                                         }}
                                     >
-                                        Message Sent!
+                                        {formSuccessTitle}
                                     </h3>
                                     <p className="muted" style={{ fontSize: '1rem', marginBottom: 24 }}>
-                                        Thank you for reaching out. Our team will get back to you shortly.
+                                        {formSuccessDesc}
                                     </p>
                                     <button
                                         onClick={() => {
@@ -253,7 +339,7 @@ export default function Contact() {
                                             boxShadow: '0 6px 18px rgba(20,184,166,0.3)',
                                         }}
                                     >
-                                        Send Another
+                                        {formSuccessBtn}
                                     </button>
                                 </div>
                             ) : (
@@ -266,10 +352,10 @@ export default function Contact() {
                                             color: '#0A1733',
                                         }}
                                     >
-                                        Send us a message
+                                        {formTitle}
                                     </h3>
                                     <p className="muted" style={{ fontSize: '0.9rem', marginBottom: 24 }}>
-                                        Fill out the form and we'll respond within hours.
+                                        {formDesc}
                                     </p>
                                     <div className="grid grid-2" style={{ gap: 14 }}>
                                         <div className="field">
@@ -320,7 +406,7 @@ export default function Contact() {
                                             gap: 8,
                                         }}
                                     >
-                                        Send Message <span>→</span>
+                                        {submitBtn} <span>→</span>
                                     </button>
                                 </form>
                             )}

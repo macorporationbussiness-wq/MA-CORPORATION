@@ -4,6 +4,24 @@ import API from '../api';
 import PageHeader from '../components/PageHeader';
 import useInView from '../hooks/useInView';
 
+// Helper to determine icon type and render appropriately
+const getIconInfo = (icon) => {
+    if (!icon) return { type: 'emoji', value: '🎓' };
+
+    // Check if it's a Cloudinary URL
+    if (icon.startsWith('http')) {
+        return { type: 'image', value: icon };
+    }
+
+    // Check if it's a PNG/JPG/SVG/WebP filename
+    if (icon.endsWith('.png') || icon.endsWith('.jpg') || icon.endsWith('.jpeg') || icon.endsWith('.svg') || icon.endsWith('.webp')) {
+        return { type: 'image', value: '/' + icon };
+    }
+
+    // Default to emoji
+    return { type: 'emoji', value: icon };
+};
+
 export default function Courses() {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -232,11 +250,13 @@ export default function Courses() {
                                                     position: 'relative',
                                                 }}
                                             >
-                                                {c.level === 'Beginner'
-                                                    ? '🌱'
-                                                    : c.level === 'Advanced'
-                                                        ? '🚀'
-                                                        : '🎓'}
+                                                {(() => {
+                                                    const iconInfo = getIconInfo(c.icon);
+                                                    if (iconInfo.type === 'image') {
+                                                        return <img src={iconInfo.value} alt={c.name} style={{ width: 64, height: 64, objectFit: 'contain' }} />;
+                                                    }
+                                                    return iconInfo.value || (c.level === 'Beginner' ? '🌱' : c.level === 'Advanced' ? '🚀' : '🎓');
+                                                })()}
                                             </div>
                                         </div>
                                         <div style={{ padding: 24, display: 'flex', flexDirection: 'column', flex: 1 }}>

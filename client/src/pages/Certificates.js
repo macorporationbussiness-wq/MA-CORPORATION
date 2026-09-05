@@ -4,6 +4,17 @@ import API from '../api';
 import PageHeader from '../components/PageHeader';
 import useInView from '../hooks/useInView';
 
+const getIconInfo = (icon) => {
+    if (!icon) return { isImageIcon: false, iconSrc: null, emoji: '🏅' };
+    if (icon.startsWith('http') || icon.startsWith('https://res.cloudinary.com')) {
+        return { isImageIcon: true, iconSrc: icon, emoji: null };
+    }
+    if (icon.endsWith('.png') || icon.endsWith('.jpg') || icon.endsWith('.jpeg') || icon.endsWith('.svg') || icon.endsWith('.webp')) {
+        return { isImageIcon: true, iconSrc: `/${icon}`, emoji: null };
+    }
+    return { isImageIcon: false, iconSrc: null, emoji: icon };
+};
+
 export default function Certificates() {
     const [certs, setCerts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -165,7 +176,23 @@ export default function Certificates() {
                                                 filter: 'drop-shadow(0 8px 20px rgba(45,212,191,0.5))',
                                             }}
                                         >
-                                            🏅
+                                            {(() => {
+                                                const iconInfo = getIconInfo(c.icon);
+                                                if (iconInfo.isImageIcon) {
+                                                    return (
+                                                        <img
+                                                            src={iconInfo.iconSrc}
+                                                            alt=""
+                                                            style={{
+                                                                width: '80px',
+                                                                height: '80px',
+                                                                objectFit: 'contain',
+                                                            }}
+                                                        />
+                                                    );
+                                                }
+                                                return <span>{iconInfo.emoji}</span>;
+                                            })()}
                                         </div>
                                     </div>
                                     <div style={{ padding: 24, textAlign: 'center' }}>

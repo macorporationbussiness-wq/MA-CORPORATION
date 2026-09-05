@@ -5,6 +5,7 @@ import AdminPageHeader from '../../components/AdminPageHeader';
 import {
     AdminFormCard,
     AdminToast,
+    AdminIconPicker,
 } from '../../components/AdminUI';
 
 export default function HomePageManager() {
@@ -189,11 +190,20 @@ export default function HomePageManager() {
                                     />
                                 </div>
                                 <div className="field">
-                                    <label>Icon Filename</label>
-                                    <input
-                                        value={item.icon}
-                                        onChange={(e) => updateArrayItem('homeKeyAreas', i, 'icon', e.target.value)}
-                                        placeholder="icon-graduation.png"
+                                    <label>Icon</label>
+                                    <AdminIconPicker
+                                        value={item.icon || ''}
+                                        onChange={(val) => updateArrayItem('homeKeyAreas', i, 'icon', val)}
+                                        onUpload={async (file) => {
+                                            const formData = new FormData();
+                                            formData.append('image', file);
+                                            const resp = await fetch('http://localhost:5000/api/upload/single', {
+                                                method: 'POST',
+                                                body: formData,
+                                            });
+                                            const data = await resp.json();
+                                            return data.url;
+                                        }}
                                     />
                                 </div>
                                 <button
@@ -274,11 +284,20 @@ export default function HomePageManager() {
                                     />
                                 </div>
                                 <div className="field">
-                                    <label>Icon Filename</label>
-                                    <input
-                                        value={item.icon}
-                                        onChange={(e) => updateArrayItem('homeCoreValues', i, 'icon', e.target.value)}
-                                        placeholder="icon-handshake.png"
+                                    <label>Icon</label>
+                                    <AdminIconPicker
+                                        value={item.icon || ''}
+                                        onChange={(val) => updateArrayItem('homeCoreValues', i, 'icon', val)}
+                                        onUpload={async (file) => {
+                                            const formData = new FormData();
+                                            formData.append('image', file);
+                                            const resp = await fetch('http://localhost:5000/api/upload/single', {
+                                                method: 'POST',
+                                                body: formData,
+                                            });
+                                            const data = await resp.json();
+                                            return data.url;
+                                        }}
                                     />
                                 </div>
                                 <button

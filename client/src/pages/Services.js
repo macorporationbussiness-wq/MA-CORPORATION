@@ -4,6 +4,24 @@ import API from '../api';
 import PageHeader from '../components/PageHeader';
 import useInView from '../hooks/useInView';
 
+// Helper to determine icon type and render appropriately
+const getIconInfo = (icon) => {
+    if (!icon) return { type: 'emoji', value: '⚙️' };
+
+    // Check if it's a Cloudinary URL
+    if (icon.startsWith('http')) {
+        return { type: 'image', value: icon };
+    }
+
+    // Check if it's a PNG/JPG/SVG/WebP filename
+    if (icon.endsWith('.png') || icon.endsWith('.jpg') || icon.endsWith('.jpeg') || icon.endsWith('.svg') || icon.endsWith('.webp')) {
+        return { type: 'image', value: '/' + icon };
+    }
+
+    // Default to emoji
+    return { type: 'emoji', value: icon };
+};
+
 const iconMap = {
     'Web Development': '💻',
     'SEO Optimization': '📈',
@@ -160,6 +178,8 @@ export default function Services() {
                             {services.map((s, i) => {
                                 const icon = iconMap[s.title] || iconMap[s.category] || iconMap.default;
                                 const color = colorMap[s.title] || colorMap[s.category] || colorMap.default;
+                                // Use service's own icon if available, otherwise fall back to mapping
+                                const iconInfo = getIconInfo(s.image || s.icon || icon);
                                 return (
                                     <div
                                         key={s._id}
@@ -225,7 +245,11 @@ export default function Services() {
                                                 }}
                                                 className="service-icon"
                                             >
-                                                {icon}
+                                                {iconInfo.type === 'image' ? (
+                                                    <img src={iconInfo.value} alt={s.title} style={{ width: 80, height: 80, objectFit: 'contain' }} />
+                                                ) : (
+                                                    iconInfo.value
+                                                )}
                                             </div>
                                         </div>
                                         <div style={{ padding: 28, textAlign: 'center' }}>

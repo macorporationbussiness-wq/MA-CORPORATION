@@ -9,13 +9,14 @@ import {
     AdminToast,
     AdminToggle,
     AdminImageUpload,
+    AdminIconPicker,
 } from '../../components/AdminUI';
 
 const empty = {
     name: '', category: 'Professional Courses', shortDescription: '', introduction: '',
     whatYouWillLearn: '', courseOutline: '', finalAssessment: '',
     durationWeeks: 8, classesPerWeek: 2, level: 'Beginner', mode: 'Online',
-    fee: 0, image: '', featured: false, isActive: true,
+    fee: 0, image: '', icon: '', featured: false, isActive: true,
 };
 
 const colorPalette = [
@@ -149,6 +150,23 @@ export default function CourseManager() {
                             <div className="field">
                                 <label>Fee (PKR)</label>
                                 <input type="number" value={form.fee} onChange={(e) => setForm({ ...form, fee: e.target.value })} />
+                            </div>
+                            <div className="field">
+                                <label>Icon</label>
+                                <AdminIconPicker
+                                    value={form.icon || ''}
+                                    onChange={(val) => setForm({ ...form, icon: val })}
+                                    onUpload={async (file) => {
+                                        const formData = new FormData();
+                                        formData.append('image', file);
+                                        const resp = await fetch('http://localhost:5000/api/upload/single', {
+                                            method: 'POST',
+                                            body: formData,
+                                        });
+                                        const data = await resp.json();
+                                        return data.url;
+                                    }}
+                                />
                             </div>
                             <div className="field">
                                 <label>Image</label>

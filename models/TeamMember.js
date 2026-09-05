@@ -20,6 +20,7 @@ const TeamMemberSchema = new mongoose.Schema({
     portfolioSlug: { type: String, default: '' },
     isActive: { type: Boolean, default: true },
     order: { type: Number, default: 0 },
+    icon: { type: String, default: '' },
     createdAt: { type: Date, default: Date.now },
 });
 

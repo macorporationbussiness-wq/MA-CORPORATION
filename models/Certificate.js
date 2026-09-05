@@ -7,6 +7,7 @@ const CertificateSchema = new mongoose.Schema({
     issueDate: { type: Date, default: Date.now },
     certificateUrl: { type: String, default: '' },
     isActive: { type: Boolean, default: true },
+    icon: { type: String, default: '' },
     createdAt: { type: Date, default: Date.now },
 });
 

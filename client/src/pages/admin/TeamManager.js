@@ -9,6 +9,7 @@ import {
     AdminToast,
     AdminToggle,
     AdminImageUpload,
+    AdminIconPicker,
 } from '../../components/AdminUI';
 
 const empty = {
@@ -17,6 +18,7 @@ const empty = {
     portfolioSlug: '',
     social: { linkedin: '', github: '', twitter: '' },
     hasPortfolio: true, isActive: true, order: 0,
+    icon: '',
 };
 
 const colorPalette = [
@@ -93,6 +95,7 @@ export default function TeamManager() {
             experience: (m.experience || []).join('\n'),
             projects: (m.projects || []).join('\n'),
             social: m.social || { linkedin: '', github: '', twitter: '' },
+            icon: m.icon || '',
         });
         setEditingId(m._id);
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -155,6 +158,14 @@ export default function TeamManager() {
                                 <AdminImageUpload
                                     value={form.photo}
                                     onChange={(v) => setForm({ ...form, photo: v })}
+                                    onUpload={handlePhotoUpload}
+                                />
+                            </div>
+                            <div className="field">
+                                <label>Icon</label>
+                                <AdminIconPicker
+                                    value={form.icon}
+                                    onChange={(v) => setForm({ ...form, icon: v })}
                                     onUpload={handlePhotoUpload}
                                 />
                             </div>

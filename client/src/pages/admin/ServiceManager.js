@@ -9,6 +9,7 @@ import {
     AdminToast,
     AdminToggle,
     AdminImageUpload,
+    AdminIconPicker,
 } from '../../components/AdminUI';
 
 const empty = { title: '', category: 'General', description: '', icon: 'star', image: '', isActive: true };
@@ -117,8 +118,21 @@ export default function ServiceManager() {
                         </div>
                         <div className="grid grid-2" style={{ gap: 14 }}>
                             <div className="field">
-                                <label>Icon (name)</label>
-                                <input value={form.icon} onChange={(e) => setForm({ ...form, icon: e.target.value })} />
+                                <label>Icon</label>
+                                <AdminIconPicker
+                                    value={form.icon || ''}
+                                    onChange={(val) => setForm({ ...form, icon: val })}
+                                    onUpload={async (file) => {
+                                        const formData = new FormData();
+                                        formData.append('image', file);
+                                        const resp = await fetch('http://localhost:5000/api/upload/single', {
+                                            method: 'POST',
+                                            body: formData,
+                                        });
+                                        const data = await resp.json();
+                                        return data.url;
+                                    }}
+                                />
                             </div>
                             <div className="field">
                                 <label>Image</label>
