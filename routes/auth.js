@@ -15,6 +15,9 @@ const FALLBACK_ADMIN = {
     password: '$2a$10$NNONrS0Qh0z8LLR0mL.tcemRKI/ZJ3z9hcCERQryXA7Rws8GNr7nq', // bcrypt hash of 'admin123'
 };
 
+// Use env JWT_SECRET or fallback (set JWT_SECRET in Vercel env vars for production)
+const JWT_SECRET = process.env.JWT_SECRET || 'macorporation_default_secret_change_me';
+
 // @route   POST api/auth/login
 // @desc    Authenticate admin & get token
 // @access  Public
@@ -54,7 +57,7 @@ router.post('/login', async (req, res) => {
 
         jwt.sign(
             payload,
-            process.env.JWT_SECRET,
+            JWT_SECRET,
             { expiresIn: '7d' },
             (err, token) => {
                 if (err) throw err;

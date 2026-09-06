@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
 
+const JWT_SECRET = process.env.JWT_SECRET || 'macorporation_default_secret_change_me';
+
 module.exports = function (req, res, next) {
     // Get token from header
     const token = req.header('x-auth-token');
@@ -11,7 +13,7 @@ module.exports = function (req, res, next) {
 
     // Verify token
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, JWT_SECRET);
         req.admin = decoded.admin;
         next();
     } catch (err) {
