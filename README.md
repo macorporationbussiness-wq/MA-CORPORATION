@@ -65,3 +65,4 @@ npm start          # serves API + static client on port 5000
   to enable live responses via the OpenCode API.
 - Google Maps embed is configured from Admin → Settings (paste the iframe HTML).
 - Online payments and a student portal are scaffolded for future addition.
+"# MAIN-SITE-DEPLOYMENT"  
