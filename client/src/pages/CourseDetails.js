@@ -15,8 +15,6 @@ export default function CourseDetails() {
     const { settings } = useSettings();
     const [course, setCourse] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [form, setForm] = useState({ name: '', email: '', phone: '', city: '', message: '' });
-    const [sent, setSent] = useState(false);
     const [sidebarRef, sidebarVisible] = useInView();
 
     useEffect(() => {
@@ -27,15 +25,8 @@ export default function CourseDetails() {
     }, [slug]);
 
     const openEnroll = () => {
-        const msg = `Hello M.A. Corporation! I want to enroll in the course: *${course?.name}*.
-
-Name: ${form.name || '—'}
-Email: ${form.email || '—'}
-Phone: ${form.phone || '—'}
-City: ${form.city || '—'}
-Message: ${form.message || '—'}`;
+        const msg = `Hello M.A. Corporation! I want to enroll in the course: *${course?.name}*.`;
         window.open(buildWhatsAppLink(settings.whatsapp, msg), '_blank');
-        setSent(true);
     };
 
     if (loading) {
@@ -476,42 +467,6 @@ Message: ${form.message || '—'}`;
                                 </tbody>
                             </table>
 
-                            {sent ? (
-                                <div
-                                    style={{
-                                        background: 'rgba(20,184,166,0.12)',
-                                        padding: 16,
-                                        borderRadius: 10,
-                                        color: '#0ea5a4',
-                                        fontSize: '0.9rem',
-                                        marginBottom: 14,
-                                        textAlign: 'center',
-                                        fontWeight: 600,
-                                    }}
-                                >
-                                    ✓ WhatsApp opened. Our team will review and update your status.
-                                </div>
-                            ) : (
-                                <p
-                                    className="muted"
-                                    style={{ fontSize: '0.85rem', marginBottom: 16, textAlign: 'center' }}
-                                >
-                                    Fill the form and click <strong>Enroll Now</strong> — it opens WhatsApp.
-                                </p>
-                            )}
-
-                            <div style={{ display: 'grid', gap: 10, marginBottom: 16 }}>
-                                <input placeholder="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-                                <input placeholder="Email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-                                <input placeholder="Phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
-                                <input placeholder="City" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} />
-                                <textarea
-                                    placeholder="Message"
-                                    value={form.message}
-                                    onChange={(e) => setForm({ ...form, message: e.target.value })}
-                                    rows={3}
-                                />
-                            </div>
                             <button
                                 onClick={openEnroll}
                                 className="btn-glow"
