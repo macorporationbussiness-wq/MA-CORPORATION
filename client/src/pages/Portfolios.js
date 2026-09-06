@@ -361,7 +361,7 @@ export default function Portfolios() {
                                                             fontSize: '0.8rem',
                                                         }}
                                                     >
-                                                        {p.teamMember?.name || p.teamMemberName
+                                                        {(p.teamMember?.name || p.teamMemberName)
                                                             .split(' ')
                                                             .map((n) => n[0])
                                                             .join('')

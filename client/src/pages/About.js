@@ -126,29 +126,24 @@ export default function About() {
                             className={`animate-on-scroll ${introVisible ? 'visible' : ''}`}
                             style={{ transitionDelay: '200ms', textAlign: 'center' }}
                         >
-                            <div style={{ position: 'relative', display: 'inline-block' }}>
-                                <div
-                                    style={{
-                                        position: 'absolute',
-                                        inset: 0,
-                                        borderRadius: '50%',
-                                        background: 'radial-gradient(circle, rgba(45,212,191,0.15), transparent 70%)',
-                                        filter: 'blur(20px)',
-                                        width: 200,
-                                        height: 200,
-                                        margin: '-40px auto 0',
-                                    }}
-                                />
+                            <div style={{
+                                position: 'relative',
+                                display: 'inline-block',
+                                maxWidth: '100%',
+                            }}>
                                 <img
                                     src={p.logoImage || '/logo.png'}
-                                    alt="M.A. Corporation Logo"
+                                    alt="M.A. Corporation"
                                     style={{
                                         maxWidth: '100%',
-                                        maxHeight: 280,
+                                        maxHeight: 320,
                                         width: 'auto',
                                         height: 'auto',
                                         objectFit: 'contain',
-                                        filter: 'drop-shadow(0 8px 32px rgba(45,212,191,0.25))',
+                                        border: 'none',
+                                        outline: 'none',
+                                        boxShadow: 'none',
+                                        background: 'transparent',
                                     }}
                                 />
                             </div>

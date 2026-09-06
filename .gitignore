@@ -26,3 +26,13 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+
+# Temp and test files
+temp_*.js
+fix_*.js
+fix-urls.js
+$NUL
+$null
+
+# Uploads (user-generated content)
+uploads/

@@ -1,3 +1,6 @@
+/* ========================================
+   CSS Variables — Merged (no duplicate :root)
+   ======================================== */
 :root {
     /* Navy / midnight blue primary */
     --navy: #0a1733;
@@ -21,30 +24,15 @@
 
     /* Text */
     --ink: #0a1733;
-    /* dark navy text on light */
     --ink-soft: #475569;
-    /* muted text on light */
     --on-dark: #ffffff;
-    /* text on dark */
     --on-dark-soft: #b6c2d9;
-    /* muted text on dark */
 
     /* Borders */
     --border-dark: rgba(255, 255, 255, 0.08);
     --border-light: rgba(10, 23, 51, 0.10);
 
-    --radius: 14px;
-    --radius-sm: 10px;
-    --max-width: 1200px;
-    --font: 'Inter', 'Plus Jakarta Sans', system-ui, sans-serif;
-    --heading: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
-    --shadow-sm: 0 1px 3px rgba(10, 23, 51, 0.06), 0 1px 2px rgba(10, 23, 51, 0.04);
-    --shadow-md: 0 10px 30px rgba(10, 23, 51, 0.08);
-    --shadow-lg: 0 24px 60px rgba(10, 23, 51, 0.12);
-}
-
-/* AI Dark Theme — for portfolio pages */
-:root {
+    /* AI Dark Theme — for portfolio pages */
     --primary: #6C63FF;
     --primary-dark: #5A52D5;
     --primary-light: #8B85FF;
@@ -59,12 +47,21 @@
     --text: #E8E8F0;
     --text-light: #A0A0B8;
     --text-lighter: #6B6B85;
-    --border-dark: rgba(255, 255, 255, 0.06);
-    --border-light: rgba(108, 99, 255, 0.3);
     --radius-sm: 10px;
     --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+    --radius: 14px;
+    --max-width: 1200px;
+    --font: 'Inter', 'Plus Jakarta Sans', system-ui, sans-serif;
+    --heading: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+    --shadow-sm: 0 1px 3px rgba(10, 23, 51, 0.06), 0 1px 2px rgba(10, 23, 51, 0.04);
+    --shadow-md: 0 10px 30px rgba(10, 23, 51, 0.08);
+    --shadow-lg: 0 24px 60px rgba(10, 23, 51, 0.12);
 }
 
+/* ========================================
+   Reset & Base
+   ======================================== */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -116,7 +113,9 @@ ul {
     list-style: none;
 }
 
-/* Layout */
+/* ========================================
+   Layout
+   ======================================== */
 .container {
     width: 100%;
     max-width: var(--max-width);
@@ -124,10 +123,17 @@ ul {
     padding: 0 24px;
 }
 
-/* ========================================
-   NAVBAR - Clean Professional Header
-   ======================================== */
+.section {
+    padding: 96px 0;
+}
 
+.section-sm {
+    padding: 64px 0;
+}
+
+/* ========================================
+   NAVBAR
+   ======================================== */
 .navbar {
     position: sticky;
     top: 0;
@@ -155,7 +161,6 @@ ul {
     position: relative;
 }
 
-/* Brand / Logo Lockup */
 .navbar-brand {
     display: flex;
     align-items: center;
@@ -205,7 +210,6 @@ ul {
     text-shadow: 0 0 30px rgba(45, 212, 191, 0.3);
 }
 
-/* Desktop Navigation */
 .navbar-nav {
     display: flex;
     align-items: center;
@@ -251,7 +255,6 @@ ul {
     background: rgba(45, 212, 191, 0.1);
 }
 
-/* CTA Button in Navbar */
 .navbar-cta {
     display: inline-flex;
     align-items: center;
@@ -276,7 +279,6 @@ ul {
     transform: translateY(0);
 }
 
-/* Mobile Toggle */
 .navbar-toggle {
     display: none;
     align-items: center;
@@ -329,7 +331,6 @@ ul {
     transform: translateY(-7px) rotate(-45deg);
 }
 
-/* Mobile Navigation */
 .navbar-mobile {
     position: absolute;
     top: 80px;
@@ -405,108 +406,92 @@ ul {
 }
 
 /* ========================================
-   RESPONSIVE NAVBAR
+   Section Themes
    ======================================== */
-
-@media (max-width: 992px) {
-    .navbar-brand-name {
-        font-size: 1.1rem;
-    }
-
-    .navbar-logo img {
-        height: 54px;
-    }
-}
-
-@media (max-width: 768px) {
-    .navbar-container {
-        height: 72px;
-        padding: 0 16px;
-    }
-
-    .navbar-brand-name {
-        font-size: 1.05rem;
-    }
-
-    .navbar-logo img {
-        height: 48px;
-    }
-
-    .navbar-nav {
-        display: none;
-    }
-
-    .navbar-toggle {
-        display: flex;
-    }
-
-    .navbar-mobile {
-        top: 72px;
-        padding: 14px 16px;
-    }
-}
-
-@media (max-width: 480px) {
-    .navbar-container {
-        padding: 0 12px;
-    }
-
-    .navbar-brand-name {
-        font-size: 1rem;
-    }
-
-    .navbar-logo img {
-        height: 44px;
-    }
-
-    .navbar-mobile {
-        top: 72px;
-        padding: 12px;
-    }
-
-    .navbar-mobile-link {
-        padding: 12px 14px;
-        font-size: 0.95rem;
-    }
-
-    .navbar-mobile-cta {
-        padding: 12px 20px;
-        font-size: 0.9rem;
-    }
-}
-
-.section {
-    padding: 96px 0;
-}
-
-.section-sm {
-    padding: 64px 0;
-}
-
-/* Section themes */
 .section-dark {
     background: var(--navy-grad);
     color: var(--on-dark);
+    position: relative;
+}
+
+/* Remove overflow:hidden from section-dark to prevent text overlapping */
+.section-dark::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+        radial-gradient(ellipse 700px 500px at 15% 25%, rgba(45, 212, 191, 0.15), transparent 60%),
+        radial-gradient(ellipse 600px 400px at 85% 75%, rgba(20, 184, 166, 0.12), transparent 60%),
+        radial-gradient(ellipse 500px 350px at 50% 50%, rgba(14, 165, 164, 0.08), transparent 60%);
+    background-size: 200% 200%, 200% 200%, 200% 200%;
+    animation: auroraDark 22s ease-in-out infinite;
 }
 
 .section-dark h1,
 .section-dark h2,
 .section-dark h3,
-.section-dark h4 {
+.section-dark h4,
+.section-dark h5,
+.section-dark h6 {
     color: var(--on-dark);
 }
 
 .section-light {
     background: var(--gray-50);
     color: var(--ink);
+    position: relative;
+    overflow: hidden;
+}
+
+.section-light::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+        radial-gradient(ellipse 600px 400px at 20% 30%, rgba(20, 184, 166, 0.08), transparent 60%),
+        radial-gradient(ellipse 500px 350px at 80% 70%, rgba(45, 212, 191, 0.08), transparent 60%),
+        radial-gradient(ellipse 400px 300px at 50% 50%, rgba(14, 165, 164, 0.05), transparent 60%);
+    background-size: 200% 200%, 200% 200%, 200% 200%;
+    animation: aurora 20s ease-in-out infinite;
 }
 
 .section-white {
     background: var(--white);
     color: var(--ink);
+    position: relative;
+    overflow: hidden;
 }
 
-/* Buttons */
+.section-white::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+        radial-gradient(ellipse 500px 350px at 25% 35%, rgba(20, 184, 166, 0.06), transparent 60%),
+        radial-gradient(ellipse 400px 300px at 75% 65%, rgba(45, 212, 191, 0.06), transparent 60%);
+    background-size: 200% 200%, 200% 200%;
+    animation: aurora 24s ease-in-out infinite;
+}
+
+/* Ensure container content stays above pseudo-elements */
+.section>.container,
+.section-sm>.container,
+.section-light>.container,
+.section-dark>.container,
+.section-white>.container {
+    position: relative;
+    z-index: 1;
+}
+
+/* ========================================
+   Buttons
+   ======================================== */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -558,7 +543,6 @@ ul {
     color: var(--teal);
 }
 
-/* Outline variant for dark sections */
 .section-dark .btn-outline {
     border-color: rgba(255, 255, 255, 0.25);
     color: var(--on-dark);
@@ -583,7 +567,6 @@ ul {
     color: var(--teal-bright);
 }
 
-/* btn-secondary for dark theme */
 .btn-secondary {
     background: var(--surface);
     color: var(--text);
@@ -602,13 +585,14 @@ ul {
     transform: translateY(-3px);
 }
 
-/* btn-sm sizing */
 .btn-sm {
     padding: 10px 22px;
     font-size: 0.85rem;
 }
 
-/* Project portfolio styles */
+/* ========================================
+   Project Portfolio Styles
+   ======================================== */
 .project-filters {
     display: flex;
     gap: 12px;
@@ -746,7 +730,9 @@ ul {
     line-height: 1.7;
 }
 
-/* Section heading */
+/* ========================================
+   Section Heading
+   ======================================== */
 .section-head {
     text-align: center;
     max-width: 700px;
@@ -807,7 +793,9 @@ ul {
     color: var(--on-dark-soft);
 }
 
-/* Universal text theme */
+/* ========================================
+   Universal Text Theme
+   ======================================== */
 h1,
 h2,
 h3,
@@ -831,7 +819,9 @@ p {
     line-height: 1.7;
 }
 
-/* Cards */
+/* ========================================
+   Cards
+   ======================================== */
 .card {
     background: var(--white);
     border: 1px solid var(--border-light);
@@ -847,7 +837,6 @@ p {
     box-shadow: var(--shadow-md);
 }
 
-/* Card on dark sections */
 .section-dark .card {
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid var(--border-dark);
@@ -860,7 +849,9 @@ p {
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
 }
 
-/* Glass */
+/* ========================================
+   Glass
+   ======================================== */
 .glass {
     background: rgba(255, 255, 255, 0.06);
     backdrop-filter: blur(12px);
@@ -868,7 +859,9 @@ p {
     border-radius: var(--radius);
 }
 
-/* Icon chip */
+/* ========================================
+   Icon Chip
+   ======================================== */
 .icon-chip {
     width: 52px;
     height: 52px;
@@ -887,7 +880,9 @@ p {
     color: var(--teal-bright);
 }
 
-/* Grid */
+/* ========================================
+   Grid
+   ======================================== */
 .grid {
     display: grid;
     gap: 28px;
@@ -909,7 +904,9 @@ p {
     grid-template-columns: repeat(5, 1fr);
 }
 
-/* Forms */
+/* ========================================
+   Forms
+   ======================================== */
 .field {
     margin-bottom: 18px;
 }
@@ -961,7 +958,9 @@ p {
     min-height: 120px;
 }
 
-/* Badge */
+/* ========================================
+   Badge
+   ======================================== */
 .badge {
     display: inline-block;
     padding: 4px 12px;
@@ -972,8 +971,9 @@ p {
     color: var(--teal-2);
 }
 
-/* Animations */
-/* Global Aurora Animated Background */
+/* ========================================
+   Animations
+   ======================================== */
 @keyframes aurora {
 
     0%,
@@ -1004,71 +1004,6 @@ p {
     66% {
         background-position: 100% 50%, 50% 100%, 0% 50%;
     }
-}
-
-.section-light {
-    position: relative;
-    overflow: hidden;
-}
-
-.section-light::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    background-image:
-        radial-gradient(ellipse 600px 400px at 20% 30%, rgba(20, 184, 166, 0.08), transparent 60%),
-        radial-gradient(ellipse 500px 350px at 80% 70%, rgba(45, 212, 191, 0.08), transparent 60%),
-        radial-gradient(ellipse 400px 300px at 50% 50%, rgba(14, 165, 164, 0.05), transparent 60%);
-    background-size: 200% 200%, 200% 200%, 200% 200%;
-    animation: aurora 20s ease-in-out infinite;
-}
-
-.section-dark {
-    position: relative;
-    overflow: hidden;
-}
-
-.section-dark::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    background-image:
-        radial-gradient(ellipse 700px 500px at 15% 25%, rgba(45, 212, 191, 0.15), transparent 60%),
-        radial-gradient(ellipse 600px 400px at 85% 75%, rgba(20, 184, 166, 0.12), transparent 60%),
-        radial-gradient(ellipse 500px 350px at 50% 50%, rgba(14, 165, 164, 0.08), transparent 60%);
-    background-size: 200% 200%, 200% 200%, 200% 200%;
-    animation: auroraDark 22s ease-in-out infinite;
-}
-
-.section-white {
-    position: relative;
-    overflow: hidden;
-}
-
-.section-white::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    background-image:
-        radial-gradient(ellipse 500px 350px at 25% 35%, rgba(20, 184, 166, 0.06), transparent 60%),
-        radial-gradient(ellipse 400px 300px at 75% 65%, rgba(45, 212, 191, 0.06), transparent 60%);
-    background-size: 200% 200%, 200% 200%;
-    animation: aurora 24s ease-in-out infinite;
-}
-
-.section>.container,
-.section-sm>.container,
-.section-light>.container,
-.section-dark>.container,
-.section-white>.container {
-    position: relative;
-    z-index: 1;
 }
 
 @keyframes fadeUp {
@@ -1233,6 +1168,9 @@ p {
     transform: translateY(0);
 }
 
+/* ========================================
+   Glass Card
+   ======================================== */
 .glass-card {
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(12px);
@@ -1278,6 +1216,9 @@ p {
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35), 0 0 30px rgba(20, 184, 166, 0.15);
 }
 
+/* ========================================
+   Hero Banner
+   ======================================== */
 .hero-banner {
     position: relative;
     border-radius: 20px;
@@ -1320,6 +1261,9 @@ p {
     pointer-events: none;
 }
 
+/* ========================================
+   Stats Card
+   ======================================== */
 .stats-card {
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(12px);
@@ -1374,6 +1318,9 @@ p {
     letter-spacing: 0.5px;
 }
 
+/* ========================================
+   CTA Card
+   ======================================== */
 .cta-card {
     background: linear-gradient(135deg, rgba(10, 23, 51, 0.9), rgba(16, 42, 92, 0.9));
     backdrop-filter: blur(20px);
@@ -1399,6 +1346,9 @@ p {
     animation: glow 3s ease-in-out infinite;
 }
 
+/* ========================================
+   Team Avatar
+   ======================================== */
 .team-avatar {
     width: 88px;
     height: 88px;
@@ -1436,6 +1386,9 @@ p {
     box-shadow: 0 12px 32px rgba(20, 184, 166, 0.4);
 }
 
+/* ========================================
+   Page Header Enhanced
+   ======================================== */
 .page-header-enhanced {
     position: relative;
     overflow: hidden;
@@ -1456,7 +1409,9 @@ p {
     background: linear-gradient(to top, rgba(10, 23, 51, 0.8), transparent);
 }
 
-/* Utility */
+/* ========================================
+   Utilities
+   ======================================== */
 .text-center {
     text-align: center;
 }
@@ -1497,6 +1452,9 @@ p {
     color: var(--teal-bright);
 }
 
+/* ========================================
+   Responsive
+   ======================================== */
 @media (max-width: 992px) {
     .grid-4 {
         grid-template-columns: repeat(2, 1fr);
@@ -1685,13 +1643,11 @@ p {
         display: none !important;
     }
 
-    /* About page - values row2 full width on mobile */
     .about-values-row2 {
         max-width: 100% !important;
         margin-top: 28px;
     }
 
-    /* About page - journey timeline mobile */
     .about-journey .journey-line {
         left: 18px !important;
     }
@@ -1713,7 +1669,6 @@ p {
         display: none !important;
     }
 
-    /* About page - intro section padding */
     .about-intro-grid {
         gap: clamp(32px, 6vw, 60px) !important;
     }
@@ -1773,13 +1728,11 @@ p {
         padding: 36px 20px;
     }
 
-    /* About page - values row2 full width on mobile */
     .about-values-row2 {
         max-width: 100% !important;
         margin-top: 20px;
     }
 
-    /* About page - journey timeline mobile */
     .about-journey .journey-line {
         left: 16px !important;
     }
@@ -1801,12 +1754,10 @@ p {
         display: none !important;
     }
 
-    /* About page - intro section padding */
     .about-intro-grid {
         gap: clamp(24px, 6vw, 40px) !important;
     }
 
-    /* Contact page - grid collapses to single column */
     .contact-grid {
         grid-template-columns: 1fr !important;
         gap: 24px !important;
@@ -1840,7 +1791,9 @@ p {
     }
 }
 
-/* 3D Animated Icons */
+/* ========================================
+   3D Animated Icons
+   ======================================== */
 .icon3d-animate .icon3d-card {
     animation: icon3d-float 3.5s ease-in-out infinite;
 }

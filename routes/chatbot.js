@@ -1,9 +1,66 @@
 const express = require('express');
 const router = express.Router();
-const { courses, services, team, portfolios, certificates, settings } = require('../data/fallback');
+const { courses: fallbackCourses, services: fallbackServices, team: fallbackTeam, portfolios: fallbackPortfolios, certificates: fallbackCertificates, settings: fallbackSettings } = require('../data/fallback');
+const { isDbConnected } = require('../utils/dbCheck');
+
+// Try to load Mongoose models if available
+let CourseModel, ServiceModel, TeamMemberModel, PortfolioModel, CertificateModel, SettingModel;
+try {
+    CourseModel = require('../models/Course');
+    ServiceModel = require('../models/Service');
+    TeamMemberModel = require('../models/TeamMember');
+    PortfolioModel = require('../models/Portfolio');
+    CertificateModel = require('../models/Certificate');
+    SettingModel = require('../models/Setting');
+} catch (e) {
+    // Models not available, will use fallback
+}
 
 // System context describing the company for the chatbot
 const SYSTEM_PROMPT = `You are the official AI assistant for M.A. Corporation, a professional organization providing quality education, practical learning, and reliable business services. The company offers professional courses (online), business services (SEO, Web Development, RAG systems, etc.), an expert team, and career development support. Be helpful, professional, and concise. Guide visitors about courses, services, enrollment (which redirects to WhatsApp), contact details, and the company's vision, mission, and core values (Integrity, Excellence, Innovation, Customer Focus, Growth). If asked about enrollment, tell them to use the Enroll Now button which opens WhatsApp to submit their details.`;
+
+// Helper: fetch latest data from DB or fallback
+async function getChatbotData() {
+    if (!isDbConnected()) {
+        return { courses: fallbackCourses, services: fallbackServices, team: fallbackTeam, portfolios: fallbackPortfolios, certificates: fallbackCertificates, settings: fallbackSettings };
+    }
+    try {
+        const [dbCourses, dbServices, dbTeam, dbPortfolios, dbCerts] = await Promise.all([
+            CourseModel ? CourseModel.find({ isActive: true }).sort({ createdAt: -1 }).lean() : Promise.resolve(fallbackCourses),
+            ServiceModel ? ServiceModel.find({ isActive: true }).sort({ createdAt: -1 }).lean() : Promise.resolve(fallbackServices),
+            TeamMemberModel ? TeamMemberModel.find({ isActive: true }).sort({ order: 1 }).lean() : Promise.resolve(fallbackTeam),
+            PortfolioModel ? PortfolioModel.find().sort({ createdAt: -1 }).lean() : Promise.resolve(fallbackPortfolios),
+            CertificateModel ? CertificateModel.find({ isActive: true }).sort({ issueDate: -1 }).lean() : Promise.resolve(fallbackCertificates),
+        ]);
+
+        // Get settings from DB
+        let dbSettings = fallbackSettings;
+        if (SettingModel) {
+            try {
+                const dbSettingDocs = await SettingModel.find();
+                if (dbSettingDocs && dbSettingDocs.length > 0) {
+                    const settingsObj = {};
+                    dbSettingDocs.forEach(s => { settingsObj[s.key] = s.value; });
+                    dbSettings = { ...fallbackSettings, ...settingsObj };
+                }
+            } catch (e) {
+                // Use fallback settings
+            }
+        }
+
+        return {
+            courses: dbCourses.length > 0 ? dbCourses : fallbackCourses,
+            services: dbServices.length > 0 ? dbServices : fallbackServices,
+            team: dbTeam.length > 0 ? dbTeam : fallbackTeam,
+            portfolios: dbPortfolios.length > 0 ? dbPortfolios : fallbackPortfolios,
+            certificates: dbCerts.length > 0 ? dbCerts : fallbackCertificates,
+            settings: dbSettings,
+        };
+    } catch (err) {
+        console.error('Chatbot DB fetch error, using fallback:', err.message);
+        return { courses: fallbackCourses, services: fallbackServices, team: fallbackTeam, portfolios: fallbackPortfolios, certificates: fallbackCertificates, settings: fallbackSettings };
+    }
+}
 
 // @route   POST api/chatbot
 // @desc    Chat with the AI assistant (OpenCode API with intelligent local fallback)
@@ -14,12 +71,21 @@ router.post('/', async (req, res) => {
         return res.status(400).json({ msg: 'Messages array required' });
     }
 
+    // Always fetch latest data from DB if available
+    let data;
+    try {
+        data = await getChatbotData();
+    } catch (err) {
+        console.error('Error fetching chatbot data:', err.message);
+        data = { courses: fallbackCourses, services: fallbackServices, team: fallbackTeam, portfolios: fallbackPortfolios, certificates: fallbackCertificates, settings: fallbackSettings };
+    }
+
     const apiKey = process.env.OPENCODE_API_KEY;
     const apiUrl = process.env.OPENCODE_API_URL;
 
     // If no API key configured, use intelligent local fallback
     if (!apiKey) {
-        return res.json({ reply: localReply(messages) });
+        return res.json({ reply: localReply(messages, data) });
     }
 
     try {
@@ -41,23 +107,23 @@ router.post('/', async (req, res) => {
 
         if (!response.ok) {
             console.error(`OpenCode API error: ${response.status} ${response.statusText}`);
-            return res.json({ reply: localReply(messages) });
+            return res.json({ reply: localReply(messages, data) });
         }
 
-        const data = await response.json();
+        const data2 = await response.json();
 
         // Handle API-level error responses (e.g., model unavailable)
-        if (data.error || !data.choices?.[0]?.message?.content) {
-            console.error(`OpenCode API returned error: ${JSON.stringify(data.error || data)}`);
-            return res.json({ reply: localReply(messages) });
+        if (data2.error || !data2.choices?.[0]?.message?.content) {
+            console.error(`OpenCode API returned error: ${JSON.stringify(data2.error || data2)}`);
+            return res.json({ reply: localReply(messages, data) });
         }
 
-        const reply = data.choices[0].message.content ||
+        const reply = data2.choices[0].message.content ||
             'Sorry, I could not process that request. Please try asking about our courses, services, or team.';
         res.json({ reply });
     } catch (err) {
         console.error('Chatbot error:', err.message);
-        res.json({ reply: localReply(messages) });
+        res.json({ reply: localReply(messages, data) });
     }
 });
 
@@ -67,7 +133,14 @@ router.post('/', async (req, res) => {
 // company knowledge base, and generates a contextual reply.
 // Works for ANY question about the company.
 // ──────────────────────────────────────────────────────────────
-function localReply(messages) {
+function localReply(messages, d) {
+    const courses = d.courses;
+    const services = d.services;
+    const team = d.team;
+    const portfolios = d.portfolios;
+    const certificates = d.certificates;
+    const settings = d.settings;
+
     const last = messages[messages.length - 1]?.content || '';
     const q = last.toLowerCase().trim();
 
@@ -86,7 +159,6 @@ function localReply(messages) {
 
     // Collect topic answers — first match wins for primary topics to avoid verbose combos
     const topics = [];
-    const primaryTopics = ['courses', 'services', 'projects', 'team', 'company', 'contact', 'location', 'stats', 'enrollment', 'skills', 'certificates'];
 
     // --- Greetings already handled above ---
     // --- Working hours / timing ---
@@ -114,8 +186,8 @@ function localReply(messages) {
 
     // --- Skills / Technologies (check BEFORE generic courses to catch "what skills do you teach") ---
     if (/\b(skills?|tech|technology|programming|language|python|react|node|mongodb)\b/.test(q) && topics.length === 0) {
-        const allSkills = [...new Set(courses.flatMap(c => c.whatYouWillLearn))];
-        topics.push(`**Skills You'll Learn:** ${allSkills.join(', ')}.`);
+        const allSkills = [...new Set(courses.flatMap(c => c.whatYouWillLearn))].join(', ');
+        topics.push(`**Skills You'll Learn:** ${allSkills}.`);
     }
 
     // --- Courses (generic) ---
@@ -197,7 +269,7 @@ function localReply(messages) {
         answer = topics.join('\n\n');
     } else {
         // Ultra-flexible fallback: try to extract any meaningful keywords and match
-        const keywordMatches = extractKeywordAnswers(q);
+        const keywordMatches = extractKeywordAnswers(q, d);
         if (keywordMatches.length > 0) {
             answer = keywordMatches.join('\n\n');
         } else {
@@ -209,7 +281,13 @@ function localReply(messages) {
 }
 
 // Dynamic keyword extraction — builds answers on the fly for ANY question
-function extractKeywordAnswers(q) {
+function extractKeywordAnswers(q, d) {
+    const courses = d.courses;
+    const services = d.services;
+    const team = d.team;
+    const portfolios = d.portfolios;
+    const certificates = d.certificates;
+
     const results = [];
     const seen = new Set(); // track matched items to prevent duplicates
     const tokens = q.replace(/[.,?!;]/g, ' ').split(/\s+/).filter(t => t.length > 2);
