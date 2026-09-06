@@ -112,6 +112,7 @@
         min-height: auto !important;
         padding: 40px 0 50px !important;
         background-position: 75% center !important;
+        background-size: cover !important;
     }
 
     .about-hero-grid {
@@ -121,11 +122,11 @@
 
     .about-hero-text {
         max-width: 100% !important;
-        background: rgba(255, 255, 255, 0.88);
+        background: rgba(255, 255, 255, 0.6) !important;
         padding: 20px !important;
         border-radius: 16px;
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
     }
 
     .about-hero-title {
@@ -443,6 +444,7 @@
 
     .about-hero-text {
         padding: 16px !important;
+        background: rgba(255, 255, 255, 0.55) !important;
     }
 
     .about-hero-title {
