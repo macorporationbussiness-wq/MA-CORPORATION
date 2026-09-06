@@ -23,6 +23,21 @@ router.get('/', async (req, res) => {
     }
 });
 
+// @route   GET api/portfolios/all
+// @desc    Get all portfolios (admin)
+// @access  Private
+router.get('/all', auth, async (req, res) => {
+    try {
+        const portfolios = await Portfolio.find()
+            .populate('teamMember', 'name position photo')
+            .sort({ createdAt: -1 });
+        res.json(portfolios);
+    } catch (err) {
+        console.error('DB unavailable, serving fallback portfolios:', err.message);
+        res.json(fallbackPortfolios);
+    }
+});
+
 // @route   POST api/portfolios
 // @access  Private
 router.post('/', auth, async (req, res) => {
