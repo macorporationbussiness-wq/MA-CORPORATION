@@ -3,12 +3,16 @@
     "version": "1.0.0",
     "description": "M.A. Corporation full-stack MERN platform",
     "main": "server.js",
+    "engines": {
+        "node": ">=18.0.0"
+    },
     "scripts": {
         "server": "nodemon server.js",
         "client": "npm run dev --prefix client",
         "install:all": "npm install && npm install --prefix client",
         "dev": "concurrently \"npm run server\" \"npm run client\"",
         "build": "npm install --prefix client && npm run build --prefix client",
+        "vercel-build": "npm install --prefix client && npm run build --prefix client",
         "start": "node server.js"
     },
     "dependencies": {
