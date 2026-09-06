@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Admin = require('../models/Admin');
 const mongoose = require('mongoose');
+const auth = require('../middleware/auth');
 
 // Fallback admin for when MongoDB is unavailable
 // Password is 'admin123' - bcrypt hash generated with cost factor 10
@@ -69,7 +70,7 @@ router.post('/login', async (req, res) => {
 // @route   GET api/auth
 // @desc    Get logged in admin
 // @access  Private
-router.get('/', require('../middleware/auth'), async (req, res) => {
+router.get('/', auth, async (req, res) => {
     try {
         // Check if MongoDB is connected
         const isDbConnected = mongoose.connection.readyState === 1;
@@ -91,6 +92,115 @@ router.get('/', require('../middleware/auth'), async (req, res) => {
         }
 
         return res.status(404).json({ msg: 'Admin not found' });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+// @route   GET api/auth/admins
+// @desc    List all admins
+// @access  Private
+router.get('/admins', auth, async (req, res) => {
+    try {
+        const isDbConnected = mongoose.connection.readyState === 1;
+        if (!isDbConnected) {
+            return res.json([{ ...FALLBACK_ADMIN, username: 'admin' }]);
+        }
+        const admins = await Admin.find().select('-password').sort({ createdAt: -1 });
+        res.json(admins);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+// @route   POST api/auth/admins
+// @desc    Create new admin
+// @access  Private
+router.post('/admins', auth, async (req, res) => {
+    const { name, username, email, password } = req.body;
+    if (!name || !username || !email || !password) {
+        return res.status(400).json({ msg: 'All fields are required' });
+    }
+    try {
+        const isDbConnected = mongoose.connection.readyState === 1;
+        if (!isDbConnected) {
+            return res.status(503).json({ msg: 'Database not connected' });
+        }
+        const existing = await Admin.findOne({ $or: [{ email }, { username }] });
+        if (existing) {
+            return res.status(400).json({ msg: 'Admin with this email or username already exists' });
+        }
+        const salt = await bcrypt.genSalt(10);
+        const hashed = await bcrypt.hash(password, salt);
+        const admin = new Admin({ name, username, email, password: hashed });
+        await admin.save();
+        res.json({ msg: 'Admin created', admin: { _id: admin._id, name, username, email } });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+// @route   DELETE api/auth/admins/:id
+// @desc    Delete an admin
+// @access  Private
+router.delete('/admins/:id', auth, async (req, res) => {
+    try {
+        const isDbConnected = mongoose.connection.readyState === 1;
+        if (!isDbConnected) {
+            return res.status(503).json({ msg: 'Database not connected' });
+        }
+        if (req.admin.id === req.params.id || req.admin.email === FALLBACK_ADMIN.email && req.params.id === FALLBACK_ADMIN._id) {
+            return res.status(400).json({ msg: 'Cannot delete your own account' });
+        }
+        const admin = await Admin.findById(req.params.id);
+        if (!admin) {
+            return res.status(404).json({ msg: 'Admin not found' });
+        }
+        await Admin.findByIdAndDelete(req.params.id);
+        res.json({ msg: 'Admin deleted' });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+// @route   PUT api/auth/password
+// @desc    Change current admin password
+// @access  Private
+router.put('/password', auth, async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+    if (!currentPassword || !newPassword) {
+        return res.status(400).json({ msg: 'Current and new password required' });
+    }
+    try {
+        const isDbConnected = mongoose.connection.readyState === 1;
+
+        // Fallback admin password change
+        if (!isDbConnected && req.admin.email === FALLBACK_ADMIN.email) {
+            const isMatch = await bcrypt.compare(currentPassword, FALLBACK_ADMIN.password);
+            if (!isMatch) {
+                return res.status(400).json({ msg: 'Current password is incorrect' });
+            }
+            return res.json({ msg: 'Password changed (fallback mode - not persisted)' });
+        }
+
+        const admin = await Admin.findById(req.admin.id);
+        if (!admin) {
+            return res.status(404).json({ msg: 'Admin not found' });
+        }
+
+        const isMatch = await bcrypt.compare(currentPassword, admin.password);
+        if (!isMatch) {
+            return res.status(400).json({ msg: 'Current password is incorrect' });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        admin.password = await bcrypt.hash(newPassword, salt);
+        await admin.save();
+        res.json({ msg: 'Password changed successfully' });
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');

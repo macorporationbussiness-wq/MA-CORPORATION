@@ -21,6 +21,14 @@ export default function Contact() {
         } catch (err) {
             console.error(err);
         }
+        const msg = `Hello M.A. Corporation! I would like to get in touch.
+
+*Name:* ${form.name}
+*Email:* ${form.email}
+*Phone:* ${form.phone || 'N/A'}
+*Subject:* ${form.subject || 'N/A'}
+*Message:* ${form.message}`;
+        window.open(buildWhatsAppLink(settings.whatsapp, msg), '_blank');
         setSent(true);
     };
 
@@ -56,7 +64,8 @@ export default function Contact() {
 
             // Special handling for WhatsApp
             if (valueKey === 'whatsappText' || valueKey === 'whatsapp') {
-                link = buildWhatsAppLink(settings.whatsapp, 'Hello!');
+                const waMessage = settings.contactPage?.whatsappMessage || 'Hello M.A. Corporation! I would like to know more about your courses and services.';
+                link = buildWhatsAppLink(settings.whatsapp, waMessage);
             }
 
             // Determine icon: emoji, PNG filename, or Cloudinary URL
@@ -104,7 +113,7 @@ export default function Contact() {
     const formSuccessTitle = contactPageConfig.formSuccessTitle || 'Message Sent!';
     const formSuccessDesc = contactPageConfig.formSuccessDesc || 'Thank you for reaching out. Our team will get back to you shortly.';
     const formSuccessBtn = contactPageConfig.formSuccessBtn || 'Send Another';
-    const submitBtn = contactPageConfig.submitBtn || 'Send Message';
+    const submitBtn = contactPageConfig.submitBtn || 'Send via WhatsApp →';
 
     return (
         <div>

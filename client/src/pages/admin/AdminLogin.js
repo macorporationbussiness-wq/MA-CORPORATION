@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 export default function AdminLogin() {
-    const [email, setEmail] = useState('admin@macorporation.com');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -214,16 +214,6 @@ export default function AdminLogin() {
                 >
                     {loading ? 'Signing in…' : 'Sign In →'}
                 </button>
-                <p
-                    style={{
-                        fontSize: '0.78rem',
-                        textAlign: 'center',
-                        marginTop: 18,
-                        color: 'rgba(255,255,255,0.5)',
-                    }}
-                >
-                    Default: <strong style={{ color: 'rgba(255,255,255,0.8)' }}>admin@macorporation.com</strong> / admin123
-                </p>
             </form>
 
             <style>{`

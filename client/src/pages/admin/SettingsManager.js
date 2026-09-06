@@ -20,6 +20,7 @@ export default function SettingsManager() {
         homeServices: { eyebrow: '', title: '', subtitle: '', viewAllText: '' },
         homeValues: { eyebrow: '', title: '' },
         homeCta: { title: '', description: '', primaryBtnText: '', whatsappBtnText: '', whatsappMessage: '' },
+        contactPage: { whatsappMessage: '' },
     });
     const [msg, setMsg] = useState({ text: '', type: 'success' });
 
@@ -43,6 +44,7 @@ export default function SettingsManager() {
             homeServices: settings.homeServices || { eyebrow: '', title: '', subtitle: '', viewAllText: '' },
             homeValues: settings.homeValues || { eyebrow: '', title: '' },
             homeCta: settings.homeCta || { title: '', description: '', primaryBtnText: '', whatsappBtnText: '', whatsappMessage: '' },
+            contactPage: settings.contactPage ? { whatsappMessage: settings.contactPage.whatsappMessage || '' } : { whatsappMessage: '' },
         });
     }, [settings]);
 
@@ -124,6 +126,27 @@ export default function SettingsManager() {
                         <div className="field">
                             <label>Address</label>
                             <input value={form.address} onChange={update('address')} />
+                        </div>
+                    </AdminFormCard>
+                </div>
+
+                <div className="admin-form-card">
+                    <AdminFormCard
+                        title="WhatsApp Messages"
+                        icon="💬"
+                        color="linear-gradient(135deg, #25D366, #128C7E)"
+                    >
+                        <div className="field">
+                            <label>Contact Page — WhatsApp Message (opens when user clicks WhatsApp button)</label>
+                            <textarea
+                                value={form.contactPage.whatsappMessage}
+                                onChange={updateNested('contactPage', 'whatsappMessage')}
+                                placeholder="Hello M.A. Corporation! I would like to know more about your courses and services."
+                                rows={3}
+                            />
+                            <p style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: 6 }}>
+                                This message pre-fills when a user clicks the WhatsApp button on the Contact page.
+                            </p>
                         </div>
                     </AdminFormCard>
                 </div>

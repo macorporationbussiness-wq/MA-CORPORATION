@@ -1,7 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
-import PageHeader from '../components/PageHeader';
 import useInView from '../hooks/useInView';
 import { useSettings } from '../context/SettingsContext';
 
@@ -51,109 +50,65 @@ export default function About() {
     const [ctaRef, ctaVisible] = useInView();
 
     return (
-        <div>
-            <PageHeader
-                eyebrow={p.eyebrow || 'About Us'}
-                title={p.title || 'About M.A. Corporation'}
-                subtitle={p.subtitle || 'Quality education, professional services, and practical learning under one platform.'}
-            />
-
-            {/* Intro section with image */}
-            <section className={clsx('section', 'section-light')} style={{ position: 'relative', overflow: 'hidden' }}>
-                <div
-                    style={{
-                        position: 'absolute',
-                        top: -150,
-                        left: -150,
-                        width: 400,
-                        height: 400,
-                        background: 'radial-gradient(circle, rgba(20,184,166,0.08), transparent 70%)',
-                        borderRadius: '50%',
-                    }}
-                />
-                <div
-                    style={{
-                        position: 'absolute',
-                        bottom: -100,
-                        right: -100,
-                        width: 350,
-                        height: 350,
-                        background: 'radial-gradient(circle, rgba(45,212,191,0.08), transparent 70%)',
-                        borderRadius: '50%',
-                    }}
-                />
-                <div className="container" ref={introRef} style={{ position: 'relative' }}>
-                    <div
-                        className={clsx('grid', 'grid-2', 'about-intro-grid')}
-                        style={{ gap: 'clamp(32px, 6vw, 60px)', alignItems: 'center' }}
-                    >
-                        <div className={`animate-on-scroll ${introVisible ? 'visible' : ''}`}>
-                            <span
-                                style={{
-                                    display: 'inline-block',
-                                    color: '#0ea5a4',
-                                    fontWeight: 700,
-                                    letterSpacing: 2,
-                                    textTransform: 'uppercase',
-                                    fontSize: '0.85rem',
-                                    marginBottom: 14,
-                                }}
-                            >
-                                {p.introEyebrow || 'Our Story'}
-                            </span>
-                            <h2
-                                style={{
-                                    fontSize: 'clamp(1.8rem, 4vw, 2.6rem)',
-                                    margin: '12px 0 24px',
-                                    fontWeight: 800,
-                                    lineHeight: 1.2,
-                                    background: 'linear-gradient(135deg, #0A1733, #2DD4BF)',
-                                    WebkitBackgroundClip: 'text',
-                                    WebkitTextFillColor: 'transparent',
-                                    backgroundClip: 'text',
-                                }}
-                            >
-                                {p.introTitle || 'Building Skills. Creating Opportunities.'}
-                            </h2>
-                            <p className="muted" style={{ fontSize: 'clamp(1rem, 2vw, 1.1rem)', marginBottom: 18, lineHeight: 1.8 }}>
+        <div className="about-page-wrapper">
+            {/* Hero Story Banner Section matching mockup */}
+            <section
+                className="about-hero-section"
+                ref={introRef}
+                style={{ backgroundImage: `url('${p.bannerImage || '/about-banner.png'}')` }}
+            >
+                <div className="about-hero-container">
+                    <div className="about-hero-grid">
+                        <div className={`about-hero-text animate-on-scroll ${introVisible ? 'visible' : ''}`}>
+                            <div className="about-story-eyebrow">
+                                <span className="about-story-dash" />
+                                <span>{p.introEyebrow || 'OUR STORY'}</span>
+                            </div>
+                            <h1 className="about-hero-title">
+                                {p.introTitle ? (
+                                    p.introTitle.includes('.') ? (
+                                        p.introTitle.split('.').filter(Boolean).map((chunk, idx, arr) => (
+                                            <React.Fragment key={idx}>
+                                                {chunk.trim()}.
+                                                {idx < arr.length - 1 && <br />}
+                                            </React.Fragment>
+                                        ))
+                                    ) : (
+                                        p.introTitle
+                                    )
+                                ) : (
+                                    <>
+                                        Building Skills.<br />
+                                        Creating Opportunities.
+                                    </>
+                                )}
+                            </h1>
+                            <p className="about-hero-desc">
                                 {p.introDesc1 || 'M.A. Corporation was established with the vision of providing reliable professional services and practical learning opportunities under one platform. We believe that knowledge becomes valuable when it can be applied in the real world.'}
                             </p>
-                            <p className="muted" style={{ fontSize: 'clamp(1rem, 2vw, 1.1rem)', lineHeight: 1.8 }}>
+                            <p className="about-hero-desc">
                                 {p.introDesc2 || 'Our approach focuses on practical learning, professional guidance, customer satisfaction, and continuous improvement. Our team works to understand the needs of every client and student and provide solutions that are practical, accessible, and results-oriented.'}
                             </p>
                         </div>
                         <div
-                            className={`animate-on-scroll ${introVisible ? 'visible' : ''}`}
-                            style={{ transitionDelay: '200ms', textAlign: 'center' }}
+                            className={`about-hero-visual animate-on-scroll ${introVisible ? 'visible' : ''}`}
+                            style={{ transitionDelay: '200ms' }}
                         >
-                            <div style={{
-                                position: 'relative',
-                                display: 'inline-block',
-                                maxWidth: '100%',
-                            }}>
-                                <img
-                                    src={p.logoImage || '/logo.png'}
-                                    alt="M.A. Corporation"
-                                    style={{
-                                        maxWidth: '100%',
-                                        maxHeight: 320,
-                                        width: 'auto',
-                                        height: 'auto',
-                                        objectFit: 'contain',
-                                        border: 'none',
-                                        outline: 'none',
-                                        boxShadow: 'none',
-                                        background: 'transparent',
-                                    }}
-                                />
-                            </div>
-                            <div style={{ marginTop: 32 }}>
-                                <h3 style={{ fontSize: 'clamp(1.2rem, 3vw, 1.5rem)', color: '#0A1733', marginBottom: 8, fontWeight: 800 }}>
-                                    {p.introBadge || 'Since 2019'}
-                                </h3>
-                                <p style={{ color: '#647489', fontSize: 'clamp(0.85rem, 2vw, 0.95rem)', lineHeight: 1.6 }}>
-                                    {p.introBadgeDesc || 'Empowering learners and businesses'}
-                                </p>
+                            {/* Floating "Since 2019" Frosted Card matching mockup */}
+                            <div className="about-hero-badge">
+                                <div className="about-badge-icon">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00b4d8" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                                    </svg>
+                                </div>
+                                <div className="about-badge-divider" />
+                                <div className="about-badge-text">
+                                    <div className="about-badge-title">{p.introBadge || 'Since 2019'}</div>
+                                    <div className="about-badge-subtitle">{p.introBadgeDesc || 'Empowering learners and businesses'}</div>
+                                </div>
                             </div>
                         </div>
                     </div>

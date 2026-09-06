@@ -16,6 +16,8 @@ import ContactPageManager from './ContactPageManager';
 import AdmissionsPageManager from './AdmissionsPageManager';
 import PrivacyPageManager from './PrivacyPageManager';
 import TermsPageManager from './TermsPageManager';
+import AdminManager from './AdminManager';
+import ChangePassword from './ChangePassword';
 
 const links = [
     { to: '/admin', label: 'Dashboard', icon: '📊', end: true, color: 'linear-gradient(135deg, #667eea, #764ba2)' },
@@ -31,6 +33,8 @@ const links = [
     { to: '/admin/admissions', label: 'Admissions', icon: '📝', color: 'linear-gradient(135deg, #f093fb, #f5576c)' },
     { to: '/admin/privacy', label: 'Privacy', icon: '🔒', color: 'linear-gradient(135deg, #8E2DE2, #4A00E0)' },
     { to: '/admin/terms', label: 'Terms', icon: '📄', color: 'linear-gradient(135deg, #fa709a, #fee140)' },
+    { to: '/admin/admins', label: 'Admin Accounts', icon: '👤', color: 'linear-gradient(135deg, #f59e0b, #d97706)' },
+    { to: '/admin/change-password', label: 'Change Password', icon: '🔑', color: 'linear-gradient(135deg, #ec4899, #be185d)' },
     { to: '/admin/settings', label: 'Settings', icon: '⚙️', color: 'linear-gradient(135deg, #11998e, #38ef7d)' },
 ];
 
@@ -194,6 +198,8 @@ export default function AdminLayout() {
                     <Route path="/admissions" element={<AdmissionsPageManager />} />
                     <Route path="/privacy" element={<PrivacyPageManager />} />
                     <Route path="/terms" element={<TermsPageManager />} />
+                    <Route path="/admins" element={<AdminManager />} />
+                    <Route path="/change-password" element={<ChangePassword />} />
                 </Routes>
             </main>
         </div>
