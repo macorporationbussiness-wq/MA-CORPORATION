@@ -6,12 +6,28 @@ const path = require('path');
 
 const app = express();
 
-// Connect Database
-connectDB();
+// Lazy DB connection (connect on first API request)
+let dbConnected = false;
+const ensureDB = async () => {
+    if (!dbConnected) {
+        try {
+            await connectDB();
+            dbConnected = true;
+        } catch (err) {
+            console.error('DB connection failed:', err.message);
+        }
+    }
+};
 
 // Init Middleware
 app.use(cors());
 app.use(express.json({ extended: false }));
+
+// Ensure DB is connected before API routes
+app.use('/api', async (req, res, next) => {
+    await ensureDB();
+    next();
+});
 
 // Define Routes
 app.use('/api/auth', require('./routes/auth'));
@@ -36,4 +52,8 @@ app.get('*', (req, res) =>
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+if (!process.env.VERCEL) {
+    app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+}
+
+module.exports = app;
