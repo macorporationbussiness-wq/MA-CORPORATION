@@ -24,43 +24,11 @@ const getIconInfo = (icon) => {
     return { type: 'emoji', value: icon };
 };
 
-const keyAreaEmoji = (icon) => {
-    const map = {
-        graduation: '🎓',
-        'icon-graduation.png': '🎓',
-        briefcase: '💼',
-        'icon-briefcase.png': '💼',
-        team: '👥',
-        'icon-team.png': '👥',
-        rocket: '🚀',
-        'icon-rocket.png': '🚀',
-    };
-    return map[icon] || '⭐';
-};
-
-const coreValueEmoji = (icon) => {
-    const map = {
-        handshake: '🤝',
-        'icon-handshake.png': '🤝',
-        star: '⭐',
-        'icon-star.png': '⭐',
-        target: '🎯',
-        'icon-target.png': '🎯',
-        growth: '📈',
-        'icon-growth.png': '📈',
-        lightbulb: '💡',
-        'icon-lightbulb.png': '💡',
-    };
-    return map[icon] || '⭐';
-};
-
 export default function Home() {
     const { settings } = useSettings();
-    const [courses, setCourses] = useState([]);
     const [services, setServices] = useState([]);
     const [keyAreasRef, keyAreasVisible] = useInView();
     const [servicesRef, servicesVisible] = useInView();
-    const [coursesRef, coursesVisible] = useInView();
     const [valuesRef, valuesVisible] = useInView();
     const [ctaRef, ctaVisible] = useInView();
 
@@ -74,7 +42,6 @@ export default function Home() {
     const homeCta = settings.homeCta || {};
 
     useEffect(() => {
-        API.get('/courses?featured=true').then((r) => setCourses(r.data)).catch(() => { });
         API.get('/services').then((r) => setServices(r.data.slice(0, 4))).catch(() => { });
     }, []);
 
