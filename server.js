@@ -28,13 +28,11 @@ app.use('/api/upload', require('./routes/upload'));
 // Serve uploaded files statically (available in both dev and production)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Serve static assets in production
-if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, 'client', 'build')));
-    app.get('*', (req, res) =>
-        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
-    );
-}
+// Serve static assets (React build)
+app.use(express.static(path.join(__dirname, 'client', 'build')));
+app.get('*', (req, res) =>
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
+);
 
 const PORT = process.env.PORT || 5000;
 
