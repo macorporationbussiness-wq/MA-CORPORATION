@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import API from '../api';
-import { useSettings } from '../context/SettingsContext';
-import { buildWhatsAppLink } from '../components/WhatsAppButton';
 import PageHeader from '../components/PageHeader';
 import useInView from '../hooks/useInView';
 
@@ -12,7 +10,6 @@ const whoCanJoin = [
 
 export default function CourseDetails() {
     const { slug } = useParams();
-    const { settings } = useSettings();
     const [course, setCourse] = useState(null);
     const [loading, setLoading] = useState(true);
     const [sidebarRef, sidebarVisible] = useInView();
@@ -23,11 +20,6 @@ export default function CourseDetails() {
             .catch(() => { })
             .finally(() => setLoading(false));
     }, [slug]);
-
-    const openEnroll = () => {
-        const msg = `Hello M.A. Corporation! I want to enroll in the course: *${course?.name}*.`;
-        window.open(buildWhatsAppLink(settings.whatsapp, msg), '_blank');
-    };
 
     if (loading) {
         return (
@@ -467,8 +459,8 @@ export default function CourseDetails() {
                                 </tbody>
                             </table>
 
-                            <button
-                                onClick={openEnroll}
+                            <Link
+                                to="/admissions"
                                 className="btn-glow"
                                 style={{
                                     width: '100%',
@@ -485,27 +477,10 @@ export default function CourseDetails() {
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     gap: 8,
+                                    textDecoration: 'none',
                                 }}
                             >
                                 Enroll Now <span>→</span>
-                            </button>
-                            <Link
-                                to="/admissions"
-                                style={{
-                                    display: 'block',
-                                    marginTop: 12,
-                                    padding: '12px 20px',
-                                    borderRadius: 12,
-                                    border: '2px solid #0ea5a4',
-                                    color: '#0ea5a4',
-                                    background: 'transparent',
-                                    textAlign: 'center',
-                                    textDecoration: 'none',
-                                    fontSize: '0.95rem',
-                                    fontWeight: 700,
-                                }}
-                            >
-                                Full Application
                             </Link>
                         </div>
                     </div>
