@@ -35,7 +35,7 @@ export default function ServiceManager() {
     const uploadFile = async (file) => {
         const formData = new FormData();
         formData.append('image', file);
-        const resp = await fetch('http://localhost:5000/api/upload/single', {
+        const resp = await fetch('/api/upload/single', {
             method: 'POST',
             body: formData,
         });
@@ -125,7 +125,7 @@ export default function ServiceManager() {
                                     onUpload={async (file) => {
                                         const formData = new FormData();
                                         formData.append('image', file);
-                                        const resp = await fetch('http://localhost:5000/api/upload/single', {
+                                        const resp = await fetch('/api/upload/single', {
                                             method: 'POST',
                                             body: formData,
                                         });
