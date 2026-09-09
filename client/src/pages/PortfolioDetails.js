@@ -35,7 +35,7 @@ export default function PortfolioDetails() {
         API.get('/portfolios')
             .then((r) => {
                 const list = r.data || [];
-                const found = list.find((item) => item.slug === slug) || list[0];
+                const found = list.find((item) => item.slug === slug) || list.find((item) => item._id === slug) || list[0];
                 setP(found || null);
             })
             .catch(() => setP(null))
