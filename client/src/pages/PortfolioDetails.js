@@ -31,6 +31,8 @@ export default function PortfolioDetails() {
     };
 
     useEffect(() => {
+        setP(null);
+        setLoading(true);
         setCurrentImageIndex(0);
         API.get('/portfolios')
             .then((r) => {
